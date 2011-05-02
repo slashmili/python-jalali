@@ -1,0 +1,5 @@
+jdatetime is (c) 2006-2009 Steven J. Bethard <steven.bethard@gmail.com>.
+
+The jdatetime module was contributed to Python as of Python 2.7 and thus
+was licensed under the Python license. Same license applies to all files in
+the jdatetime package project.
