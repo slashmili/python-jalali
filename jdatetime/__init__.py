@@ -3,7 +3,19 @@ from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 MINYEAR=1
 MAXYEAR=9377
 
+timedelta = datetime.timedelta
+
 class date(object):
+    j_months       = ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 
+               'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand']
+    j_months_short = ['Far', 'Ord', 'Kho', 'Tir', 'Mor', 'Sha', 
+               'Meh', 'Aba', 'Aza', 'Dey', 'Bah', 'Esf']
+
+    j_weekdays       = ['Shanbeh', 'Yekshanbeh','Doshanbeh', 
+                  'SehShanbeh', 'Chaharshanbeh', 'Panjshanbeh','Jomeh']
+    j_weekdays_short = ['Sha', 'Yek','Dos', 
+                  'Seh', 'Cha', 'Pan','Jom']
+
     year  = 0
     month = 0 
     day   = 0
@@ -15,6 +27,7 @@ class date(object):
             raise ValueError, "month must be in 1..12"
         if day< 1 :
             raise ValueError, "day is out of range for month"
+        #TODO: check if it's Kabise allow 30 days
         if day > j_days_in_month[month-1] :
             raise ValueError, "day is out of range for month"
 
@@ -25,6 +38,15 @@ class date(object):
     
     #def __getattribute__(self, name):
     #    print name
+    
+    """The smallest possible difference between non-equal date objects, timedelta(days=1)."""
+    resolution = timedelta(1) 
+
+    """The earliest representable date, date(MINYEAR, 1, 1)"""
+    #min = date(MINYEAR, 1, 1)
+    #TODO fixed errror :  name 'date' is not defined
+    """The latest representable date, date(MAXYEAR, 12, 31)."""
+    #max = date(MAXYEAR, 12,29)
 
     @staticmethod
     def today():
@@ -145,7 +167,19 @@ class date(object):
 
     def ctime(self):
         """Return ctime() style string."""
-        #TODO: elli nagozasht baghiesh ro emsham anjam bedam yadet bashe farda anjam bedi
+        #TODO: I have to wait until I impl strftime method !
         #'Mon May  2 00:00:00 2011'
+    def replace(self, year=0, month=0, day=0):
+        """Return date with new specified fields."""
+        new_year  = self.year
+        new_month = self.month
+        new_day   = self.day
 
-timedelta = datetime.timedelta
+        if year != 0 :
+            new_year = year
+        if month != 0 : 
+            new_month = month
+        if day != 0 :
+            new_day = day
+
+        return date(new_year, new_month, new_day)
