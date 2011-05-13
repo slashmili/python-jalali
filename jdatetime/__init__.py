@@ -56,7 +56,10 @@ class date(object):
 
     @staticmethod
     def fromgregorian(**kw):
-        """Convert gregorian to jalali and return jdatetime.date"""
+        """Convert gregorian to jalali and return jdatetime.date
+        jdatetime.date.fromgregorian(day=X,month=X,year=X)
+        jdatetime.date.fromgregorian(date=datetime.date)
+        """
         if 'date' in kw  and type(kw['date']) == py_datetime.date :
             d = kw['date']
             (y, m, d) = GregorianToJalali(d.year, d.month, d.day).getJalaliList()
