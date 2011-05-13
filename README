@@ -1,6 +1,9 @@
 jdatetime is Jalali implementation of Python's datetime module 
 
 == INSTALL ==
+You can install it with easy_install 
+easy_install jdatetime
+OR use install it from source
 python setup.py install
 
 == Document ==
