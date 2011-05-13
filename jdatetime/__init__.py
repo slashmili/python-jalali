@@ -37,8 +37,6 @@ class date(object):
         self.day   = day
         pass
     
-    #def __getattribute__(self, name):
-    #    print name
     
     """The smallest possible difference between non-equal date objects, timedelta(days=1)."""
     resolution = timedelta(1) 
@@ -255,6 +253,13 @@ class date(object):
         """Return a 3-tuple, (ISO year, ISO week number, ISO weekday)."""
         return (self.year, self.weeknumber(), self.isoweekday())
 
+    def isoformat(self):
+        """Return a string representing the date in ISO 8601 format, 'YYYY-MM-DD'"""
+        return self.strftime("%Y-%m-%d")
+
+    #TODO: create jtime !
+    #def timetuple(self):
+    #    pass
     def strftime(self, format):
         """format -> strftime() style string."""
         #TODO: change stupid str.replace 
