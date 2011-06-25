@@ -33,4 +33,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390,2,23)
         self.assertEqual(True, s.strftime("%a %A %b %B %c %d %f %H %I %j %m %M %p %S %w %W %x %X %y %Y %z %Z") == 'Jom Jomeh Ord Ordibehesht Jom Ord 23 00:00:00 1390 23 23 00 00 054 02 00 AM 00 6 7 02/23/90 00:00:00 90 1390  ')
+
+    def test_kabiseh(self):
+        kabiseh_year = jdatetime.date.fromgregorian(date=datetime.date(2013,3,20))
+        self.assertEqual(True, kabiseh_year.isleap() == True)
+
+        normal_year = jdatetime.date.fromgregorian(date=datetime.date(2014,3,20))
+        self.assertEqual(True, normal_year.isleap() == False)
+
 unittest.main()

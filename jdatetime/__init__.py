@@ -7,6 +7,7 @@ timedelta = py_datetime.timedelta
 datetime  = py_datetime.datetime
 
 class date(object):
+    """date(year, month, day) --> date object"""
     j_months       = ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 
                'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand']
     j_months_short = ['Far', 'Ord', 'Kho', 'Tir', 'Mor', 'Sha', 
@@ -17,9 +18,21 @@ class date(object):
     j_weekdays_short = ['Sha', 'Yek','Dos', 
                   'Seh', 'Cha', 'Pan','Jom']
 
-    year  = 0
-    month = 0 
-    day   = 0
+    @property
+    def year(self):
+        return self.__year
+
+    @property
+    def month(self):
+        return self.__month
+
+    @property
+    def day(self):
+        return self.__day
+
+    __year  = 0
+    __month = 0
+    __day   = 0
     def __init__(self, year, month, day):
         """date(year, month, day) --> date object"""
         if year < MINYEAR or year >MAXYEAR :
@@ -28,13 +41,15 @@ class date(object):
             raise ValueError, "month must be in 1..12"
         if day< 1 :
             raise ValueError, "day is out of range for month"
-        #TODO: check if it's Kabise allow 30 days
-        if day > j_days_in_month[month-1] :
+        if month == 12 and day == 30 and self.isleap:
+            #Do nothing
+            pass
+        elif day > j_days_in_month[month-1] :
             raise ValueError, "day is out of range for month"
 
-        self.year  = year
-        self.month = month
-        self.day   = day
+        self.__year  = year
+        self.__month = month
+        self.__day   = day
         pass
     
     
@@ -46,6 +61,11 @@ class date(object):
     #TODO fixed errror :  name 'date' is not defined
     """The latest representable date, date(MAXYEAR, 12, 31)."""
     #max = date(MAXYEAR, 12,29)
+
+    def isleap(self):
+        """check if year is leap year
+            algortim is based on http://en.wikipedia.org/wiki/Leap_year"""
+        return self.year % 33 in (1, 5, 9, 13, 17, 22, 26, 30)
 
     def togregorian(self):
         """Convert current jalali date to gregorian and return datetime.date"""

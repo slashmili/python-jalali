@@ -1,4 +1,3 @@
-jdatetime/__init__.py:31:        #TODO: check if it's Kabise allow 30 days
 jdatetime/__init__.py:46:    #TODO fixed errror :  name 'date' is not defined
 jdatetime/__init__.py:260:    #TODO: create jtime !
 jdatetime/__init__.py:265:        #TODO: change stupid str.replace 
