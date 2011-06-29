@@ -41,4 +41,6 @@ class TestJDateTime(unittest.TestCase):
         normal_year = jdatetime.date.fromgregorian(date=datetime.date(2014,3,20))
         self.assertEqual(True, normal_year.isleap() == False)
 
+    def test_datetime(self):
+        pass
 unittest.main()

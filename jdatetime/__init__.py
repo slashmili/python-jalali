@@ -4,7 +4,11 @@ MINYEAR=1
 MAXYEAR=9377
 
 timedelta = py_datetime.timedelta
-datetime  = py_datetime.datetime
+
+class time(py_datetime.time):
+    def __repr__(self):
+       return  "jdatetime.time(%s, %s, %s)"%(self.hour, self.minute, self.second)
+
 
 class date(object):
     """date(year, month, day) --> date object"""
@@ -17,6 +21,7 @@ class date(object):
                   'SehShanbeh', 'Chaharshanbeh', 'Panjshanbeh','Jomeh']
     j_weekdays_short = ['Sha', 'Yek','Dos', 
                   'Seh', 'Cha', 'Pan','Jom']
+
 
     @property
     def year(self):
@@ -33,8 +38,17 @@ class date(object):
     __year  = 0
     __month = 0
     __day   = 0
+
+    def __check_arg(self,value):
+       if type(value) is int or type(value) is long :
+           return True
+       return False
+
+
     def __init__(self, year, month, day):
         """date(year, month, day) --> date object"""
+        if not (self.__check_arg(year) and self.__check_arg(month) and self.__check_arg(day)) :
+            raise TypeError, "an integer is required"
         if year < MINYEAR or year >MAXYEAR :
             raise ValueError , "year is out of range"
         if month < 1 or month > 12 :
@@ -138,6 +152,8 @@ class date(object):
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
+        if other_date == None :
+            return False
         if type(other_date) != date :
             raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_date)))
         if self.year == other_date.year and self.month == other_date.month and self.day == other_date.day :
@@ -188,6 +204,8 @@ class date(object):
 
     def __ne__(self, other_date):
         """x.__ne__(y) <==> x!=y"""
+        if other_date == None:
+            return True
         if type(other_date) != date :
             raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_date)))
 
@@ -313,6 +331,7 @@ class date(object):
 
         format = format.replace("%M", '00')
 
+        #TODO: fix AM, PM
         format = format.replace("%p", 'AM')
 
         format = format.replace("%S", '00')
@@ -338,3 +357,188 @@ class date(object):
         format = format.replace("%Z", '')
 
         return format
+
+class datetime(object):
+    __date = None
+    __time = None
+
+    def time(self):
+        """Return time object with same time but with tzinfo=None."""
+        return self.__time
+
+    def date(self):
+        """Return date object with same year, month and day."""
+        return self.__date
+
+    def __check_arg(self,value):
+       if type(value) is int or type(value) is long :
+           return True
+       return False
+
+    def __init__(self,year, month, day, hour=None, minute=None, second=None, microsecond=None, tzinfo=None):
+        self.__date = date(year, month, day)
+       
+        tmp_hour = 0
+        tmp_min  = 0
+        tmp_sec  = 0
+        tmp_micr = 0
+        if hour != None:
+            tmp_hour = hour
+        if minute != None:
+            tmp_min = minute
+        if second !=None :
+            tmp_sec = second
+        if microsecond !=None:
+            tmp_micr = microsecond
+
+        if not (self.__check_arg(tmp_hour) and self.__check_arg(tmp_min) and self.__check_arg(tmp_sec) and self.__check_arg(tmp_micr)) :
+            raise TypeError, "an integer is required"
+        
+        self.__time = time(tmp_hour,tmp_min, tmp_sec, tmp_micr,tzinfo) 
+
+    def __repr__(self):
+        if self.__time.tzinfo != None :
+            return  "jdatetime.datetime(%s, %s, %s, %s, %s, %s, %s, tzinfo=%s)"%(self.__date.year, self.__date.month, self.__date.day,self.__time.hour, self.__time.minute, self.__time.second, self.__time.microsecond ,self.__time.tzinfo)
+        
+        if self.__time.microsecond != 0 :
+            return  "jdatetime.datetime(%s, %s, %s, %s, %s, %s, %s)"%(self.__date.year, self.__date.month, self.__date.day,self.__time.hour, self.__time.minute, self.__time.second, self.__time.microsecond)
+
+        if self.__time.second != 0 :
+            return  "jdatetime.datetime(%s, %s, %s, %s, %s, %s)"%(self.__date.year, self.__date.month, self.__date.day,self.__time.hour, self.__time.minute, self.__time.second)
+
+        return  "jdatetime.datetime(%s, %s, %s, %s, %s)"%(self.__date.year, self.__date.month, self.__date.day,self.__time.hour, self.__time.minute)
+    
+    @staticmethod
+    def today():
+        """Current date or datetime"""
+        return datetime.now()
+
+    @staticmethod
+    def now(tz=None):
+        """[tz] -> new datetime with tz's local day and time."""
+        now_datetime = py_datetime.datetime.now(tz)
+        now = date.fromgregorian(date=now_datetime.date())
+        return datetime(now.year, now.month, now.day, now_datetime.hour, now_datetime.minute, now_datetime.second, now_datetime.microsecond, tz)
+
+    @staticmethod
+    def utcnow():
+        """Return a new datetime representing UTC day and time."""
+        now_datetime = py_datetime.datetime.utcnow()
+        now = date.fromgregorian(date=now_datetime.date())
+        return datetime(now.year, now.month, now.day, now_datetime.hour, now_datetime.minute, now_datetime.second, now_datetime.microsecond)
+        
+    @staticmethod
+    def fromtimestamp(timestamp, tz=None):
+        """timestamp[, tz] -> tz's local time from POSIX timestamp."""
+        now_datetime = py_datetime.datetime.fromtimestamp(timestamp, tz)
+        now = date.fromgregorian(date=now_datetime.date())
+        return datetime(now.year, now.month, now.day, now_datetime.hour, now_datetime.minute, now_datetime.second, now_datetime.microsecond, tz)
+
+    @staticmethod
+    def utcfromtimestamp(timestamp):
+        """timestamp -> UTC datetime from a POSIX timestamp (like time.time())."""
+        now_datetime = py_datetime.datetime.fromtimestamp(timestamp)
+        now = date.fromgregorian(date=now_datetime.date())
+        return datetime(now.year, now.month, now.day, now_datetime.hour, now_datetime.minute, now_datetime.second, now_datetime.microsecond)
+
+    @staticmethod
+    def combine(d=None, t=None, **kw):
+        """date, time -> datetime with same date and time fields"""
+
+        c_date = None
+        if d != None :
+            c_date = d
+        elif 'date' in kw :
+            c_date = kw['date']
+
+        c_time = None
+        if t != None:
+            c_time = t
+        elif 'time' in kw :
+            c_time = kw['time']
+
+        if c_date == None :
+            raise TypeError , "Required argument 'date' (pos 1) not found"
+        if c_time == None :
+            raise TypeError , "Required argument 'date' (pos 2) not found"
+
+        if type(c_date) != date :
+            raise TypeError, "combine() argument 1 must be jdatetime.date, not %s"%(type(c_date))
+        if type(c_time) != time :
+            raise TypeError, "combine() argument 2 must be jdatetime.time, not %s"%(type(c_time))
+        
+        return datetime(c_date.year, c_date.month, c_date.day, c_time.hour, c_time.minute, c_time.second, c_time.microsecond, c_time.tzinfo)
+
+    @staticmethod 
+    def fromordinal(ordinal):
+        """int -> date corresponding to a proleptic Jalali ordinal. 
+        it starts from Farvardin 1 of year 1, which is equal to 622-3-21 of Gregorian"""
+        if ordinal < 1 :
+            raise ValueError, "ordinal must be >= 1"
+        d      = py_datetime.date.fromordinal(226894 +ordinal)
+        j_date = date.fromgregorian(date=d)
+        return datetime(j_date.year, j_date.month, j_date.day, 0, 0)
+
+    @property
+    def year(self):
+        return self.__date.year
+
+    @property
+    def month(self):
+        return self.__date.month
+
+    @property
+    def day(self):
+        return self.__date.day
+
+    @property
+    def hour(self):
+        return self.__time.day
+
+    @property
+    def minute(self):
+        return self.__time.minute
+
+    @property
+    def second(self):
+        return self.__time.second
+
+    @property
+    def microsecond(self):
+        return self.__time.microsecond
+
+    @property
+    def tzinfo(self):
+        return self.__time.tzinfo
+
+
+
+    @staticmethod
+    def strptime(date_string, format):
+        """string, format -> new datetime parsed from a string (like time.strptime())"""
+        if '*' in format :
+            format = format.replace("*", "\*")
+        if '+' in format :
+            format = format.replace("+", "\+")
+        if '(' in format or ')' in format :
+            format = format.replace("(", "\(")
+            format = format.replace(")", "\)")
+        if '[' in format or ']' in format :
+            format = format.replace("[", "\[")
+            format = format.replace("]", "\]")
+        result_date = {'day': 1, 'month': 1, 'year': 1279, 'microsecond': 0, 'second': 0, 'minute' : 0, 'hour': 0}
+        format_map = {
+                        '%a': ['[A-Za-z]{3}' , 'day'],
+                        '%A': ['[A-Za-z]+'   , 'day'],
+                        '%b': ['[A-Za-z]{3}' , 'month'],
+                        '%B': ['[A-Za-z]+'   , 'month'],
+                        '%d': ['[0-9]{2}'    , 'day'],
+                        '%f': ['[0-9]{1,6}'  , 'microsecond'],
+                        '%H': ['[0-9]{1,2}'  , 'hour'],
+                        '%I': ['[0-9]{1,2}'  , 'hour'],
+                        '%j': ['[0-9]{1,3}'  , 'day'],
+                        '%m': ['[0-9]{1,2}'  , 'month'],
+                        '%M': ['[0-9]{1,2}'  , 'minute'],
+                        '%p': ['(AM|PM)'     , 'hour'],
+                        '%S': ['[0-9]{1,2}'  , 'second'],
+                      }
