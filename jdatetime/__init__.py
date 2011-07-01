@@ -1,5 +1,6 @@
 import datetime as py_datetime
 from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
+import re as _re
 MINYEAR=1
 MAXYEAR=9377
 
@@ -527,18 +528,32 @@ class datetime(object):
             format = format.replace("[", "\[")
             format = format.replace("]", "\]")
         result_date = {'day': 1, 'month': 1, 'year': 1279, 'microsecond': 0, 'second': 0, 'minute' : 0, 'hour': 0}
+        apply_order = []
         format_map = {
-                        '%a': ['[A-Za-z]{3}' , 'day'],
-                        '%A': ['[A-Za-z]+'   , 'day'],
-                        '%b': ['[A-Za-z]{3}' , 'month'],
-                        '%B': ['[A-Za-z]+'   , 'month'],
                         '%d': ['[0-9]{2}'    , 'day'],
                         '%f': ['[0-9]{1,6}'  , 'microsecond'],
                         '%H': ['[0-9]{1,2}'  , 'hour'],
                         '%I': ['[0-9]{1,2}'  , 'hour'],
-                        '%j': ['[0-9]{1,3}'  , 'day'],
                         '%m': ['[0-9]{1,2}'  , 'month'],
                         '%M': ['[0-9]{1,2}'  , 'minute'],
-                        '%p': ['(AM|PM)'     , 'hour'],
                         '%S': ['[0-9]{1,2}'  , 'second'],
+                        '%Y': ['[0-9]{4,5}'  , 'year'],
                       }
+        regex = format
+        find = _re.compile("([%a-zA-Z]{2})")
+
+        for form in find.findall(format):
+            if form in format_map :
+                regex = regex.replace(form, "(" + format_map[form][0] + ")")
+                apply_order.append( format_map[form][1])
+        try :
+            p = _re.compile(regex)
+            if not p.match(date_string):
+                raise ValueError
+            for i,el in enumerate(p.match(date_string).groups()):
+                result_date[apply_order[i]] = int(el)
+            #TODO: check range
+            #if result_date['day'] not in range(1,31)
+        except :
+            raise ValueError , "Vaaalllue errr"
+        #print result_date
