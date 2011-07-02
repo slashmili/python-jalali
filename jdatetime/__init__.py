@@ -1,3 +1,8 @@
+#jdatetime is (c) 2010-2011 Milad Rastian <eslashmili at gmail.com>.
+#The jdatetime module was contributed to Python as of Python 2.7 and thus
+#was licensed under the Python license. Same license applies to all files in
+#the jdatetime package project.
+
 import datetime as py_datetime
 from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
