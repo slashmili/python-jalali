@@ -1,4 +1,6 @@
 #dervied from http://farsitools.sf.net
+#Copyright (C) 2003-2011  Parspooyesh Fanavar (http://parspooyesh.com/)
+#see LICENSE.txt
 g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 j_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 

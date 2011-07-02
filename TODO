@@ -1,7 +1,4 @@
-jdatetime/__init__.py:46:    #TODO fixed errror :  name 'date' is not defined
-jdatetime/__init__.py:260:    #TODO: create jtime !
-jdatetime/__init__.py:265:        #TODO: change stupid str.replace 
-jdatetime/__init__.py:278:        #TODO: FIX %d and hardcode hour
-jdatetime/__init__.py:283:        #TODO: FIXME !
-jdatetime/__init__.py:285:        #TODO: FIXME !
-jdatetime/__init__.py:287:        #TODO: FIXME !
+jdatetime/__init__.py:    #TODO fixed errror :  name 'date' is not defined
+jdatetime/__init__.py:    #TODO: create jtime !
+jdatetime/__init__.py:        #TODO: change stupid str.replace 
+jdatetime/__init__.py:    #TODO: check what this def does !

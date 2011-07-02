@@ -9,9 +9,9 @@ python setup.py install
 == Document ==
 see the datetime module documents http://docs.python.org/release/2.7.1/library/datetime.html
 
-These methods are addedd to jdatetime.date :
+These methods are addedd to jdatetime :
+    * jdatetime.date.isleap
     * jdatetime.date.fromgregorian
-        * fromgregorian(date=datetime.date)
-        * fromgregorian(day=X,month=X,year=X)
     * jdatetime.date.togregorian
-        * jdatetime.date.today().togregorian()
+    * jdatetime.jdate.fromgregorian
+    * jdatetime.jdate.togregorian
