@@ -142,7 +142,7 @@ class date(object):
        return  "jdatetime.date(%s, %s, %s)"%(self.year, self.month, self.day)
 
     def __str__(self):
-        return "%s-%s-%s"%(self.year ,self.month ,self.day)
+        return self.strftime("%Y-%m-%d")
     
     def __add__(self, timedelta):
         """x.__add__(y) <==> x+y"""
@@ -163,7 +163,7 @@ class date(object):
         if other_date == None :
             return False
         if type(other_date) != date :
-            raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_date)))
+            return False
         if self.year == other_date.year and self.month == other_date.month and self.day == other_date.day :
             return True
         return False
@@ -215,7 +215,7 @@ class date(object):
         if other_date == None:
             return True
         if type(other_date) != date :
-            raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_date)))
+            return True
 
         return not self.__eq__(other_date)
     
@@ -405,6 +405,7 @@ class date(object):
         return format
 
 class datetime(date):
+    """datetime(year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]) --> datetime objects"""
     __time = None
 
     def time(self):
@@ -640,7 +641,7 @@ class datetime(date):
         if other_datetime == None :
             return False
         if type(other_datetime) != datetime :
-            raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_datetime)))
+            return False
         if self.year == other_datetime.year and self.month == other_datetime.month and self.day == other_datetime.day :
             return True
         if self.hour == other_datetime.hour and self.minute == other_datetime.minute and self.second == other_datetime.second and self.microsecond == other_datetime.microsecond and self.tzinfo == self.other_datetime.tzinfo :
@@ -717,7 +718,7 @@ class datetime(date):
         if other_date == None:
             return True
         if type(other_date) != datetime :
-            raise TypeError, ("unsupported operand type for ==: '%s'"%(type(other_datetime)))
+            return True
 
         return not self.__eq__(other_datetime)
     
