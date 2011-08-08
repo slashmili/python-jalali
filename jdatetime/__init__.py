@@ -337,9 +337,9 @@ class date(object):
 
         try :
             if self.hour > 12 :
-                format = format.replace("%I", '%2.d'%(self.hour - 12))
+                format = format.replace("%I", '%02.d'%(self.hour - 12))
             else:
-                format = format.replace("%I", '%2.d'%(self.hour))
+                format = format.replace("%I", '%02.d'%(self.hour))
         except :
             format = format.replace("%I", '00' )
     
