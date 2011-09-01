@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #jdatetime is (c) 2010-2011 Milad Rastian <eslashmili at gmail.com>.
 #The jdatetime module was contributed to Python as of Python 2.7 and thus
 #was licensed under the Python license. Same license applies to all files in
@@ -6,6 +7,8 @@
 import datetime as py_datetime
 from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
+import locale as _locale
+__VERSION__="1.2"
 MINYEAR=1
 MAXYEAR=9377
 
@@ -18,16 +21,41 @@ class time(py_datetime.time):
 
 class date(object):
     """date(year, month, day) --> date object"""
-    j_months       = ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar', 
+    j_months_en       = ['Farvardin', 'Ordibehesht', 'Khordad', 'Tir', 'Mordad', 'Shahrivar',
                'Mehr', 'Aban', 'Azar', 'Dey', 'Bahman', 'Esfand']
-    j_months_short = ['Far', 'Ord', 'Kho', 'Tir', 'Mor', 'Sha', 
+    j_months_short_en = ['Far', 'Ord', 'Kho', 'Tir', 'Mor', 'Sha',
                'Meh', 'Aba', 'Aza', 'Dey', 'Bah', 'Esf']
 
-    j_weekdays       = ['Shanbeh', 'Yekshanbeh','Doshanbeh', 
+    j_weekdays_en       = ['Shanbeh', 'Yekshanbeh','Doshanbeh',
                   'SehShanbeh', 'Chaharshanbeh', 'Panjshanbeh','Jomeh']
-    j_weekdays_short = ['Sha', 'Yek','Dos', 
+    j_weekdays_short_en = ['Sha', 'Yek','Dos',
                   'Seh', 'Cha', 'Pan','Jom']
+    j_ampm_en = {'PM':'PM', 'AM':'AM'}
 
+    j_months_fa       = ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 
+               'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند']
+    j_months_short_fa = ['فرو', 'ارد', 'خرد', 'تیر', 'مهر', 'شهر', 
+               'مهر', 'آبا', 'آذر', 'دی', 'بهم', 'اسف']
+
+    j_weekdays_fa       = ['شنبه', 'یکشنبه','دوشنبه', 
+                  'سه شنبه', 'چهارشنبه', 'پنجشنبه','جمعه']
+    j_weekdays_short_fa = ['شنب', 'یک','دو', 
+                  'سه', 'چهار', 'پنج','جمع']
+    j_ampm_fa           = {'PM': 'بعد از ظهر', 'AM': 'قبل از ظهر'}
+
+
+    if 'fa_IR' in _locale.getdefaultlocale():
+        j_months         = j_months_fa
+        j_months_short   = j_months_short_fa
+        j_weekdays       = j_weekdays_fa
+        j_weekdays_short = j_weekdays_short_fa
+        j_ampm           = j_ampm_fa
+    else :
+        j_months         = j_months_en
+        j_months_short   = j_months_short_en
+        j_weekdays       = j_weekdays_en
+        j_weekdays_short = j_weekdays_short_en
+        j_ampm           = j_ampm_en
 
     @property
     def year(self):
@@ -354,11 +382,11 @@ class date(object):
 
         try :
             if self.hour > 12 :
-                format = format.replace("%p", 'PM')
+                format = format.replace("%p", self.j_ampm['PM'])
             else :
-                format = format.replace("%p", 'AM')
+                format = format.replace("%p", self.j_ampm['AM'])
         except :
-            format = format.replace("%p", 'AM')
+            format = format.replace("%p", self.j_ampm['AM'])
 
         try :
             format = format.replace("%S", '%02.d'%(self.second))
