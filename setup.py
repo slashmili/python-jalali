@@ -7,5 +7,5 @@ setup(
         license='Python Software Foundation License',
         keywords='Jalali implementation of Python datetime',
         platforms='any',
-        long_description=open('README').read(),
+        long_description=open('README.md').read(),
 )

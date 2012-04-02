@@ -1,17 +1,26 @@
-jdatetime is Jalali implementation of Python's datetime module 
+jdatetime
+=========
+jdatetime is [Jalali](http://en.wikipedia.org/wiki/Iranian_calendar) implementation of Python's datetime module 
 
-== INSTALL ==
-You can install it with easy_install 
-easy_install jdatetime
+INSTALL
+-------
+Install it with easy_install 
+```
+easy_install django_jalali
+```
 OR install it from source
+```
 python setup.py install
+```
 
-== Document ==
+Documents
+---------
 see the datetime module documents http://docs.python.org/release/2.7.1/library/datetime.html
 
-These methods are addedd to jdatetime :
-    * jdatetime.date.isleap
-    * jdatetime.date.fromgregorian
-    * jdatetime.date.togregorian
-    * jdatetime.jdate.fromgregorian
-    * jdatetime.jdate.togregorian
+Also these methods are addedd to jdatetime :
+
+* jdatetime.date.isleap
+* jdatetime.date.fromgregorian
+* jdatetime.date.togregorian
+* jdatetime.jdate.fromgregorian
+* jdatetime.jdate.togregorian
