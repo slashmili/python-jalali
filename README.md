@@ -15,12 +15,19 @@ python setup.py install
 
 Documents
 ---------
-see the datetime module documents http://docs.python.org/release/2.7.1/library/datetime.html
+This module exactly follows Python Standard [datetime module's methods](http://docs.python.org/release/2.7.1/library/datetime.html)
 
-Also these methods are addedd to jdatetime :
+Also these methods are addedd to jdatetime.date and jdatetime.datetime :
+```
+ |  fromgregorian(**kw)
+ |      Convert gregorian to jalali and return jdatetime.date
+ |      jdatetime.date.fromgregorian(day=X,month=X,year=X)
+ |      jdatetime.date.fromgregorian(date=datetime.date)
+ |      jdatetime.date.fromgregorian(datetime=datetime.datetime)
+ |  togregorian(self)
+ |      Convert current jalali date to gregorian and return datetime.date
+ |  isleap(self)
+ |      check if year is leap year
+ |      algortim is based on http://en.wikipedia.org/wiki/Leap_year 
+ ```
 
-* jdatetime.date.isleap
-* jdatetime.date.fromgregorian
-* jdatetime.date.togregorian
-* jdatetime.jdate.fromgregorian
-* jdatetime.jdate.togregorian
