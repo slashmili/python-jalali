@@ -44,7 +44,7 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, jdatetime.datetime.fromgregorian(datetime=datetime.datetime(2011, 5, 13)).date() == d_check_with)
 
         jd_datetime = jdatetime.datetime.fromgregorian(year=2011, month=5, day=13, hour=14, minute=15, second=16)
-        self.assertEqual(True, jd_datetime == jdatetime.datetime.combine(d_check_with, jdatetime.time(14, 15, 16))) 
+        self.assertEqual(True, jd_datetime == jdatetime.datetime.combine(d_check_with, jdatetime.time(14, 15, 16)))
 
         gdatetime = datetime.datetime(2011, 5, 13, 14, 15, 16)
         self.assertEqual(True, jd_datetime.togregorian() == gdatetime)
@@ -62,9 +62,9 @@ class TestJDateTime(unittest.TestCase):
                 return jdatetime.timedelta(hours=-4)
             def tzname(self,dt):
                 return "EDT"
-            def dst(self,dt): 
+            def dst(self,dt):
                 return jdatetime.timedelta(0)
-        nyc=NYCTime() 
+        nyc=NYCTime()
         dt = jdatetime.datetime(1389,2,17,19,10,2,tzinfo=nyc)
         self.assertEqual(True, dt.strftime("%Z %z") == "EDT -0400")
 
