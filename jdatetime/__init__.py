@@ -8,7 +8,7 @@ import datetime as py_datetime
 from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
-__VERSION__="1.2"
+__VERSION__="1.3"
 MINYEAR=1
 MAXYEAR=9377
 
@@ -85,20 +85,22 @@ class date(object):
             raise TypeError, "an integer is required"
         if year < MINYEAR or year >MAXYEAR :
             raise ValueError , "year is out of range"
+        self.__year = year
+
         if month < 1 or month > 12 :
             raise ValueError, "month must be in 1..12"
+        self.__month = month
+
         if day< 1 :
             raise ValueError, "day is out of range for month"
-        if month == 12 and day == 30 and self.isleap:
-            #Do nothing
+        if self.__month == 12 and day == 30 and self.isleap():
+            #for leap years it's ok to have 30 days in Esfand
             pass
-        elif day > j_days_in_month[month-1] :
+        elif self.__month == 12 and day == 30 and not self.isleap():
             raise ValueError, "day is out of range for month"
-
-        self.__year  = year
-        self.__month = month
-        self.__day   = day
-        pass
+        elif day > j_days_in_month[self.__month-1] :
+            raise ValueError, "day is out of range for month"
+        self.__day = day
     
     
     """The smallest possible difference between non-equal date objects, timedelta(days=1)."""

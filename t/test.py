@@ -4,9 +4,10 @@ import datetime
 import time
 class TestJDateTime(unittest.TestCase):
     def test_today(self):
-        today = jdatetime.date.today()
-        self.assertEqual(1390,today.year)
-    
+        today  = datetime.date.today()
+        converted_today = jdatetime.date.today().togregorian()
+        self.assertEqual(today.year,converted_today.year)
+
     def test_fromtimestamp(self):
         d = jdatetime.date.fromtimestamp(1783232224)
         self.assertEqual(1405, d.year)
@@ -72,7 +73,7 @@ class TestJDateTime(unittest.TestCase):
                 return jdatetime.timedelta(hours=3, minutes=30)
             def tzname(self,dt):
                 return "IRDT"
-            def dst(self,dt): 
+            def dst(self,dt):
                 return jdatetime.timedelta(0)
         teh=TehranTime()
         dt = jdatetime.datetime(1389,2,17,19,10,2,tzinfo=teh)
@@ -85,16 +86,22 @@ class TestJDateTime(unittest.TestCase):
         normal_year = jdatetime.date.fromgregorian(date=datetime.date(2014,3,20))
         self.assertEqual(True, normal_year.isleap() == False)
 
+        kabiseh_year = jdatetime.date(1391,12,30)
+        self.assertEqual(True, kabiseh_year.isleap() == True)
+
+        with self.assertRaises(ValueError):
+            jdatetime.date(1392,12,30)
+
     def test_datetime(self):
         d = jdatetime.datetime(1390, 1, 2, 12, 13, 14)
 
         self.assertEqual(True, d.time() == jdatetime.time(12, 13, 14))
         self.assertEqual(True, d.date() == jdatetime.date(1390, 1, 2))
-        
+
     def test_datetimetoday(self):
         jnow = jdatetime.datetime.today()
         gnow = jdatetime.date.fromgregorian(date=datetime.datetime.today().date())
-        
+
         self.assertEqual(True, jnow.date() == gnow)
 
     def test_datetimefromtimestamp(self):
@@ -116,9 +123,9 @@ class TestJDateTime(unittest.TestCase):
         dt  = jdatetime.datetime.today()
         dtr = dt.replace(year=1390, month=12, day=1, hour=13, minute=14, second=15, microsecond = 1233)
         dtn = jdatetime.datetime(1390, 12, 1, 13, 14, 15, 1233)
-        
+
         self.assertEqual(True, dtr == dtn )
-    
+
     def test_strptime(self):
         dt1 = jdatetime.datetime.strptime("1363-6-6 12:13:14","%Y-%m-%d %H:%M:%S")
         dt2 = jdatetime.datetime(1363, 6 , 6 , 12, 13, 14)

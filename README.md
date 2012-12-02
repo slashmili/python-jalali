@@ -1,12 +1,12 @@
 jdatetime
 =========
-jdatetime is [Jalali](http://en.wikipedia.org/wiki/Iranian_calendar) implementation of Python's datetime module 
+jdatetime is [Jalali](http://en.wikipedia.org/wiki/Iranian_calendar) implementation of Python's datetime module
 
 INSTALL
 -------
-Install it with easy_install 
+Install it with easy_install
 ```
-easy_install django_jalali
+easy_install jdatetime
 ```
 OR install it from source
 ```
