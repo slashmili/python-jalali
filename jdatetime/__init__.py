@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 #jdatetime is (c) 2010-2011 Milad Rastian <eslashmili at gmail.com>.
 #The jdatetime module was contributed to Python as of Python 2.7 and thus
 #was licensed under the Python license. Same license applies to all files in
@@ -107,7 +107,7 @@ class date(object):
                            'جمع']
     j_ampm_fa = {'PM': 'بعد از ظهر', 'AM': 'قبل از ظهر'}
 
-    if 'fa_IR' in _locale.getdefaultlocale():
+    if True: #'fa_IR' in _locale.getdefaultlocale():
         j_months = j_months_fa
         j_months_short = j_months_short_fa
         j_weekdays = j_weekdays_fa
