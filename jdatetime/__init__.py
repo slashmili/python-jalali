@@ -408,6 +408,13 @@ class date(object):
         """Return a string representing the date in ISO 8601 format, 'YYYY-MM-DD'"""
         return self.strftime("%Y-%m-%d")
 
+    def __format__(self, format):
+        """
+        PEP-3101
+        Make string formating work!
+        """
+        return self.strftime(format)
+
     #TODO: create jtime !
     #def timetuple(self):
     #    pass
