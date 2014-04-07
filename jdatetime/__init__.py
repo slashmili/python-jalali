@@ -431,6 +431,7 @@ class date(object):
             format = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
 
         format = format.replace("%d", '%02.d'%(self.day) )
+        format = format.replace("%-d", '%d'%(self.day) )
 
         try:
             format = format.replace("%f", '%06.d'%(self.microsecond))
