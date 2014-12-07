@@ -189,5 +189,11 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(False, dt2 == dt1)
 
+    def test_datetime_eq_now(self):
+        dt1 = jdatetime.datetime.now()
+        dt2 = jdatetime.datetime.now()
+        self.assertEqual(False, dt2 == dt1)
+
+
 if __name__ == "__main__":
     unittest.main()
