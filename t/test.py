@@ -3,6 +3,7 @@ import datetime
 import time
 import os
 import sys
+import pytz
 BASEDIR = os.path.abspath(os.path.join(
                           os.path.dirname(os.path.abspath(__file__)),
                           ".."))
@@ -193,6 +194,35 @@ class TestJDateTime(unittest.TestCase):
         dt1 = jdatetime.datetime.now()
         dt2 = jdatetime.datetime.now()
         self.assertEqual(False, dt2 == dt1)
+
+    def test_datetime_eq_diff_tz(self):
+        class GMTTime(jdatetime.tzinfo):
+            def utcoffset(self, dt):
+                return jdatetime.timedelta(hours=0)
+
+            def tzname(self, dt):
+                return "GMT"
+
+            def dst(self, dt):
+                return jdatetime.timedelta(0)
+
+        nyc = GMTTime()
+        dt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=nyc)
+
+        class TehranTime(jdatetime.tzinfo):
+            def utcoffset(self, dt):
+                return jdatetime.timedelta(hours=3, minutes=30)
+
+            def tzname(self, dt):
+                return "IRDT"
+
+            def dst(self, dt):
+                return jdatetime.timedelta(0)
+        th = TehranTime()
+        dt = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=th)
+
+        self.assertEqual(True, dt == th)
+
 
 
 if __name__ == "__main__":
