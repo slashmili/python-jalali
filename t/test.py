@@ -177,4 +177,17 @@ class TestJDateTime(unittest.TestCase):
         dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
 
         self.assertEqual(True, dt1 == dt2)
-unittest.main()
+
+    def test_datetime_eq(self):
+        date_string = "1363-6-6 12:13:14"
+        date_format = "%Y-%m-%d %H:%M:%S"
+
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+
+        date_string = "1364-6-6 12:13:14"
+        dt2 = jdatetime.datetime.strptime(date_string, date_format)
+
+        self.assertEqual(False, dt2 == dt1)
+
+if __name__ == "__main__":
+    unittest.main()
