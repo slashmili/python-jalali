@@ -767,46 +767,38 @@ class datetime(date):
         if type(other_datetime) != datetime:
             raise TypeError("unsupported operand type for >=: '%s'"%(type(other_datetime)))
 
-        if self.year > other_datetime.year:
-            return True
-        elif self.year == other_datetime.year:
-            if self.month > other_datetime.month:
-                return True
-            elif self.month == other_datetime.month and self.day >= other_datetime.day:
-                return True
-        if self.hour >= other_datetime.hour:
-            return True
-        if self.minute >= other_datetime.minute:
-            return True
-        if self.second >= other_datetime.second:
-            return True
-        if self.microsecond >= other_datetime.microsecond:
-            return True
-
-        return False
+        return (self.year,
+        self.month,
+        self.day,
+        self.hour,
+        self.minute,
+        self.second,
+        self.microsecond) >= (other_datetime.year,
+        other_datetime.month,
+        other_datetime.day,
+        other_datetime.hour,
+        other_datetime.minute,
+        other_datetime.second,
+        other_datetime.microsecond)
 
     def __gt__(self, other_datetime):
         """x.__gt__(y) <==> x>y"""
         if type(other_datetime) != datetime:
             raise TypeError("unsupported operand type for >: '%s'"%(type(other_datetime)))
 
-        if self.year > other_datetime.year:
-            return True
-        elif self.year == other_datetime.year:
-            if self.month > other_datetime.month:
-                return True
-            elif self.month >= other_datetime.month and self.day > other_datetime.day:
-                return True
-        if self.hour > other_datetime.hour:
-            return True
-        if self.minute > other_datetime.minute:
-            return True
-        if self.second > other_datetime.second:
-            return True
-        if self.microsecond > other_datetime.microsecond:
-            return True
-
-        return False
+        return (self.year,
+        self.month,
+        self.day,
+        self.hour,
+        self.minute,
+        self.second,
+        self.microsecond) > (other_datetime.year,
+        other_datetime.month,
+        other_datetime.day,
+        other_datetime.hour,
+        other_datetime.minute,
+        other_datetime.second,
+        other_datetime.microsecond)
 
     def __hash__(self):
         """x.__hash__() <==> hash(x)"""
@@ -819,13 +811,13 @@ class datetime(date):
         if type(other_datetime) != datetime:
             raise TypeError("unsupported operand type for <=: '%s'"%(type(other_datetime)))
 
-        return not self.__ge__(other_datetime)
+        return not self.__gt__(other_datetime)
 
     def __lt__(self, other_datetime):
         """x.__lt__(y) <==> x<y"""
         if type(other_datetime) != datetime:
             raise TypeError("unsupported operand type for <: '%s'"%(type(other_datetime)))
-        return not self.__gt__(other_datetime)
+        return not self.__ge__(other_datetime)
 
     def __ne__(self, other_datetime):
         """x.__ne__(y) <==> x!=y"""
