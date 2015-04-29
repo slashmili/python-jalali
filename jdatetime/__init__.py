@@ -5,7 +5,7 @@
 #the jdatetime package project.
 
 import datetime as py_datetime
-from jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
+from jdatetime.jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
 __VERSION__ = "1.3"
