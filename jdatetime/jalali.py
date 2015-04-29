@@ -32,7 +32,7 @@ class GregorianToJalali:
         gm = self.gmonth-1
         gd = self.gday-1
 
-        g_day_no = 365*gy+(gy+3)/4-(gy+99)/100+(gy+399)/400
+        g_day_no = 365*gy+(gy+3)//4-(gy+99)//100+(gy+399)//400
 
         for i in range(gm):
             g_day_no += g_days_in_month[i]
@@ -43,14 +43,14 @@ class GregorianToJalali:
 
         j_day_no = g_day_no-79
 
-        j_np = j_day_no / 12053
+        j_np = j_day_no // 12053
         j_day_no %= 12053
-        jy = 979+33*j_np+4*int(j_day_no/1461)
+        jy = 979+33*j_np+4*int(j_day_no//1461)
 
         j_day_no %= 1461
 
         if j_day_no >= 366:
-            jy += (j_day_no-1)/ 365
+            jy += (j_day_no-1)// 365
             j_day_no = (j_day_no-1)%365
 
         for i in range(11):
@@ -90,7 +90,7 @@ class JalaliToGregorian:
         jd = self.jday-1
 
 
-        j_day_no = 365*jy +int(jy/33)*8 + (jy%33+3)/4
+        j_day_no = 365*jy +int(jy//33)*8 + (jy%33+3)//4
         for i in range(jm):
             j_day_no += j_days_in_month[i]
 
@@ -98,13 +98,13 @@ class JalaliToGregorian:
 
         g_day_no = j_day_no+79
 
-        gy = 1600 + 400*int(g_day_no/ 146097) # 146097 = 365*400 + 400/4 - 400/100 + 400/400
+        gy = 1600 + 400*int(g_day_no// 146097) # 146097 = 365*400 + 400/4 - 400/100 + 400/400
         g_day_no = g_day_no % 146097
 
         leap = 1
         if g_day_no >= 36525: # 36525 = 365*100 + 100/4
             g_day_no-=1
-            gy += 100*int(g_day_no/ 36524) # 36524 = 365*100 + 100/4 - 100/100
+            gy += 100*int(g_day_no// 36524) # 36524 = 365*100 + 100/4 - 100/100
             g_day_no = g_day_no % 36524
 
             if g_day_no >= 365:
@@ -113,13 +113,13 @@ class JalaliToGregorian:
                 leap = 0
 
 
-        gy += 4*int(g_day_no/1461) # 1461 = 365*4 + 4/4
+        gy += 4*int(g_day_no//1461) # 1461 = 365*4 + 4/4
         g_day_no %= 1461
 
         if g_day_no >= 366:
             leap = 0
             g_day_no-=1
-            gy += g_day_no/365
+            gy += g_day_no//365
             g_day_no = g_day_no % 365
 
         i=0
