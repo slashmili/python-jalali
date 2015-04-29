@@ -3,8 +3,9 @@
 #The jdatetime module was contributed to Python as of Python 2.7 and thus
 #was licensed under the Python license. Same license applies to all files in
 #the jdatetime package project.
-
+from __future__ import unicode_literals
 import datetime as py_datetime
+import sys
 from jdatetime.jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
@@ -14,6 +15,11 @@ MAXYEAR = 9377
 
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
+
+if sys.version_info[0] >= 3:  # py3
+    _int_types = (int,)
+else:
+    _int_types = (int, long,)
 
 
 class time(py_datetime.time):
@@ -137,7 +143,7 @@ class date(object):
     __day = 0
 
     def _check_arg(self, value):
-        if type(value) is int or type(value) is long:
+        if not isinstance(value, _int_types):
             return True
         return False
 
