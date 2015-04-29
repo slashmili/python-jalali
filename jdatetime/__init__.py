@@ -19,7 +19,7 @@ tzinfo = py_datetime.tzinfo
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
 else:
-    _int_types = (int, long,)
+    _int_types = (int, long)
 
 
 class time(py_datetime.time):
@@ -143,7 +143,7 @@ class date(object):
     __day = 0
 
     def _check_arg(self, value):
-        if not isinstance(value, _int_types):
+        if isinstance(value, _int_types):
             return True
         return False
 
@@ -152,7 +152,7 @@ class date(object):
         if not (self._check_arg(year) and
                 self._check_arg(month) and
                 self._check_arg(day)):
-            raise TypeError("an integer is required")
+            raise TypeError("an integer is required" + repr(type(year)))
         if year < MINYEAR or year > MAXYEAR:
             raise ValueError("year is out of range")
         self.__year = year
@@ -404,7 +404,7 @@ class date(object):
 
     def weeknumber(self):
         """Return week number """
-        return self.yday() / 7
+        return self.yday() // 7
 
     def isocalendar(self):
         """Return a 3-tuple, (ISO year, ISO week number, ISO weekday)."""

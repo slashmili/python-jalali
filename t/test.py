@@ -77,12 +77,12 @@ class TestJDateTime(unittest.TestCase):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
         output = 'Jom Jomeh Ord Ordibehesht Jom Ord 23 00:00:00 1390 23 00 00 054 02 00 AM 00 6 7 02/23/90 00:00:00 90 1390 000000  '
-        self.assertEqual(True, s.strftime(string_format) == output)
+        self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
         output = 'Jom Jomeh Ord Ordibehesht Jom Ord 23 12:13:14 1390 23 12 12 054 02 13 AM 14 6 7 02/23/90 12:12:14 90 1390 000001'
-        self.assertEqual(True, dt.strftime(string_format) == output)
+        self.assertEqual(dt.strftime(string_format), output)
 
         class NYCTime(jdatetime.tzinfo):
             def utcoffset(self, dt):
