@@ -228,22 +228,6 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(True, jdt_teh == jdt_gmt)
 
-    def test_datetime_eq_raise_error_if_only_one_has_tz(self):
-        gmt = GMTTime()
-
-        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
-        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0)
-        with self.assertRaises(TypeError):
-            dt_teh == dt_gmt
-
-        jdt_gmt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=gmt)
-        jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0)
-
-        with self.assertRaises(TypeError):
-            jdt_teh == jdt_gmt
-
-
-
 
 if __name__ == "__main__":
     unittest.main()
