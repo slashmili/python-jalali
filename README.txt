@@ -2,6 +2,10 @@ jdatetime
 =========
 jdatetime is [Jalali](http://en.wikipedia.org/wiki/Iranian_calendar) implementation of Python's datetime module
 
+
+[![Build Status](https://travis-ci.org/slashmili/python-jalali.svg?branch=master)](https://travis-ci.org/slashmili/python-jalali)
+
+
 INSTALL
 -------
 Install it with easy_install
