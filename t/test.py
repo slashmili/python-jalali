@@ -211,15 +211,15 @@ class TestJDateTime(unittest.TestCase):
     def test_timetz(self):
         teh = TehranTime()
 
-        dt_gmt = datetime.datetime(2015, 06, 27, 1, 2, 3, tzinfo=teh)
+        dt_gmt = datetime.datetime(2015, 6, 27, 1, 2, 3, tzinfo=teh)
         self.assertEqual("01:02:03+03:30",dt_gmt.timetz().__str__())
 
     def test_datetime_eq_diff_tz(self):
         gmt = GMTTime()
         teh = TehranTime()
 
-        dt_gmt = datetime.datetime(2015, 06, 27, 0, 0, 0, tzinfo=gmt)
-        dt_teh = datetime.datetime(2015, 06, 27, 3, 30, 0, tzinfo=teh)
+        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
+        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0, tzinfo=teh)
         self.assertEqual(True, dt_teh == dt_gmt, "In standrd python datetime, __eq__ considers timezone")
 
         jdt_gmt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=gmt)
@@ -231,8 +231,8 @@ class TestJDateTime(unittest.TestCase):
     def test_datetime_eq_raise_error_if_only_one_has_tz(self):
         gmt = GMTTime()
 
-        dt_gmt = datetime.datetime(2015, 06, 27, 0, 0, 0, tzinfo=gmt)
-        dt_teh = datetime.datetime(2015, 06, 27, 3, 30, 0)
+        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
+        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0)
         with self.assertRaises(TypeError):
             dt_teh == dt_gmt
 
