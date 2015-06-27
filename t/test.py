@@ -10,6 +10,27 @@ BASEDIR = os.path.abspath(os.path.join(
 sys.path.insert(0, BASEDIR)
 import jdatetime
 
+class GMTTime(jdatetime.tzinfo):
+    def utcoffset(self, dt):
+        return jdatetime.timedelta(hours=0)
+
+    def tzname(self, dt):
+        return "GMT"
+
+    def dst(self, dt):
+        return jdatetime.timedelta(0)
+
+class TehranTime(jdatetime.tzinfo):
+    def utcoffset(self, dt):
+        return jdatetime.timedelta(hours=3, minutes=30)
+
+    def tzname(self, dt):
+        return "IRDT"
+
+    def dst(self, dt):
+        return jdatetime.timedelta(0)
+
+
 
 class TestJDateTime(unittest.TestCase):
     def test_today(self):
@@ -99,15 +120,6 @@ class TestJDateTime(unittest.TestCase):
         dt = jdatetime.datetime(1389, 2, 17, 19, 10, 2, tzinfo=nyc)
         self.assertEqual(True, dt.strftime("%Z %z") == "EDT -0400")
 
-        class TehranTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=3, minutes=30)
-
-            def tzname(self, dt):
-                return "IRDT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
         teh = TehranTime()
         dt = jdatetime.datetime(1389, 2, 17, 19, 10, 2, tzinfo=teh)
         self.assertEqual(True, dt.strftime("%Z %z") == "IRDT +0330")
@@ -198,41 +210,12 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(False, dt2 == dt1)
 
     def test_timetz(self):
-        class TehranTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=3, minutes=30)
-
-            def tzname(self, dt):
-                return "IRDT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
         teh = TehranTime()
 
         dt_gmt = datetime.datetime(2015, 06, 27, 1, 2, 3, tzinfo=teh)
         self.assertEqual("01:02:03+03:30",dt_gmt.timetz().__str__())
 
     def test_datetime_eq_diff_tz(self):
-        class GMTTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=0)
-
-            def tzname(self, dt):
-                return "GMT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
-
-        class TehranTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=3, minutes=30)
-
-            def tzname(self, dt):
-                return "IRDT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
-
         gmt = GMTTime()
         teh = TehranTime()
 
@@ -247,16 +230,6 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, jdt_teh == jdt_gmt)
 
     def test_datetime_eq_raise_error_if_only_one_has_tz(self):
-        class GMTTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=0)
-
-            def tzname(self, dt):
-                return "GMT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
-
         gmt = GMTTime()
 
         dt_gmt = datetime.datetime(2015, 06, 27, 0, 0, 0, tzinfo=gmt)
