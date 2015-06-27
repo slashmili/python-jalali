@@ -1,3 +1,8 @@
+1.6
+2015-06-27 Milad Rastian
+	* Fixed bug #11 related to jdatetime.datetime.__eq__() method for
+	datetime. Now it even supports matching two obj with different time zone
+
 1.5
 2015-04-29 Taha Jahangir <mtjahangir@gmail.com>
 	* Compatible with python 2.7/3.x

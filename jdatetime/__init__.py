@@ -9,7 +9,7 @@ import sys
 from jdatetime.jalali import GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
-__VERSION__ = "1.3"
+__VERSION__ = "1.6"
 MINYEAR = 1
 MAXYEAR = 9377
 
@@ -568,6 +568,7 @@ class datetime(date):
 
         return  "jdatetime.datetime(%s, %s, %s, %s, %s)"%(self.year, self.month, self.day,self.hour, self.minute)
 
+
     @staticmethod
     def today():
         """Current date or datetime"""
@@ -763,9 +764,7 @@ class datetime(date):
         if type(other_datetime) != datetime:
             return False
         if self.year == other_datetime.year and self.month == other_datetime.month and self.day == other_datetime.day:
-            return True
-        if self.hour == other_datetime.hour and self.minute == other_datetime.minute and self.second == other_datetime.second and self.microsecond == other_datetime.microsecond and self.tzinfo == self.other_datetime.tzinfo:
-            return True
+            return self.timetz() == other_datetime.timetz() and self.microsecond == other_datetime.microsecond
         return False
 
     def __ge__(self, other_datetime):
@@ -928,6 +927,7 @@ class datetime(date):
 
     def timetz(self):
         """Return time object with same time and tzinfo."""
+        return self.__time
 
     def tzname(self):
         """Return self.tzinfo.tzname(self)"""

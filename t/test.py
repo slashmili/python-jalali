@@ -9,6 +9,27 @@ BASEDIR = os.path.abspath(os.path.join(
 sys.path.insert(0, BASEDIR)
 import jdatetime
 
+class GMTTime(jdatetime.tzinfo):
+    def utcoffset(self, dt):
+        return jdatetime.timedelta(hours=0)
+
+    def tzname(self, dt):
+        return "GMT"
+
+    def dst(self, dt):
+        return jdatetime.timedelta(0)
+
+class TehranTime(jdatetime.tzinfo):
+    def utcoffset(self, dt):
+        return jdatetime.timedelta(hours=3, minutes=30)
+
+    def tzname(self, dt):
+        return "IRDT"
+
+    def dst(self, dt):
+        return jdatetime.timedelta(0)
+
+
 
 class TestJDateTime(unittest.TestCase):
     def test_today(self):
@@ -98,15 +119,6 @@ class TestJDateTime(unittest.TestCase):
         dt = jdatetime.datetime(1389, 2, 17, 19, 10, 2, tzinfo=nyc)
         self.assertEqual(True, dt.strftime("%Z %z") == "EDT -0400")
 
-        class TehranTime(jdatetime.tzinfo):
-            def utcoffset(self, dt):
-                return jdatetime.timedelta(hours=3, minutes=30)
-
-            def tzname(self, dt):
-                return "IRDT"
-
-            def dst(self, dt):
-                return jdatetime.timedelta(0)
         teh = TehranTime()
         dt = jdatetime.datetime(1389, 2, 17, 19, 10, 2, tzinfo=teh)
         self.assertEqual(True, dt.strftime("%Z %z") == "IRDT +0330")
@@ -177,4 +189,45 @@ class TestJDateTime(unittest.TestCase):
         dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
 
         self.assertEqual(True, dt1 == dt2)
-unittest.main()
+
+    def test_datetime_eq(self):
+        date_string = "1363-6-6 12:13:14"
+        date_format = "%Y-%m-%d %H:%M:%S"
+
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+
+        date_string = "1364-6-6 12:13:14"
+        dt2 = jdatetime.datetime.strptime(date_string, date_format)
+
+        self.assertEqual(False, dt2 == dt1)
+
+    def test_datetime_eq_now(self):
+        import time
+        dt1 = jdatetime.datetime.now()
+        time.sleep(0.1)
+        dt2 = jdatetime.datetime.now()
+        self.assertEqual(False, dt2 == dt1)
+
+    def test_timetz(self):
+        teh = TehranTime()
+
+        dt_gmt = datetime.datetime(2015, 6, 27, 1, 2, 3, tzinfo=teh)
+        self.assertEqual("01:02:03+03:30",dt_gmt.timetz().__str__())
+
+    def test_datetime_eq_diff_tz(self):
+        gmt = GMTTime()
+        teh = TehranTime()
+
+        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
+        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0, tzinfo=teh)
+        self.assertEqual(True, dt_teh == dt_gmt, "In standrd python datetime, __eq__ considers timezone")
+
+        jdt_gmt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=gmt)
+
+        jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=teh)
+
+        self.assertEqual(True, jdt_teh == jdt_gmt)
+
+
+if __name__ == "__main__":
+    unittest.main()
