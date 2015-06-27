@@ -757,9 +757,8 @@ class datetime(date):
         if type(other_datetime) != datetime:
             return False
         if self.year == other_datetime.year and self.month == other_datetime.month and self.day == other_datetime.day:
-            return True
-        if self.hour == other_datetime.hour and self.minute == other_datetime.minute and self.second == other_datetime.second and self.microsecond == other_datetime.microsecond and self.tzinfo == self.other_datetime.tzinfo:
-            return True
+            if self.hour == other_datetime.hour and self.minute == other_datetime.minute and self.second == other_datetime.second and self.microsecond == other_datetime.microsecond and self.tzinfo == other_datetime.tzinfo:
+                return True
         return False
 
     def __ge__(self, other_datetime):

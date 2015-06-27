@@ -191,7 +191,9 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(False, dt2 == dt1)
 
     def test_datetime_eq_now(self):
+        import time
         dt1 = jdatetime.datetime.now()
+        time.sleep(0.1)
         dt2 = jdatetime.datetime.now()
         self.assertEqual(False, dt2 == dt1)
 
