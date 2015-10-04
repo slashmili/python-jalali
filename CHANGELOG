@@ -1,3 +1,8 @@
+1.7
+2015-10-04 Milad Rastian
+	* Added support for substracting two date objects. Check issue #17 for
+	more details
+
 1.6
 2015-06-27 Milad Rastian
 	* Fixed bug #11 related to jdatetime.datetime.__eq__() method for
