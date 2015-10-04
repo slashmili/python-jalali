@@ -229,5 +229,18 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, jdt_teh == jdt_gmt)
 
 
+    def test_datetime_subtract_timedelta(self):
+        date_1395 = jdatetime.datetime(1395,1,1)
+        day_before = date_1395 - jdatetime.timedelta(days=1)
+
+        self.assertEqual(day_before, jdatetime.datetime(1394, 12, 29, 0, 0))
+
+    def test_datetime_subtract_two_dates(self):
+        date_1394 = jdatetime.datetime(1394,1,1)
+        date_1395 = jdatetime.datetime(1395,1,1)
+        day_diff = date_1395 - date_1394
+
+        self.assertEqual(day_diff, datetime.timedelta(365))
+
 if __name__ == "__main__":
     unittest.main()
