@@ -870,16 +870,27 @@ class datetime(date):
 
         return datetime.fromgregorian(datetime=new_gdatetime)
 
-    def __sub__(self, timedelta):
+    def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
-        if not isinstance(timedelta, py_datetime.timedelta):
-            raise TypeError(
-                "unsupported operand type(s) for -: '%s' and '%s'" %
-                (type(self), type(timedelta)))
+        if isinstance(other, py_datetime.timedelta):
+            return self.__calculation_on_timedelta('__sub__', other)
+        if isinstance(other, datetime):
+            return self.__calculation_on_datetime('__sub__', other)
+        raise TypeError(
+            "unsupported operand type(s) for -: '%s' and '%s'" %
+            (type(self), type(other)))
+
+    def __calculation_on_timedelta(self, action, timedelta):
         gdatetime = self.togregorian()
-        new_gdatetime = gdatetime - timedelta
+        new_gdatetime = getattr(gdatetime, action)(timedelta)
 
         return datetime.fromgregorian(datetime=new_gdatetime)
+
+    def __calculation_on_datetime(self, action, another_datetime):
+        self_gdatetime = self.togregorian()
+        another_gdatetime = another_datetime.togregorian()
+
+        return getattr(self_gdatetime, action)(another_gdatetime)
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
