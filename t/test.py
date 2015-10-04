@@ -269,5 +269,46 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(day_diff, datetime.timedelta(-365))
 
+    def test_date_raise_exception_on_invalid_calculation(self):
+        date_1395 = jdatetime.date(1395,1,1)
+
+        with self.assertRaises(TypeError):
+            day_before = date_1395 - 1
+
+        with self.assertRaises(TypeError):
+            day_before = date_1395 + 1
+
+        with self.assertRaises(TypeError):
+            day_before = jdatetime.timedelta(days=1) - date_1395
+
+        with self.assertRaises(TypeError):
+            day_before = date_1395 + date_1395
+
+    def test_date_calculation_on_timedelta(self):
+        date_1395 = jdatetime.date(1395,1,1)
+        day_before = date_1395 - jdatetime.timedelta(days=1)
+        day_after = date_1395 + jdatetime.timedelta(days=1)
+
+        self.assertEqual(day_before, jdatetime.date(1394, 12, 29))
+        self.assertEqual(day_after, jdatetime.date(1395, 1, 2))
+
+        day_after = jdatetime.timedelta(days=1) + date_1395
+
+        self.assertEqual(day_before, jdatetime.date(1394, 12, 29))
+        self.assertEqual(day_after, jdatetime.date(1395, 1, 2))
+
+    def test_date_calculation_on_two_dates(self):
+        date_1394 = jdatetime.date(1394,1,1)
+        date_1395 = jdatetime.date(1395,1,1)
+
+        day_diff = date_1395 - date_1394
+
+        self.assertEqual(day_diff, datetime.timedelta(365))
+
+
+        day_diff = date_1394 - date_1395
+
+        self.assertEqual(day_diff, datetime.timedelta(-365))
+
 if __name__ == "__main__":
     unittest.main()
