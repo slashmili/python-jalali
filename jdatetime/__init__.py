@@ -894,8 +894,8 @@ class datetime(date):
             return self.__calculation_on_datetime('__rsub__', other)
 
         raise TypeError(
-                "unsupported operand type for -: '%s' and '%s'" %
-                (type(other), type(self)))
+            "unsupported operand type for -: '%s' and '%s'" %
+            (type(other), type(self)))
 
     def __calculation_on_timedelta(self, action, timedelta):
         gdatetime = self.togregorian()
