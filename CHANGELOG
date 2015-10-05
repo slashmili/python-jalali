@@ -1,3 +1,7 @@
+1.7.1
+2015-10-05 Milad Rastian
+	* added markdown as the description file
+
 1.7
 2015-10-04 Milad Rastian
 	* Added support for substracting two date objects. Check issue #17 for
