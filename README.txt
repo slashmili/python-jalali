@@ -4,7 +4,8 @@ jdatetime is [Jalali](http://en.wikipedia.org/wiki/Iranian_calendar) implementat
 
 
 [![Build Status](https://travis-ci.org/slashmili/python-jalali.svg?branch=master)](https://travis-ci.org/slashmili/python-jalali)
-
+[![PyPi] (https://img.shields.io/pypi/v/jdatetime.svg)](https://pypi.python.org/pypi/jdatetime)
+[![PyPi Downloads] (https://img.shields.io/pypi/dm/jdatetime.svg)](https://pypi.python.org/pypi/jdatetime)
 
 INSTALL
 -------
