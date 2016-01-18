@@ -851,7 +851,7 @@ class datetime(date):
 
         t_tz = self.tzinfo
         if tzinfo is not None:
-            t_tz = t_tz
+            t_tz = tzinfo
         return datetime(
             t_year,
             t_month,
