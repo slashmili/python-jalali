@@ -9,5 +9,5 @@ setup(
         platforms='any',
         description=("Jalali datetime binding for python"),
         url="https://github.com/slashmili/python-jalali",
-        long_description=open('README.rst').read()
+        long_description=open('README').read()
 )
