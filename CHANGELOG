@@ -1,3 +1,11 @@
+1.7.4
+2016-02-22 mrash14
+	* Fixed the README.rst not available during installation
+
+1.7.3
+2016-02-22 mrash14
+	* Converted README to rst format
+
 1.7.2
 2016-01-18 mrash14
 	* Update datetime replace function
