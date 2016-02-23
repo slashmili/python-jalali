@@ -10,7 +10,7 @@ from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
-__VERSION__ = "1.7.1"
+__VERSION__ = "1.7.4"
 MINYEAR = 1
 MAXYEAR = 9377
 
