@@ -54,6 +54,10 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, today + jdatetime.timedelta(days=1) > today)
         self.assertEqual(True, today + jdatetime.timedelta(days=30) >= today)
         self.assertEqual(True, today == today)
+        self.assertEqual(False, today > today)
+        self.assertEqual(False, today < today)
+        self.assertEqual(True, today >= today)
+        self.assertEqual(True, today <= today)
         not_today = jdatetime.date(today.year,
                                    today.month,
                                    today.day) + jdatetime.timedelta(days=1)
