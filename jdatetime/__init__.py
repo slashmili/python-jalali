@@ -22,6 +22,7 @@ if sys.version_info[0] >= 3:  # py3
 else:
     _int_types = (int, long)
 
+FA_LOCALE = 'fa_IR'
 
 class time(py_datetime.time):
 
@@ -58,20 +59,20 @@ class date(object):
                          'Bah',
                          'Esf']
 
-    j_weekdays_en = ['Shanbeh',
-                     'Yekshanbeh',
-                     'Doshanbeh',
-                     'SehShanbeh',
-                     'Chaharshanbeh',
-                     'Panjshanbeh',
-                     'Jomeh']
-    j_weekdays_short_en = ['Sha',
-                           'Yek',
-                           'Dos',
-                           'Seh',
-                           'Cha',
-                           'Pan',
-                           'Jom']
+    j_weekdays_en = ['Saturday',
+                     'Sunday',
+                     'Monday',
+                     'Tuesday',
+                     'Wednesday',
+                     'Thursday',
+                     'Friday']
+    j_weekdays_short_en = ['Sat',
+                           'Sun',
+                           'Mon',
+                           'Tue',
+                           'Wed',
+                           'Thu',
+                           'Fri']
     j_ampm_en = {'PM': 'PM', 'AM': 'AM'}
 
     j_months_fa = [u'فروردین',
@@ -86,18 +87,6 @@ class date(object):
                    u'دی',
                    u'بهمن',
                    u'اسفند']
-    j_months_short_fa = [u'فرو',
-                         u'ارد',
-                         u'خرد',
-                         u'تیر',
-                         u'مهر',
-                         u'شهر',
-                         u'مهر',
-                         u'آبا',
-                         u'آذر',
-                         u'دی',
-                         u'بهم',
-                         u'اسف']
 
     j_weekdays_fa = [u'شنبه',
                      u'یکشنبه',
@@ -106,27 +95,7 @@ class date(object):
                      u'چهارشنبه',
                      u'پنجشنبه',
                      u'جمعه']
-    j_weekdays_short_fa = [u'شنب',
-                           u'یک',
-                           u'دو',
-                           u'سه',
-                           u'چهار',
-                           u'پنج',
-                           u'جمع']
     j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
-
-    if 'fa_IR' in _locale.getdefaultlocale():
-        j_months = j_months_fa
-        j_months_short = j_months_short_fa
-        j_weekdays = j_weekdays_fa
-        j_weekdays_short = j_weekdays_short_fa
-        j_ampm = j_ampm_fa
-    else:
-        j_months = j_months_en
-        j_months_short = j_months_short_en
-        j_weekdays = j_weekdays_en
-        j_weekdays_short = j_weekdays_short_en
-        j_ampm = j_ampm_en
 
     @property
     def year(self):
@@ -173,6 +142,29 @@ class date(object):
         elif day > j_days_in_month[self.__month - 1]:
             raise ValueError("day is out of range for month")
         self.__day = day
+
+        if self._is_fa_locale():
+            self.j_months = self.j_months_fa
+            self.j_months_short = self.j_months_fa
+            self.j_weekdays = self.j_weekdays_fa
+            self.j_weekdays_short = self.j_weekdays_fa
+            self.j_ampm = self.j_ampm_fa
+        else:
+            self.j_months = self.j_months_en
+            self.j_months_short = self.j_months_short_en
+            self.j_weekdays = self.j_weekdays_en
+            self.j_weekdays_short = self.j_weekdays_short_en
+            self.j_ampm = self.j_ampm_en
+
+    def _is_fa_locale(self):
+        if FA_LOCALE in _locale.getlocale():
+            return True
+        if None not in _locale.getlocale():
+            return False
+        if FA_LOCALE in _locale.getdefaultlocale():
+            return True
+        return False
+
 
     """The smallest possible difference between
     non-equal date objects, timedelta(days=1)."""

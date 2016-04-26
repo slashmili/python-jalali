@@ -37,6 +37,26 @@ Also these methods are addedd to jdatetime.date and jdatetime.datetime :
     |      algortim is based on http://en.wikipedia.org/wiki/Leap_year
     
     
+Locale
+------
+In order to get the date string in farsi you need to set the locale
+
+.. code:: shell
+
+    $ python
+    Python 2.7.9 (default, Mar  1 2015, 12:57:24)
+    [GCC 4.9.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    (InteractiveConsole)
+    >>> import locale
+    >>> import jdatetime
+    >> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+    'Sun, 05 Ord 1395 17:26:22'
+    >>> locale.setlocale(locale.LC_ALL, "fa_IR")
+    'fa_IR'
+    >>> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+    'یکشنبه, 05 اردیبشهت 1395 17:26:34'
+
 Example
 -------
 
