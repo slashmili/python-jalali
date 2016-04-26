@@ -24,6 +24,7 @@ else:
 
 FA_LOCALE = 'fa_IR'
 
+
 class time(py_datetime.time):
 
     def __repr__(self):
@@ -164,7 +165,6 @@ class date(object):
         if FA_LOCALE in _locale.getdefaultlocale():
             return True
         return False
-
 
     """The smallest possible difference between
     non-equal date objects, timedelta(days=1)."""
