@@ -3,6 +3,10 @@
 	* Change the result locale base on locale set in locale.setlocale
 	* If locale is set to fa_IR, always returns full week day/month name even if %a or %b is used
 
+1.7.5
+2016-04-23 hsamadi
+	* Fixed a bug related to comparing date
+
 1.7.4
 2016-02-22
 	* Fix the README.rst not available during installation

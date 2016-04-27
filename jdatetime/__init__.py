@@ -338,7 +338,7 @@ class date(object):
                 "unsupported operand type for <=: '%s'" %
                 (type(other_date)))
 
-        return not self.__ge__(other_date)
+        return not self.__gt__(other_date)
 
     def __lt__(self, other_date):
         """x.__lt__(y) <==> x<y"""
@@ -347,7 +347,7 @@ class date(object):
                 "unsupported operand type for <: '%s'" %
                 (type(other_date)))
 
-        return not self.__gt__(other_date)
+        return not self.__ge__(other_date)
 
     def __ne__(self, other_date):
         """x.__ne__(y) <==> x!=y"""
