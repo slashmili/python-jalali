@@ -1,4 +1,3 @@
-sudo: false
 language: python
 install:
   - pip install pep8 --use-mirrors
@@ -10,6 +9,7 @@ python:
     - "3.4"
 before_script:
   - "pep8 --ignore=E501  jdatetime/__init__.py"
+  - sudo locale-gen fa_IR
 script: python t/test.py
 matrix:
     allow_failures:

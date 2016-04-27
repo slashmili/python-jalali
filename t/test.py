@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 import datetime
 import time
@@ -8,6 +9,7 @@ BASEDIR = os.path.abspath(os.path.join(
                           ".."))
 sys.path.insert(0, BASEDIR)
 import jdatetime
+import locale
 
 class GMTTime(jdatetime.tzinfo):
     def utcoffset(self, dt):
@@ -101,12 +103,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = 'Jom Jomeh Ord Ordibehesht Jom Ord 23 00:00:00 1390 23 00 00 054 02 00 AM 00 6 7 02/23/90 00:00:00 90 1390 000000  '
+        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 00 054 02 00 AM 00 6 7 02/23/90 00:00:00 90 1390 000000  '
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = 'Jom Jomeh Ord Ordibehesht Jom Ord 23 12:13:14 1390 23 12 12 054 02 13 AM 14 6 7 02/23/90 12:12:14 90 1390 000001'
+        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 AM 14 6 7 02/23/90 12:12:14 90 1390 000001'
         self.assertEqual(dt.strftime(string_format), output)
 
         class NYCTime(jdatetime.tzinfo):
@@ -313,6 +315,18 @@ class TestJDateTime(unittest.TestCase):
         day_diff = date_1394 - date_1395
 
         self.assertEqual(day_diff, datetime.timedelta(-365))
+
+    def test_with_none_locale_set(self):
+        locale.resetlocale()
+        day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
+
+        self.assertEqual(day_of_week, "Mon")
+
+    def test_with_fa_locale(self):
+        locale.setlocale(locale.LC_ALL, "fa_IR")
+        day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
+
+        self.assertEqual(day_of_week, u"دوشنبه")
 
 if __name__ == "__main__":
     unittest.main()

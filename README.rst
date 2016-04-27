@@ -35,8 +35,9 @@ Also these methods are addedd to jdatetime.date and jdatetime.datetime :
     |  isleap(self)
     |      check if year is leap year
     |      algortim is based on http://en.wikipedia.org/wiki/Leap_year
-    
-    
+
+
+
 Example
 -------
 
@@ -52,5 +53,25 @@ Example
     jdatetime.datetime(1394, 12, 4, 8, 37, 31, 855729)
     >>> jdatetime.date.today()
     jdatetime.date(1394, 12, 4)
-    
+
+Locale
+------
+In order to get the date string in farsi you need to set the locale to fa_IR
+
+.. code:: shell
+
+    $ python
+    Python 2.7.9 (default, Mar  1 2015, 12:57:24)
+    [GCC 4.9.2] on linux2
+    Type "help", "copyright", "credits" or "license" for more information.
+    (InteractiveConsole)
+    >>> import locale
+    >>> import jdatetime
+    >> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+    u'Wed, 08 Ord 1395 20:47:32'
+    >>> locale.setlocale(locale.LC_ALL, "fa_IR")
+    'fa_IR'
+    >>> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
+    u'\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647, 08 \u0627\u0631\u062f\u06cc\u0628\u0647\u0634\u062a 1395 20:47:56'
+
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
