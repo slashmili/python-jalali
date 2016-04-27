@@ -1,10 +1,15 @@
+1.8.0
+2016-02-27
+	* Change the result locale base on locale set in locale.setlocale
+	* If locale is set to fa_IR, always returns full week day/month name even if %a or %b is used
+
 1.7.4
-2016-02-22 mrash14
-	* Fixed the README.rst not available during installation
+2016-02-22
+	* Fix the README.rst not available during installation
 
 1.7.3
-2016-02-22 mrash14
-	* Converted README to rst format
+2016-02-22
+	* Convert README to rst format
 
 1.7.2
 2016-01-18 mrash14
@@ -12,16 +17,16 @@
 
 1.7.1
 2015-10-05 Milad Rastian
-	* added markdown as the description file
+	* add markdown as the description file
 
 1.7
 2015-10-04 Milad Rastian
-	* Added support for substracting two date objects. Check issue #17 for
+	* Add support for substracting two date objects. Check issue #17 for
 	more details
 
 1.6
 2015-06-27 Milad Rastian
-	* Fixed bug #11 related to jdatetime.datetime.__eq__() method for
+	* Fix bug #11 related to jdatetime.datetime.__eq__() method for
 	datetime. Now it even supports matching two obj with different time zone
 
 1.5
