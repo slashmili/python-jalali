@@ -328,5 +328,9 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(day_of_week, u"دوشنبه")
 
+    def test_datetime_to_str(self):
+        date = jdatetime.datetime(1394, 1, 1, 0, 0, 0)
+        self.assertEqual(str(date), "1394-01-01 00:00:00")
+
 if __name__ == "__main__":
     unittest.main()
