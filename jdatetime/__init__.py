@@ -10,7 +10,7 @@ from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
-__VERSION__ = "1.8.0"
+__VERSION__ = "1.8.1"
 MINYEAR = 1
 MAXYEAR = 9377
 
@@ -1107,4 +1107,4 @@ class datetime(date):
         else:
             mil = "." + mil
         tz = self.strftime("%z")
-        return self.strftime("%Y-%m-%d%H:%M:%S") + "%s%s" % (mil, tz)
+        return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
