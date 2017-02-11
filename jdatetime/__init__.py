@@ -442,6 +442,13 @@ class date(object):
         #           '%a': lambda: self.j_weekdays_short[self.weekday()]
         # }
         # find all %[a-zA-Z] and call method if it in formats
+
+        # convert to unicode
+        try:
+            format = format.decode('utf-8')
+        except:
+            pass
+
         format = format.replace("%a", self.j_weekdays_short[self.weekday()])
 
         format = format.replace("%A", self.j_weekdays[self.weekday()])
