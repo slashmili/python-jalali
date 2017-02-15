@@ -107,8 +107,13 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
-        string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
+        unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
         output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 AM 14 6 7 02/23/90 12:12:14 90 1390 000001'
+        self.assertEqual(dt.strftime(unicode_format), output)
+
+        dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
+        string_format = u"ﺱﺎﻟ = %y، ﻡﺎﻫ = %m، ﺭﻭﺯ = %d"
+        output = u"ﺱﺎﻟ = 90، ﻡﺎﻫ = 02، ﺭﻭﺯ = 23"
         self.assertEqual(dt.strftime(string_format), output)
 
         class NYCTime(jdatetime.tzinfo):
