@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
         name='jdatetime',
-        version='1.8.1',
+        version='1.8.2',
         packages=['jdatetime',],
         license='Python Software Foundation License',
         keywords='Jalali implementation of Python datetime',
