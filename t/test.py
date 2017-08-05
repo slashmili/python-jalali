@@ -323,10 +323,16 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(day_diff, datetime.timedelta(-365))
 
     def test_with_none_locale_set(self):
-        locale.resetlocale()
+        self.reset_locale()
         day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
 
         self.assertEqual(day_of_week, "Mon")
+
+    def reset_locale(self):
+        if platform.system() == 'Windows':
+            locale.setlocale(locale.LC_ALL, 'English_United States')
+        else:
+            locale.resetlocale()
 
     def test_with_fa_locale(self):
         self.set_fa_locale()
