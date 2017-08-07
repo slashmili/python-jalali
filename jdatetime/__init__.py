@@ -6,6 +6,7 @@
 from __future__ import unicode_literals
 import datetime as py_datetime
 import sys
+import platform
 from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
@@ -22,7 +23,10 @@ if sys.version_info[0] >= 3:  # py3
 else:
     _int_types = (int, long)
 
-FA_LOCALE = 'fa_IR'
+if platform.system() == 'Windows':
+    FA_LOCALE = 'Persian_Iran'
+else:
+    FA_LOCALE = 'fa_IR'
 
 
 class time(py_datetime.time):

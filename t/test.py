@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import unittest
 import datetime
+import platform
 import time
 import os
 import sys
@@ -322,16 +323,28 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(day_diff, datetime.timedelta(-365))
 
     def test_with_none_locale_set(self):
-        locale.resetlocale()
+        self.reset_locale()
         day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
 
         self.assertEqual(day_of_week, "Mon")
 
+    def reset_locale(self):
+        if platform.system() == 'Windows':
+            locale.setlocale(locale.LC_ALL, 'English_United States')
+        else:
+            locale.resetlocale()
+
     def test_with_fa_locale(self):
-        locale.setlocale(locale.LC_ALL, "fa_IR")
+        self.set_fa_locale()
         day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
 
         self.assertEqual(day_of_week, u"دوشنبه")
+
+    def set_fa_locale(self):
+        if platform.system() == 'Windows':
+            locale.setlocale(locale.LC_ALL, 'Persian')
+        else:
+            locale.setlocale(locale.LC_ALL, "fa_IR")
 
     def test_datetime_to_str(self):
         date = jdatetime.datetime(1394, 1, 1, 0, 0, 0)
