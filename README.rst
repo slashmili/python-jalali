@@ -8,7 +8,7 @@ Status
 .. image:: https://travis-ci.org/slashmili/python-jalali.svg?branch=master
     :target: https://travis-ci.org/slashmili/python-jalali
 
-.. image:: https://ci.appveyor.com/api/projects/status/github/slashmili/python-jalali/master
+.. image:: https://ci.appveyor.com/api/projects/status/ge5rk703ydx649a6?svg=true
    :target: https://ci.appveyor.com/project/slashmili/python-jalali
 
 .. image:: https://img.shields.io/pypi/v/jdatetime.svg
