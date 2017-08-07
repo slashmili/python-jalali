@@ -1,3 +1,7 @@
+1.9.0
+2017-08-07 mehdisadeghi
+	* Support locale format on Windows
+
 1.8.2
 2017-02-16
 	* add suport unicode format in `strftime` method(for python 2.x)
