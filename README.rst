@@ -14,7 +14,6 @@ Status
 .. image:: https://img.shields.io/pypi/v/jdatetime.svg
    :target: https://pypi.python.org/pypi/jdatetime
 
-.. image:: https://img.shields.io/pypi/dm/jdatetime.svg
 
 Install
 -------
