@@ -11,7 +11,7 @@ from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
-__VERSION__ = "1.8.2"
+__VERSION__ = "1.9.1"
 MINYEAR = 1
 MAXYEAR = 9377
 
@@ -537,7 +537,7 @@ class date(object):
 
         try:
             sign = "+"
-            diff = self.tzinfo.utcoffset(self.tzinfo)
+            diff = self.tzinfo.utcoffset(self)
             diff_sec = diff.seconds
             if diff.days > 0 or diff.days < -1:
                 raise ValueError(
@@ -555,7 +555,7 @@ class date(object):
             format = format.replace("%z", '')
 
         try:
-            format = format.replace("%Z", self.tzinfo.tzname(self.tzinfo))
+            format = format.replace("%Z", self.tzinfo.tzname(self))
         except AttributeError:
             format = format.replace("%Z", '')
 

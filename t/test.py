@@ -350,5 +350,16 @@ class TestJDateTime(unittest.TestCase):
         date = jdatetime.datetime(1394, 1, 1, 0, 0, 0)
         self.assertEqual(str(date), "1394-01-01 00:00:00")
 
+    def test_with_pytz(self):
+        try:
+            import pytz
+            from pytz import timezone
+        except:
+            pytz = None
+        if pytz:
+            tehran = timezone('Asia/Tehran')
+            date = jdatetime.datetime(1394, 1, 1, 0, 0, 0, tzinfo=tehran)
+            self.assertEqual(str(date), "1394-01-01 00:00:00+0326")
+
 if __name__ == "__main__":
     unittest.main()
