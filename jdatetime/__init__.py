@@ -11,6 +11,7 @@ from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
 import re as _re
 import locale as _locale
+
 __VERSION__ = "1.9.1"
 MINYEAR = 1
 MAXYEAR = 9377
@@ -118,6 +119,8 @@ class date(object):
     __month = 0
     __day = 0
 
+    locale = None
+
     def _check_arg(self, value):
         if isinstance(value, _int_types):
             return True
@@ -162,11 +165,18 @@ class date(object):
             self.j_ampm = self.j_ampm_en
 
     def _is_fa_locale(self):
-        if FA_LOCALE in _locale.getlocale():
+        """
+        Finds if current locale is FA_LOCALE or not
+        :return:
+        """
+        app_locale = _locale.getlocale()
+        sys_locale = _locale.getdefaultlocale()
+        obj_locale = (self.locale, 'UTF-8',)
+        if obj_locale and FA_LOCALE in obj_locale:
             return True
-        if None not in _locale.getlocale():
-            return False
-        if FA_LOCALE in _locale.getdefaultlocale():
+        if FA_LOCALE in app_locale:
+            return True
+        if FA_LOCALE in sys_locale:
             return True
         return False
 
@@ -178,6 +188,7 @@ class date(object):
     # min = date(MINYEAR, 1, 1)
     # TODO fixed errror:  name 'date' is not defined
     """The latest representable date, date(MAXYEAR, 12, 31)."""
+
     # max = date(MAXYEAR, 12,29)
 
     def isleap(self):
@@ -300,8 +311,8 @@ class date(object):
         if not isinstance(other_date, date):
             return False
         if self.year == other_date.year and \
-           self.month == other_date.month and \
-           self.day == other_date.day:
+                self.month == other_date.month and \
+                self.day == other_date.day:
             return True
         return False
 
@@ -451,13 +462,25 @@ class date(object):
     # TODO: create jtime !
     # def timetuple(self):
     #    pass
-    def strftime(self, format):
+    def strftime(self, format, locale=None):
         """format -> strftime() style string."""
         # TODO: change stupid str.replace
         # formats = {
         #           '%a': lambda: self.j_weekdays_short[self.weekday()]
         # }
         # find all %[a-zA-Z] and call method if it in formats
+
+        #   re-check locale param and _is_fa_locale()
+        #   to see if locale is set in object or
+        #   at strftime run time.
+        #   This allows to be more flexible when working with strftime and
+        #   eliminates the need to change env or python level locale settings.
+        if self._is_fa_locale() or FA_LOCALE in [locale]:
+            self.j_months = self.j_months_fa
+            self.j_months_short = self.j_months_fa
+            self.j_weekdays = self.j_weekdays_fa
+            self.j_weekdays_short = self.j_weekdays_fa
+            self.j_ampm = self.j_ampm_fa
 
         # convert to unicode
         try:
@@ -550,7 +573,7 @@ class date(object):
             diff_min = tmp_min % 60
             format = format.replace(
                 "%z", '%s%02.d%02.d' %
-                (sign, diff_hour, diff_min))
+                      (sign, diff_hour, diff_min))
         except AttributeError:
             format = format.replace("%z", '')
 
@@ -933,8 +956,8 @@ class datetime(date):
         if not isinstance(other_datetime, datetime):
             return False
         if self.year == other_datetime.year and \
-           self.month == other_datetime.month and \
-           self.day == other_datetime.day:
+                self.month == other_datetime.month and \
+                self.day == other_datetime.day:
             return self.timetz() == other_datetime.timetz(
             ) and self.microsecond == other_datetime.microsecond
         return False
@@ -955,13 +978,13 @@ class datetime(date):
                 self.minute,
                 self.second,
                 self.microsecond) >= \
-            (other_datetime.year,
-             other_datetime.month,
-             other_datetime.day,
-             other_datetime.hour,
-             other_datetime.minute,
-             other_datetime.second,
-             other_datetime.microsecond)
+               (other_datetime.year,
+                other_datetime.month,
+                other_datetime.day,
+                other_datetime.hour,
+                other_datetime.minute,
+                other_datetime.second,
+                other_datetime.microsecond)
 
     def __gt__(self, other_datetime):
         """x.__gt__(y) <==> x>y"""
@@ -979,13 +1002,13 @@ class datetime(date):
                 self.minute,
                 self.second,
                 self.microsecond) > \
-            (other_datetime.year,
-             other_datetime.month,
-             other_datetime.day,
-             other_datetime.hour,
-             other_datetime.minute,
-             other_datetime.second,
-             other_datetime.microsecond)
+               (other_datetime.year,
+                other_datetime.month,
+                other_datetime.day,
+                other_datetime.hour,
+                other_datetime.minute,
+                other_datetime.second,
+                other_datetime.microsecond)
 
     def __hash__(self):
         """x.__hash__() <==> hash(x)"""
