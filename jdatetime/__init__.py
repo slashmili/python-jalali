@@ -1166,4 +1166,3 @@ class datetime(date):
             mil = "." + mil
         tz = self.strftime("%z")
         return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
-
