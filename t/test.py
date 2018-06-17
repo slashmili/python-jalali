@@ -8,6 +8,12 @@ import threading
 import locale
 import unittest
 
+try:
+    import greenlet
+    greenlet_installed = True
+except ImportError:
+    greenlet_installed = False
+
 BASEDIR = os.path.abspath(os.path.join(
                           os.path.dirname(os.path.abspath(__file__)),
                           ".."))
@@ -380,6 +386,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
     def test_get_locale_returns_none_if_no_locale_set_yet(self):
         self.assertIsNone(jdatetime.get_locale())
 
+    @unittest.skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
     def test_set_locale_is_per_thread_with_no_effect_on_other_threads(self):
         event = threading.Event()
         fa_record = []
@@ -399,6 +406,34 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
         self.assertEqual('nl_NL', nl_record[0])
         self.assertIsNone(jdatetime.get_locale())  # MainThread is not affected neither
 
+    @unittest.skipUnless(greenlet_installed, 'greenelts ident is used when greenlet module is installed')
+    def test_set_locale_is_per_greenlet_with_no_effect_on_other_greenlets(self):
+        fa_record = []
+
+        def record_greenlet_locale_fa():
+            jdatetime.set_locale('fa_IR')
+            nl_greenlet.switch()
+            fa_record.append(jdatetime.get_locale())
+            nl_greenlet.switch()
+
+        nl_record = []
+
+        def record_greenlet_locale_nl():
+            jdatetime.set_locale('nl_NL')
+            fa_greenlet.switch()
+            nl_record.append(jdatetime.get_locale())
+            fa_greenlet.switch()
+
+        fa_greenlet = greenlet.greenlet(record_greenlet_locale_fa)
+        nl_greenlet = greenlet.greenlet(record_greenlet_locale_nl)
+        fa_greenlet.switch()
+
+        self.assertEqual(1, len(fa_record))
+        self.assertEqual('fa_IR', fa_record[0])
+        self.assertEqual(1, len(nl_record))
+        self.assertEqual('nl_NL', nl_record[0])
+
+    @unittest.skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
     def test_set_locale_sets_default_locale_for_date_objects(self):
         def record_locale_formatted_date(record, locale):
             jdatetime.set_locale(locale)
@@ -410,6 +445,20 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
         fa_th = threading.Thread(target=record_locale_formatted_date, args=(fa_record, 'fa_IR'))
         fa_th.start()
         fa_th.join()
+
+        self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
+
+    @unittest.skipUnless(greenlet_installed, 'greenlets ident is used when greenlet module is installed')
+    def test_set_locale_sets_default_locale_for_date_objects_with_greenlets(self):
+        def record_locale_formatted_date(record, locale):
+            jdatetime.set_locale(locale)
+            dt = jdatetime.date(1397, 3, 27)
+            record.append(dt.strftime('%A'))
+            record.append(dt.strftime('%B'))
+
+        fa_record = []
+        fa_greenlet = greenlet.greenlet(record_locale_formatted_date)
+        fa_greenlet.switch(fa_record, 'fa_IR')
 
         self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
 

@@ -11,12 +11,15 @@ import locale as _locale
 import re as _re
 
 try:
-    from _thread import get_ident
+    from greenlet import getcurrent as get_ident
 except ImportError:
-    from thread import get_ident  # Python 2 used thread module instead of _thread
+    try:
+        from _thread import get_ident
+    except ImportError:
+        from thread import get_ident  # Python 2 used thread module instead of _thread
 
-from jdatetime.jalali import \
-    GregorianToJalali, JalaliToGregorian, j_days_in_month
+from jdatetime.jalali import (GregorianToJalali, JalaliToGregorian,
+                              j_days_in_month)
 
 __VERSION__ = "1.9.1"
 MINYEAR = 1
