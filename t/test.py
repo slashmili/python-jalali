@@ -1,16 +1,19 @@
 # -*- coding: utf-8 -*-
-import unittest
+import sys
+import os
+import time
 import datetime
 import platform
-import time
-import os
-import sys
+import threading
+import locale
+import unittest
+
 BASEDIR = os.path.abspath(os.path.join(
                           os.path.dirname(os.path.abspath(__file__)),
                           ".."))
 sys.path.insert(0, BASEDIR)
 import jdatetime
-import locale
+
 
 class GMTTime(jdatetime.tzinfo):
     def utcoffset(self, dt):
@@ -22,6 +25,7 @@ class GMTTime(jdatetime.tzinfo):
     def dst(self, dt):
         return jdatetime.timedelta(0)
 
+
 class TehranTime(jdatetime.tzinfo):
     def utcoffset(self, dt):
         return jdatetime.timedelta(hours=3, minutes=30)
@@ -31,7 +35,6 @@ class TehranTime(jdatetime.tzinfo):
 
     def dst(self, dt):
         return jdatetime.timedelta(0)
-
 
 
 class TestJDateTime(unittest.TestCase):
@@ -240,7 +243,6 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(True, jdt_teh == jdt_gmt)
 
-
     def test_datetime_raise_exception_on_invalid_calculation(self):
         date_1395 = jdatetime.datetime(1395,1,1)
 
@@ -360,6 +362,57 @@ class TestJDateTime(unittest.TestCase):
             tehran = timezone('Asia/Tehran')
             date = jdatetime.datetime(1394, 1, 1, 0, 0, 0, tzinfo=tehran)
             self.assertEqual(str(date), "1394-01-01 00:00:00+0326")
+
+
+class TestJdatetimeGetSetLocale(unittest.TestCase):
+    @staticmethod
+    def record_thread_locale(record, event, locale):
+        """Set and capture locale in current thread.
+        Use an event to coordinate execution for multithreaded
+        tests. Because thread idents maybe recycled and reused
+        and jdatetime uses threads idents to identify unique
+        threads.
+        """
+        event.wait(timeout=10)
+        jdatetime.set_locale(locale)
+        record.append(jdatetime.get_locale())
+
+    def test_get_locale_returns_none_if_no_locale_set_yet(self):
+        self.assertIsNone(jdatetime.get_locale())
+
+    def test_set_locale_is_per_thread_with_no_effect_on_other_threads(self):
+        event = threading.Event()
+        fa_record = []
+        fa_thread = threading.Thread(target=self.record_thread_locale, args=(fa_record, event, 'fa_IR'))
+        nl_record = []
+        nl_thread = threading.Thread(target=self.record_thread_locale, args=(nl_record, event, 'nl_NL'))
+
+        fa_thread.start()
+        nl_thread.start()
+        event.set()  # ensure both threads run concurrently
+        fa_thread.join()
+        nl_thread.join()
+
+        self.assertEqual(1, len(fa_record))
+        self.assertEqual('fa_IR', fa_record[0])
+        self.assertEqual(1, len(nl_record))
+        self.assertEqual('nl_NL', nl_record[0])
+        self.assertIsNone(jdatetime.get_locale())  # MainThread is not affected neither
+
+    def test_set_locale_sets_default_locale_for_date_objects(self):
+        def record_locale_formatted_date(record, locale):
+            jdatetime.set_locale(locale)
+            dt = jdatetime.date(1397, 3, 27)
+            record.append(dt.strftime('%A'))
+            record.append(dt.strftime('%B'))
+
+        fa_record = []
+        fa_th = threading.Thread(target=record_locale_formatted_date, args=(fa_record, 'fa_IR'))
+        fa_th.start()
+        fa_th.join()
+
+        self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
+
 
 if __name__ == "__main__":
     unittest.main()

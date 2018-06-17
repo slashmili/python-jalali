@@ -4,19 +4,27 @@
 # was licensed under the Python license. Same license applies to all files in
 # the jdatetime package project.
 from __future__ import unicode_literals
-import datetime as py_datetime
 import sys
 import platform
+import datetime as py_datetime
+import locale as _locale
+import re as _re
+
+try:
+    from _thread import get_ident
+except ImportError:
+    from thread import get_ident  # Python 2 used thread module instead of _thread
+
 from jdatetime.jalali import \
     GregorianToJalali, JalaliToGregorian, j_days_in_month
-import re as _re
-import locale as _locale
+
 __VERSION__ = "1.9.1"
 MINYEAR = 1
 MAXYEAR = 9377
 
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
+
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -30,14 +38,45 @@ else:
 
 
 class time(py_datetime.time):
-
     def __repr__(self):
         return "jdatetime.time(%s, %s, %s)" % (self.hour,
                                                self.minute,
                                                self.second)
 
 
+_thread_local_locales = dict()
+
+
+def set_locale(locale):
+    """Set the thread local module locale. This will be the default locale
+    for new date/datetime instances in current thread.
+    Returns the previous value of locale set on current thread.
+
+    Note: since Python thread identities maybe recycled and reused,
+    always ensure the desied locale is set for current thread,
+    or the locale maybe affected by previous threads with the same
+    identity.
+
+    :param str|None: locale
+    :return: str|None
+    """
+    thread_identity = get_ident()
+    prev_locale = _thread_local_locales.get(thread_identity)
+    _thread_local_locales[thread_identity] = locale
+    return prev_locale
+
+
+def get_locale():
+    """Get the thread local module locale. This will be the default locale
+    for newly date/datetime instances in current thread.
+
+    :return: str|None
+    """
+    return _thread_local_locales.get(get_ident())
+
+
 class date(object):
+
     """date(year, month, day) --> date object"""
     j_months_en = ['Farvardin',
                    'Ordibehesht',
@@ -147,6 +186,7 @@ class date(object):
         elif day > j_days_in_month[self.__month - 1]:
             raise ValueError("day is out of range for month")
         self.__day = day
+        self.__locale = get_locale()
 
         if self._is_fa_locale():
             self.j_months = self.j_months_fa
@@ -162,6 +202,8 @@ class date(object):
             self.j_ampm = self.j_ampm_en
 
     def _is_fa_locale(self):
+        if self.__locale and self.__locale == FA_LOCALE:
+            return True
         if FA_LOCALE in _locale.getlocale():
             return True
         if None not in _locale.getlocale():
