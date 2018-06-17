@@ -25,25 +25,26 @@ This module exactly follows Python Standard datetime module's methods http://doc
 
 Also these methods are addedd to jdatetime.date and jdatetime.datetime :
 
-.. code::
 
-    |  fromgregorian(**kw)
-    |      Convert gregorian to jalali and return jdatetime.date
-    |      jdatetime.date.fromgregorian(day=X,month=X,year=X)
-    |      jdatetime.date.fromgregorian(date=datetime.date)
-    |      jdatetime.date.fromgregorian(datetime=datetime.datetime)
-    |  togregorian(self)
-    |      Convert current jalali date to gregorian and return datetime.date
-    |  isleap(self)
-    |      check if year is leap year
-    |      algortim is based on http://en.wikipedia.org/wiki/Leap_year
+.. code-block:: python
+
+    fromgregorian(**kw)
+        Convert gregorian to jalali and return jdatetime.date
+        jdatetime.date.fromgregorian(day=X,month=X,year=X)
+        jdatetime.date.fromgregorian(date=datetime.date)
+        jdatetime.date.fromgregorian(datetime=datetime.datetime)
+    togregorian(self)
+        Convert current jalali date to gregorian and return datetime.date
+    isleap(self)
+        check if year is leap year
+        algortim is based on http://en.wikipedia.org/wiki/Leap_year
 
 
 
 Example
 -------
 
-.. code:: shell
+.. code-block:: shell
 
     $ python
     Python 2.6.6 (r266:84292, Sep 15 2010, 15:52:39)
@@ -56,11 +57,12 @@ Example
     >>> jdatetime.date.today()
     jdatetime.date(1394, 12, 4)
 
+
 Locale
 ------
 In order to get the date string in farsi you need to set the locale to fa_IR
 
-.. code:: shell
+.. code-block:: shell
 
     $ python
     Python 2.7.9 (default, Mar  1 2015, 12:57:24)
@@ -75,5 +77,20 @@ In order to get the date string in farsi you need to set the locale to fa_IR
     'fa_IR'
     >>> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
     u'\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647, 08 \u0627\u0631\u062f\u06cc\u0628\u0647\u0634\u062a 1395 20:47:56'
+
+
+If your requirements demand to support different locales withing the same process,
+you could set the default locale per thread. New `date` and `datetime` instances
+created in each thread, will use the specified locale by default.
+This supports both Python threads, and greenlets.
+
+
+.. code-block:: python
+
+    import jdatetime
+    jdatetime.set_locale('fa_IR')
+    jdatetime.datetime.now().strftime('%A %B')
+    # u'\u062f\u0648\u0634\u0646\u0628\u0647 \u062e\u0631\u062f\u0627\u062f'
+
 
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
