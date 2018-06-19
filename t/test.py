@@ -442,7 +442,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
             record.append(dt.strftime('%B'))
 
         fa_record = []
-        fa_th = threading.Thread(target=record_locale_formatted_date, args=(fa_record, 'fa_IR'))
+        fa_th = threading.Thread(target=record_locale_formatted_date, args=(fa_record, jdatetime.FA_LOCALE))
         fa_th.start()
         fa_th.join()
 
@@ -458,7 +458,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
 
         fa_record = []
         fa_greenlet = greenlet.greenlet(record_locale_formatted_date)
-        fa_greenlet.switch(fa_record, 'fa_IR')
+        fa_greenlet.switch(fa_record, jdatetime.FA_LOCALE)
 
         self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
 
