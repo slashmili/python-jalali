@@ -557,11 +557,11 @@ class date(object):
             format = format.replace("%M", '%02.d' % (self.minute))
         except:
             format = format.replace("%M", '00')
+
         try:
             format = format.replace("%-M", '%d' % (self.minute))
         except:
             format = format.replace("%-M", '0')
-
 
         try:
             if self.hour > 12:
