@@ -156,16 +156,21 @@ class date(object):
     def day(self):
         return self.__day
 
+    @property
+    def locale(self):
+        return self.__locale
+
     __year = 0
     __month = 0
     __day = 0
+    __locale = None
 
     def _check_arg(self, value):
         if isinstance(value, _int_types):
             return True
         return False
 
-    def __init__(self, year, month, day):
+    def __init__(self, year, month, day, **kwargs):
         """date(year, month, day) --> date object"""
         if not (self._check_arg(year) and
                 self._check_arg(month) and
@@ -189,7 +194,7 @@ class date(object):
         elif day > j_days_in_month[self.__month - 1]:
             raise ValueError("day is out of range for month")
         self.__day = day
-        self.__locale = get_locale()
+        self.__locale = kwargs['locale'] if ('locale' in kwargs and kwargs['locale']) else get_locale()
 
         if self._is_fa_locale():
             self.j_months = self.j_months_fa
@@ -346,7 +351,8 @@ class date(object):
             return False
         if self.year == other_date.year and \
            self.month == other_date.month and \
-           self.day == other_date.day:
+           self.day == other_date.day and \
+           self.locale == other_date.locale:
             return True
         return False
 
@@ -441,7 +447,7 @@ class date(object):
         if day != 0:
             new_day = day
 
-        return date(new_year, new_month, new_day)
+        return date(new_year, new_month, new_day, locale=self.locale)
 
     def yday(self):
         """return day of year"""
@@ -617,7 +623,7 @@ class datetime(date):
 
     def date(self):
         """Return date object with same year, month and day."""
-        return date(self.year, self.month, self.day)
+        return date(self.year, self.month, self.day, locale=self.locale)
 
     def __init__(
             self,
@@ -628,8 +634,8 @@ class datetime(date):
             minute=None,
             second=None,
             microsecond=None,
-            tzinfo=None):
-        date.__init__(self, year, month, day)
+            tzinfo=None, **kwargs):
+        date.__init__(self, year, month, day, **kwargs)
         tmp_hour = 0
         tmp_min = 0
         tmp_sec = 0

@@ -43,7 +43,87 @@ class TehranTime(jdatetime.tzinfo):
         return jdatetime.timedelta(0)
 
 
+class TestJDate(unittest.TestCase):
+    def test_init_locale_is_effective_only_if_not_none(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('en_US')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        date = jdatetime.date(1397, 4, 22, locale=None)
+        self.assertEqual(date.locale, 'en_US')
+
+    def test_init_locale_is_effective_only_if_not_empty(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('nl_NL')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        date = jdatetime.date(1397, 4, 22, locale='')
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_locale_property_is_read_only(self):
+        date = jdatetime.date(1397, 4, 22)
+        with self.assertRaises(AttributeError):
+            date.locale = jdatetime.FA_LOCALE
+
+    def test_locale_property_returns_locale(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_init_locale_is_named_argument_only(self):
+        with self.assertRaises(TypeError):
+            datetime.date(1397, 4, 22, 'nl_NL')
+
+    def test_init_accepts_instance_locale(self):
+        date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
+        self.assertEqual(date.strftime('%A'), u'شنبه')
+
+    def test_dates_are_not_equal_if_locales_are_different(self):
+        date_fa = jdatetime.date(1397, 4, 22, locale='fa_IR')
+        date_nl = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        self.assertNotEqual(date_fa, date_nl)
+
+    def test_replace_keeps_the_locale_of_source_date(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        other_date = date.replace(day=20)
+        self.assertEqual(other_date.day, 20)
+        self.assertEqual(other_date.locale, 'nl_NL')
+
+
 class TestJDateTime(unittest.TestCase):
+    def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
+        datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
+        date = datetime.date()
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_init_locale_is_effective_only_if_not_none(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('en_US')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        datetime = jdatetime.datetime(1397, 4, 22, locale=None)
+        self.assertEqual(datetime.locale, 'en_US')
+
+    def test_init_locale_is_effective_only_if_not_empty(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('nl_NL')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        datetime = jdatetime.datetime(1397, 4, 22, locale='')
+        self.assertEqual(datetime.locale, 'nl_NL')
+
+    def test_locale_property_is_read_only(self):
+        datetime = jdatetime.datetime(1397, 4, 22)
+        with self.assertRaises(AttributeError):
+            datetime.locale = jdatetime.FA_LOCALE
+
+    def test_locale_property_returns_locale(self):
+        datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
+        self.assertEqual(datetime.locale, 'nl_NL')
+
+    def test_init_locale_is_named_argument_only(self):
+        with self.assertRaises(TypeError):
+            datetime.datetime(1397, 4, 22, 'nl_NL')
+
+    def test_init_accepts_instance_locale(self):
+        datetime = jdatetime.datetime(1397, 4, 23, locale=jdatetime.FA_LOCALE)
+        self.assertEqual(datetime.strftime('%A'), u'شنبه')
+
     def test_today(self):
         today = datetime.date.today()
         converted_today = jdatetime.date.today().togregorian()
