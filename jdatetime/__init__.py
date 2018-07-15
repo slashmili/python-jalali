@@ -615,6 +615,9 @@ class date(object):
 
         return format
 
+    def aslocale(self, locale):
+        return date(self.year, self.month, self.day, locale=locale)
+
 
 class datetime(date):
     """datetime(year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]) --> datetime objects"""
@@ -1203,3 +1206,7 @@ class datetime(date):
             mil = "." + mil
         tz = self.strftime("%z")
         return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
+
+    def aslocale(self, locale):
+        return datetime(self.year, self.month, self.day, self.hour, self.minute,
+                self.second, self.microsecond, tzinfo=self.tzinfo, locale=locale)

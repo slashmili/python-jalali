@@ -44,6 +44,14 @@ class TehranTime(jdatetime.tzinfo):
 
 
 class TestJDate(unittest.TestCase):
+    def test_as_locale_returns_same_date_with_specified_locale(self):
+        jdate_en = jdatetime.date(1397, 4, 23, locale='en_US')
+        jdate_fa = jdate_en.aslocale('fa_IR')
+        self.assertEqual(jdate_fa.year, 1397)
+        self.assertEqual(jdate_fa.month, 4)
+        self.assertEqual(jdate_fa.day, 23)
+        self.assertEqual(jdate_fa.locale, 'fa_IR')
+
     def test_init_locale_is_effective_only_if_not_none(self):
         orig_locale = jdatetime.get_locale()
         jdatetime.set_locale('en_US')
@@ -545,6 +553,18 @@ class TestJDateTime(unittest.TestCase):
             tehran = timezone('Asia/Tehran')
             date = jdatetime.datetime(1394, 1, 1, 0, 0, 0, tzinfo=tehran)
             self.assertEqual(str(date), "1394-01-01 00:00:00+0326")
+
+    def test_as_locale_returns_same_datetime_with_specified_locale(self):
+        jdt_en = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, locale='en_US')
+        jdt_fa = jdt_en.aslocale('fa_IR')
+        self.assertEqual(jdt_fa.year, 1397)
+        self.assertEqual(jdt_fa.month, 4)
+        self.assertEqual(jdt_fa.day, 23)
+        self.assertEqual(jdt_fa.hour, 11)
+        self.assertEqual(jdt_fa.minute, 47)
+        self.assertEqual(jdt_fa.second, 30)
+        self.assertEqual(jdt_fa.microsecond, 40)
+        self.assertEqual(jdt_fa.locale, 'fa_IR')
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):
