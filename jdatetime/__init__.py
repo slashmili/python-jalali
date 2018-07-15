@@ -1209,4 +1209,4 @@ class datetime(date):
 
     def aslocale(self, locale):
         return datetime(self.year, self.month, self.day, self.hour, self.minute,
-                self.second, self.microsecond, tzinfo=self.tzinfo, locale=locale)
+                        self.second, self.microsecond, tzinfo=self.tzinfo, locale=locale)
