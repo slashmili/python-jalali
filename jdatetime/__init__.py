@@ -770,7 +770,7 @@ class datetime(date):
         if c_date is None:
             raise TypeError("Required argument 'date' (pos 1) not found")
         if c_time is None:
-            raise TypeError("Required argument 'date' (pos 2) not found")
+            raise TypeError("Required argument 'time' (pos 2) not found")
 
         if not isinstance(c_date, date):
             raise TypeError(
