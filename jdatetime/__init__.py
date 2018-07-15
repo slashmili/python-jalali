@@ -245,23 +245,26 @@ class date(object):
     @staticmethod
     def fromgregorian(**kw):
         """Convert gregorian to jalali and return jdatetime.date
+
         jdatetime.date.fromgregorian(day=X,month=X,year=X)
         jdatetime.date.fromgregorian(date=datetime.date)
+        jdatetime.date.fromgregorian(date=datetime.date, locale='fa_IR')
         """
+        locale = kw.get('locale')
         if 'date' in kw and isinstance(kw['date'], py_datetime.date):
             d = kw['date']
             (y, m, d) = GregorianToJalali(d.year,
                                           d.month,
                                           d.day).getJalaliList()
-            return date(y, m, d)
+            return date(y, m, d, locale=locale)
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
-            return date(y, m, d)
+            return date(y, m, d, locale=locale)
 
         error_msg = ["fromgregorian have to be be called"]
-        error_msg += ["fromgregorian(day=X,month=X,year=X)"]
         error_msg += ["or"]
+        error_msg += ["fromgregorian(day=X,month=X,year=X)"]
         error_msg += ["fromgregorian(date=datetime.date)"]
         raise ValueError(" ".join(error_msg))
 
@@ -309,13 +312,13 @@ class date(object):
                 "unsupported operand type(s) for +: '%s' and '%s'" %
                 (type(self), type(timedelta)))
         gd = self.togregorian() + timedelta
-        return date.fromgregorian(date=gd)
+        return date.fromgregorian(date=gd, locale=self.locale)
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
         if isinstance(other, py_datetime.timedelta):
             gd = self.togregorian() - other
-            return date.fromgregorian(date=gd)
+            return date.fromgregorian(date=gd, locale=self.locale)
 
         if isinstance(other, date):
             return self.togregorian() - other.togregorian()
@@ -789,7 +792,8 @@ class datetime(date):
             c_time.minute,
             c_time.second,
             c_time.microsecond,
-            c_time.tzinfo)
+            c_time.tzinfo,
+            locale=c_date.locale)
 
     @staticmethod
     def fromordinal(ordinal):
@@ -926,7 +930,8 @@ class datetime(date):
             t_min,
             t_sec,
             t_mic,
-            t_tz)
+            t_tz,
+            locale=self.locale)
 
     def __add__(self, timedelta):
         """x.__add__(y) <==> x+y"""
@@ -967,7 +972,7 @@ class datetime(date):
         gdatetime = self.togregorian()
         new_gdatetime = getattr(gdatetime, action)(timedelta)
 
-        return datetime.fromgregorian(datetime=new_gdatetime)
+        return datetime.fromgregorian(datetime=new_gdatetime, locale=self.locale)
 
     def __calculation_on_datetime(self, action, another_datetime):
         self_gdatetime = self.togregorian()
@@ -985,7 +990,8 @@ class datetime(date):
             return False
         if self.year == other_datetime.year and \
            self.month == other_datetime.month and \
-           self.day == other_datetime.day:
+           self.day == other_datetime.day and\
+           self.locale == other_datetime.locale:
             return self.timetz() == other_datetime.timetz(
             ) and self.microsecond == other_datetime.microsecond
         return False
@@ -1081,13 +1087,15 @@ class datetime(date):
         jdatetime.date.fromgregorian(day=X,month=X,year=X,[hour=X, [minute=X, [second=X, [tzinfo=X]]]])
         jdatetime.date.fromgregorian(date=datetime.date)
         jdatetime.date.fromgregorian(datetime=datetime.datetime)
+        jdatetime.date.fromgregorian(datetime=datetime.datetime, locale='fa_IR')
         """
+        locale = kw.get('locale')
         if 'date' in kw and isinstance(kw['date'], py_datetime.date):
             d = kw['date']
             (y, m, d) = GregorianToJalali(d.year,
                                           d.month,
                                           d.day).getJalaliList()
-            return datetime(y, m, d)
+            return datetime(y, m, d, locale=locale)
         if 'datetime' in kw and isinstance(
                 kw['datetime'], py_datetime.datetime):
             dt = kw['datetime']
@@ -1101,7 +1109,8 @@ class datetime(date):
                 dt.minute,
                 dt.second,
                 dt.microsecond,
-                dt.tzinfo)
+                dt.tzinfo,
+                locale=locale)
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
@@ -1120,7 +1129,7 @@ class datetime(date):
                             microsecond = kw['microsecond']
                             if 'tzinfo' in kw:
                                 tzinfo = kw['tzinfo']
-            return datetime(y, m, d, hour, minute, second, microsecond, tzinfo)
+            return datetime(y, m, d, hour, minute, second, microsecond, tzinfo, locale=locale)
 
         raise ValueError(
             "fromgregorian have to called fromgregorian(day=X,month=X,year=X, [hour=X, [minute=X, [second=X, [tzinfo=X]]]]) or fromgregorian(date=datetime.date) or fromgregorian(datetime=datetime.datetime)")
