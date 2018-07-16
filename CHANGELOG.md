@@ -1,7 +1,13 @@
 # Changelog
 
+## [3.0.0] - 2018-07-16
+## Add
+    * Added instance "locale" attribute #37
+## Change
+    * date/datetime instances with different locale attrs are not equal anymore #37
+
 ## [2.2.0] - 2018-07-07
-## add
+## Add
     * Added padding-less variations of strftime format symbols #36
 
 ## [2.1.0] - 2018-06-20
