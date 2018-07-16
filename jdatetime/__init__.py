@@ -21,7 +21,7 @@ except ImportError:
 from jdatetime.jalali import (GregorianToJalali, JalaliToGregorian,
                               j_days_in_month)
 
-__VERSION__ = "1.9.1"
+__VERSION__ = "2.1.0"
 MINYEAR = 1
 MAXYEAR = 9377
 
@@ -532,6 +532,7 @@ class date(object):
                 "%c", self.strftime("%a %b %d %H:%M:%S %Y"))
 
         format = format.replace("%d", '%02.d' % (self.day))
+        format = format.replace("%-d", '%d' % (self.day))
 
         try:
             format = format.replace("%f", '%06.d' % (self.microsecond))
@@ -544,6 +545,11 @@ class date(object):
             format = format.replace("%H", '00')
 
         try:
+            format = format.replace("%-H", '%d' % (self.hour))
+        except:
+            format = format.replace("%-H", '0')
+
+        try:
             if self.hour > 12:
                 format = format.replace("%I", '%02.d' % (self.hour - 12))
             else:
@@ -554,11 +560,17 @@ class date(object):
         format = format.replace("%j", '%03.d' % (self.yday()))
 
         format = format.replace("%m", '%02.d' % (self.month))
+        format = format.replace("%-m", '%d' % (self.month))
 
         try:
             format = format.replace("%M", '%02.d' % (self.minute))
         except:
             format = format.replace("%M", '00')
+
+        try:
+            format = format.replace("%-M", '%d' % (self.minute))
+        except:
+            format = format.replace("%-M", '0')
 
         try:
             if self.hour > 12:
@@ -572,6 +584,11 @@ class date(object):
             format = format.replace("%S", '%02.d' % (self.second))
         except:
             format = format.replace("%S", '00')
+
+        try:
+            format = format.replace("%-S", '%d' % (self.second))
+        except:
+            format = format.replace("%-S", '0')
 
         format = format.replace("%w", str(self.weekday()))
 
