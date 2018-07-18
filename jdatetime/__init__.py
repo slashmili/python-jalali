@@ -156,16 +156,21 @@ class date(object):
     def day(self):
         return self.__day
 
+    @property
+    def locale(self):
+        return self.__locale
+
     __year = 0
     __month = 0
     __day = 0
+    __locale = None
 
     def _check_arg(self, value):
         if isinstance(value, _int_types):
             return True
         return False
 
-    def __init__(self, year, month, day):
+    def __init__(self, year, month, day, **kwargs):
         """date(year, month, day) --> date object"""
         if not (self._check_arg(year) and
                 self._check_arg(month) and
@@ -189,7 +194,7 @@ class date(object):
         elif day > j_days_in_month[self.__month - 1]:
             raise ValueError("day is out of range for month")
         self.__day = day
-        self.__locale = get_locale()
+        self.__locale = kwargs['locale'] if ('locale' in kwargs and kwargs['locale']) else get_locale()
 
         if self._is_fa_locale():
             self.j_months = self.j_months_fa
@@ -240,23 +245,26 @@ class date(object):
     @staticmethod
     def fromgregorian(**kw):
         """Convert gregorian to jalali and return jdatetime.date
+
         jdatetime.date.fromgregorian(day=X,month=X,year=X)
         jdatetime.date.fromgregorian(date=datetime.date)
+        jdatetime.date.fromgregorian(date=datetime.date, locale='fa_IR')
         """
+        locale = kw.get('locale')
         if 'date' in kw and isinstance(kw['date'], py_datetime.date):
             d = kw['date']
             (y, m, d) = GregorianToJalali(d.year,
                                           d.month,
                                           d.day).getJalaliList()
-            return date(y, m, d)
+            return date(y, m, d, locale=locale)
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
-            return date(y, m, d)
+            return date(y, m, d, locale=locale)
 
         error_msg = ["fromgregorian have to be be called"]
-        error_msg += ["fromgregorian(day=X,month=X,year=X)"]
         error_msg += ["or"]
+        error_msg += ["fromgregorian(day=X,month=X,year=X)"]
         error_msg += ["fromgregorian(date=datetime.date)"]
         raise ValueError(" ".join(error_msg))
 
@@ -304,13 +312,13 @@ class date(object):
                 "unsupported operand type(s) for +: '%s' and '%s'" %
                 (type(self), type(timedelta)))
         gd = self.togregorian() + timedelta
-        return date.fromgregorian(date=gd)
+        return date.fromgregorian(date=gd, locale=self.locale)
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
         if isinstance(other, py_datetime.timedelta):
             gd = self.togregorian() - other
-            return date.fromgregorian(date=gd)
+            return date.fromgregorian(date=gd, locale=self.locale)
 
         if isinstance(other, date):
             return self.togregorian() - other.togregorian()
@@ -346,7 +354,8 @@ class date(object):
             return False
         if self.year == other_date.year and \
            self.month == other_date.month and \
-           self.day == other_date.day:
+           self.day == other_date.day and \
+           self.locale == other_date.locale:
             return True
         return False
 
@@ -441,7 +450,7 @@ class date(object):
         if day != 0:
             new_day = day
 
-        return date(new_year, new_month, new_day)
+        return date(new_year, new_month, new_day, locale=self.locale)
 
     def yday(self):
         """return day of year"""
@@ -623,6 +632,9 @@ class date(object):
 
         return format
 
+    def aslocale(self, locale):
+        return date(self.year, self.month, self.day, locale=locale)
+
 
 class datetime(date):
     """datetime(year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]) --> datetime objects"""
@@ -634,7 +646,7 @@ class datetime(date):
 
     def date(self):
         """Return date object with same year, month and day."""
-        return date(self.year, self.month, self.day)
+        return date(self.year, self.month, self.day, locale=self.locale)
 
     def __init__(
             self,
@@ -645,8 +657,8 @@ class datetime(date):
             minute=None,
             second=None,
             microsecond=None,
-            tzinfo=None):
-        date.__init__(self, year, month, day)
+            tzinfo=None, **kwargs):
+        date.__init__(self, year, month, day, **kwargs)
         tmp_hour = 0
         tmp_min = 0
         tmp_sec = 0
@@ -781,7 +793,7 @@ class datetime(date):
         if c_date is None:
             raise TypeError("Required argument 'date' (pos 1) not found")
         if c_time is None:
-            raise TypeError("Required argument 'date' (pos 2) not found")
+            raise TypeError("Required argument 'time' (pos 2) not found")
 
         if not isinstance(c_date, date):
             raise TypeError(
@@ -800,7 +812,8 @@ class datetime(date):
             c_time.minute,
             c_time.second,
             c_time.microsecond,
-            c_time.tzinfo)
+            c_time.tzinfo,
+            locale=c_date.locale)
 
     @staticmethod
     def fromordinal(ordinal):
@@ -937,7 +950,8 @@ class datetime(date):
             t_min,
             t_sec,
             t_mic,
-            t_tz)
+            t_tz,
+            locale=self.locale)
 
     def __add__(self, timedelta):
         """x.__add__(y) <==> x+y"""
@@ -978,7 +992,7 @@ class datetime(date):
         gdatetime = self.togregorian()
         new_gdatetime = getattr(gdatetime, action)(timedelta)
 
-        return datetime.fromgregorian(datetime=new_gdatetime)
+        return datetime.fromgregorian(datetime=new_gdatetime, locale=self.locale)
 
     def __calculation_on_datetime(self, action, another_datetime):
         self_gdatetime = self.togregorian()
@@ -996,7 +1010,8 @@ class datetime(date):
             return False
         if self.year == other_datetime.year and \
            self.month == other_datetime.month and \
-           self.day == other_datetime.day:
+           self.day == other_datetime.day and\
+           self.locale == other_datetime.locale:
             return self.timetz() == other_datetime.timetz(
             ) and self.microsecond == other_datetime.microsecond
         return False
@@ -1092,13 +1107,15 @@ class datetime(date):
         jdatetime.date.fromgregorian(day=X,month=X,year=X,[hour=X, [minute=X, [second=X, [tzinfo=X]]]])
         jdatetime.date.fromgregorian(date=datetime.date)
         jdatetime.date.fromgregorian(datetime=datetime.datetime)
+        jdatetime.date.fromgregorian(datetime=datetime.datetime, locale='fa_IR')
         """
+        locale = kw.get('locale')
         if 'date' in kw and isinstance(kw['date'], py_datetime.date):
             d = kw['date']
             (y, m, d) = GregorianToJalali(d.year,
                                           d.month,
                                           d.day).getJalaliList()
-            return datetime(y, m, d)
+            return datetime(y, m, d, locale=locale)
         if 'datetime' in kw and isinstance(
                 kw['datetime'], py_datetime.datetime):
             dt = kw['datetime']
@@ -1112,7 +1129,8 @@ class datetime(date):
                 dt.minute,
                 dt.second,
                 dt.microsecond,
-                dt.tzinfo)
+                dt.tzinfo,
+                locale=locale)
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
@@ -1131,7 +1149,7 @@ class datetime(date):
                             microsecond = kw['microsecond']
                             if 'tzinfo' in kw:
                                 tzinfo = kw['tzinfo']
-            return datetime(y, m, d, hour, minute, second, microsecond, tzinfo)
+            return datetime(y, m, d, hour, minute, second, microsecond, tzinfo, locale=locale)
 
         raise ValueError(
             "fromgregorian have to called fromgregorian(day=X,month=X,year=X, [hour=X, [minute=X, [second=X, [tzinfo=X]]]]) or fromgregorian(date=datetime.date) or fromgregorian(datetime=datetime.datetime)")
@@ -1205,3 +1223,7 @@ class datetime(date):
             mil = "." + mil
         tz = self.strftime("%z")
         return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
+
+    def aslocale(self, locale):
+        return datetime(self.year, self.month, self.day, self.hour, self.minute,
+                        self.second, self.microsecond, tzinfo=self.tzinfo, locale=locale)

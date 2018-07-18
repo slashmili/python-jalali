@@ -43,7 +43,128 @@ class TehranTime(jdatetime.tzinfo):
         return jdatetime.timedelta(0)
 
 
+class TestJDate(unittest.TestCase):
+    def test_as_locale_returns_same_date_with_specified_locale(self):
+        jdate_en = jdatetime.date(1397, 4, 23, locale='en_US')
+        jdate_fa = jdate_en.aslocale('fa_IR')
+        self.assertEqual(jdate_fa.year, 1397)
+        self.assertEqual(jdate_fa.month, 4)
+        self.assertEqual(jdate_fa.day, 23)
+        self.assertEqual(jdate_fa.locale, 'fa_IR')
+
+    def test_init_locale_is_effective_only_if_not_none(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('en_US')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        date = jdatetime.date(1397, 4, 22, locale=None)
+        self.assertEqual(date.locale, 'en_US')
+
+    def test_init_locale_is_effective_only_if_not_empty(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('nl_NL')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        date = jdatetime.date(1397, 4, 22, locale='')
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_locale_property_is_read_only(self):
+        date = jdatetime.date(1397, 4, 22)
+        with self.assertRaises(AttributeError):
+            date.locale = jdatetime.FA_LOCALE
+
+    def test_locale_property_returns_locale(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_init_locale_is_named_argument_only(self):
+        with self.assertRaises(TypeError):
+            datetime.date(1397, 4, 22, 'nl_NL')
+
+    def test_init_accepts_instance_locale(self):
+        date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
+        self.assertEqual(date.strftime('%A'), u'شنبه')
+
+    def test_dates_are_not_equal_if_locales_are_different(self):
+        date_fa = jdatetime.date(1397, 4, 22, locale='fa_IR')
+        date_nl = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        self.assertNotEqual(date_fa, date_nl)
+
+    def test_fromgregorian_accepts_locale_keyword_arg_when_datetime_passed(self):
+        today = datetime.datetime.today().date()
+        j_today = jdatetime.date.fromgregorian(date=today, locale='nl_NL')
+        self.assertEqual(j_today.locale, 'nl_NL')
+
+    def test_fromgregorian_accepts_locale_keyword_arg_when_int_passed(self):
+        j_today = jdatetime.date.fromgregorian(day=15, month=7, year=2018, locale='nl_NL')
+        self.assertEqual(j_today.locale, 'nl_NL')
+
+    def test_replace_keeps_the_locale_of_source_date(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        other_date = date.replace(day=20)
+        self.assertEqual(other_date.day, 20)
+        self.assertEqual(other_date.locale, 'nl_NL')
+
+    def test_add_time_delta(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        new_date = date + datetime.timedelta(days=1)
+        self.assertEqual(new_date.year, 1397)
+        self.assertEqual(new_date.month, 4)
+        self.assertEqual(new_date.day, 23)
+        self.assertEqual(new_date.locale, 'nl_NL')
+
+    def test_reverse_add_time_delta(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        new_date = datetime.timedelta(days=2) + date
+        self.assertEqual(new_date.year, 1397)
+        self.assertEqual(new_date.month, 4)
+        self.assertEqual(new_date.day, 24)
+        self.assertEqual(new_date.locale, 'nl_NL')
+
+    def test_subtract_time_delta(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        new_date = date - datetime.timedelta(days=1)
+        self.assertEqual(new_date.year, 1397)
+        self.assertEqual(new_date.month, 4)
+        self.assertEqual(new_date.day, 21)
+        self.assertEqual(new_date.locale, 'nl_NL')
+
+
 class TestJDateTime(unittest.TestCase):
+    def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
+        datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
+        date = datetime.date()
+        self.assertEqual(date.locale, 'nl_NL')
+
+    def test_init_locale_is_effective_only_if_not_none(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('en_US')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        datetime = jdatetime.datetime(1397, 4, 22, locale=None)
+        self.assertEqual(datetime.locale, 'en_US')
+
+    def test_init_locale_is_effective_only_if_not_empty(self):
+        orig_locale = jdatetime.get_locale()
+        jdatetime.set_locale('nl_NL')
+        self.addCleanup(jdatetime.set_locale, orig_locale)
+        datetime = jdatetime.datetime(1397, 4, 22, locale='')
+        self.assertEqual(datetime.locale, 'nl_NL')
+
+    def test_locale_property_is_read_only(self):
+        datetime = jdatetime.datetime(1397, 4, 22)
+        with self.assertRaises(AttributeError):
+            datetime.locale = jdatetime.FA_LOCALE
+
+    def test_locale_property_returns_locale(self):
+        datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
+        self.assertEqual(datetime.locale, 'nl_NL')
+
+    def test_init_locale_is_named_argument_only(self):
+        with self.assertRaises(TypeError):
+            datetime.datetime(1397, 4, 22, 'nl_NL')
+
+    def test_init_accepts_instance_locale(self):
+        datetime = jdatetime.datetime(1397, 4, 23, locale=jdatetime.FA_LOCALE)
+        self.assertEqual(datetime.strftime('%A'), u'شنبه')
+
     def test_today(self):
         today = datetime.date.today()
         converted_today = jdatetime.date.today().togregorian()
@@ -188,6 +309,11 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(True, jdatetime.datetime.combine(d, t) == dt)
 
+    def test_combine_keeps_date_locale(self):
+        t = jdatetime.time(11, 20, 30)
+        d = jdatetime.date(1397, 4, 24, locale='nl_NL')
+        self.assertEqual(jdatetime.datetime.combine(d, t).locale, 'nl_NL')
+
     def test_replace(self):
         dt = jdatetime.datetime.today()
         args = {'year': 1390,
@@ -202,6 +328,14 @@ class TestJDateTime(unittest.TestCase):
         dtn = jdatetime.datetime(1390, 12, 1, 13, 14, 15, 1233)
 
         self.assertEqual(True, dtr == dtn)
+
+    def test_replace_keeps_date_locale(self):
+        dt = jdatetime.datetime(1397, 4, 24, locale='nl_NL')
+        args = {'year': 1390,
+                'month': 12,
+                'hour': 13,
+                }
+        self.assertEqual(dt.replace(**args).locale, 'nl_NL')
 
     def test_strptime(self):
         date_string = "1363-6-6 12:13:14"
@@ -248,6 +382,41 @@ class TestJDateTime(unittest.TestCase):
         jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=teh)
 
         self.assertEqual(True, jdt_teh == jdt_gmt)
+
+    def test_datetimes_with_different_locales_are_not_equal(self):
+        dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
+        dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
+        self.assertNotEqual(dt_en, dt_fa)
+
+    def test_datetimes_with_different_locales_inequality_works(self):
+        dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
+        dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
+        self.assertTrue(dt_en != dt_fa)
+
+    def test_fromgregorian_accepts_named_argument_of_date_and_locale(self):
+        gd = datetime.date(2018, 7, 14)
+        jdt = jdatetime.datetime.fromgregorian(date=gd, locale='nl_NL')
+        self.assertEqual(jdt.year, 1397)
+        self.assertEqual(jdt.month, 4)
+        self.assertEqual(jdt.day, 23)
+        self.assertEqual(jdt.locale, 'nl_NL')
+
+    def test_fromgregorian_accepts_named_argument_of_datetime_and_locale(self):
+        gdt = datetime.datetime(2018, 7, 15, 11, 7, 0)
+        jdt = jdatetime.datetime.fromgregorian(datetime=gdt, locale='nl_NL')
+        self.assertEqual(jdt.year, 1397)
+        self.assertEqual(jdt.month, 4)
+        self.assertEqual(jdt.day, 24)
+        self.assertEqual(jdt.hour, 11)
+        self.assertEqual(jdt.minute, 7)
+        self.assertEqual(jdt.locale, 'nl_NL')
+
+    def test_fromgregorian_accepts_year_month_day_and_locale(self):
+        jdt = jdatetime.datetime.fromgregorian(year=2018, month=7, day=15, locale='nl_NL')
+        self.assertEqual(jdt.year, 1397)
+        self.assertEqual(jdt.month, 4)
+        self.assertEqual(jdt.day, 24)
+        self.assertEqual(jdt.locale, 'nl_NL')
 
     def test_datetime_raise_exception_on_invalid_calculation(self):
         date_1395 = jdatetime.datetime(1395,1,1)
@@ -330,6 +499,22 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(day_diff, datetime.timedelta(-365))
 
+    def test_add_timedelta_keeps_source_datetime_locale(self):
+        jdate = jdatetime.datetime(1397, 4, 23, locale='nl_NL')
+        new_jdate = jdate + datetime.timedelta(days=1)
+        self.assertEqual(new_jdate.year, 1397)
+        self.assertEqual(new_jdate.month, 4)
+        self.assertEqual(new_jdate.day, 24)
+        self.assertEqual(new_jdate.locale, 'nl_NL')
+
+    def test_subtract_timedelta_keeps_source_datetime_locale(self):
+        jdate = jdatetime.datetime(1397, 4, 23, locale='nl_NL')
+        new_jdate = jdate - datetime.timedelta(days=1)
+        self.assertEqual(new_jdate.year, 1397)
+        self.assertEqual(new_jdate.month, 4)
+        self.assertEqual(new_jdate.day, 22)
+        self.assertEqual(new_jdate.locale, 'nl_NL')
+
     def test_with_none_locale_set(self):
         self.reset_locale()
         day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
@@ -368,6 +553,18 @@ class TestJDateTime(unittest.TestCase):
             tehran = timezone('Asia/Tehran')
             date = jdatetime.datetime(1394, 1, 1, 0, 0, 0, tzinfo=tehran)
             self.assertEqual(str(date), "1394-01-01 00:00:00+0326")
+
+    def test_as_locale_returns_same_datetime_with_specified_locale(self):
+        jdt_en = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, locale='en_US')
+        jdt_fa = jdt_en.aslocale('fa_IR')
+        self.assertEqual(jdt_fa.year, 1397)
+        self.assertEqual(jdt_fa.month, 4)
+        self.assertEqual(jdt_fa.day, 23)
+        self.assertEqual(jdt_fa.hour, 11)
+        self.assertEqual(jdt_fa.minute, 47)
+        self.assertEqual(jdt_fa.second, 30)
+        self.assertEqual(jdt_fa.microsecond, 40)
+        self.assertEqual(jdt_fa.locale, 'fa_IR')
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):

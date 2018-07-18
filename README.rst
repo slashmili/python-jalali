@@ -60,7 +60,27 @@ Example
 
 Locale
 ------
-In order to get the date string in farsi you need to set the locale to fa_IR
+In order to get the date string in farsi you need to set the locale to fa_IR. The locale
+could be specified explicitly upon instantiation of `date`/`datetime` instances, or by
+setting a default locale.
+
+Instance locales is *named argument only*:
+
+.. code-block:: python
+
+    import jdatetime
+    fa_date = jdatetime.date(1397, 4, 23, locale='fa_IR')
+    fa_datetime = jdatetime.datetime(1397, 4, 23, 11, 40, 30, locale='fa_IR')
+
+
+`date` and `datetime` instances provide the method `aslocale()` to return a clone of the instance
+with the same timestamp, in a different locale.
+
+
+Default Locale
+~~~~~~~~~~~~~~
+It's possible to set the default locale, so all new instances created afterwards would use
+the desired locale, unless explicitly specified otherwise.
 
 .. code-block:: shell
 
