@@ -2,19 +2,19 @@
 
 ## [3.0.0] - 2018-07-22
 ### Add
-    * Added instance "locale" attribute #37
+* Added instance "locale" attribute #37
 ### Change
-    * date/datetime instances with different locale attrs are not equal anymore #37
+* date/datetime instances with different locale attrs are not equal anymore #37
 ###  Fixed
-    * fixed a bug in %p placeholder #40
+* fixed a bug in %p placeholder #40
 
 ## [2.2.0] - 2018-07-07
 ### Add
-    * Added padding-less variations of strftime format symbols #36
+* Added padding-less variations of strftime format symbols #36
 
 ## [2.1.0] - 2018-06-20
 ### Add
-    * Set default date/datetime locales per thread #35
+* Set default date/datetime locales per thread #35
 
 ## [2.0.0] - 2018-02-25
 ### Add
