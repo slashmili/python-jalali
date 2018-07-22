@@ -112,5 +112,12 @@ This supports both Python threads, and greenlets.
     jdatetime.datetime.now().strftime('%A %B')
     # u'\u062f\u0648\u0634\u0646\u0628\u0647 \u062e\u0631\u062f\u0627\u062f'
 
+Release Steps
+~~~~~~~~~~~~~~
+* Bump the version setup.py
+* Add release notes in CHANGELOG.md
+* Commit and create a tag with a name like v3.5.9
+* python setup.py sdist
+* twine upload dist/jdatetime-3.5.9.tar.gz
 
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
