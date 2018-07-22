@@ -1,5 +1,9 @@
 # Changelog
 
+## [2.1.1] - 2018-06-22
+###
+* fixed a bug in %p placeholder #40
+
 ## [2.1.0] - 2018-06-20
 ## Add
     * Set default date/datetime locales per thread #35

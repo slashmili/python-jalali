@@ -552,7 +552,7 @@ class date(object):
             format = format.replace("%M", '00')
 
         try:
-            if self.hour > 12:
+            if self.hour >= 12:
                 format = format.replace("%p", self.j_ampm['PM'])
             else:
                 format = format.replace("%p", self.j_ampm['AM'])
