@@ -876,7 +876,7 @@ class datetime(date):
             '%Y': ['[0-9]{4,5}', 'year'],
         }
         regex = format
-        find = _re.compile("([%a-zA-Z]{2})")
+        find = _re.compile("(%[a-zA-Z])")
 
         for form in find.findall(format):
             if form in format_map:
