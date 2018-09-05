@@ -32,7 +32,7 @@ Also these methods are addedd to jdatetime.date and jdatetime.datetime :
         Convert gregorian to jalali and return jdatetime.date
         jdatetime.date.fromgregorian(day=X,month=X,year=X)
         jdatetime.date.fromgregorian(date=datetime.date)
-        jdatetime.date.fromgregorian(datetime=datetime.datetime)
+        jdatetime.datetime.fromgregorian(datetime=datetime.datetime)
     togregorian(self)
         Convert current jalali date to gregorian and return datetime.date
     isleap(self)
