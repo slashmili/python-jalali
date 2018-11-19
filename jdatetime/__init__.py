@@ -909,7 +909,7 @@ class datetime(date):
             minute=None,
             second=None,
             microsecond=None,
-            tzinfo=None):
+            tzinfo=True):
         """Return datetime with new specified fields."""
         t_year = self.year
         if year is not None:
@@ -940,7 +940,7 @@ class datetime(date):
             t_mic = microsecond
 
         t_tz = self.tzinfo
-        if tzinfo is not None:
+        if tzinfo is not True:
             t_tz = tzinfo
         return datetime(
             t_year,

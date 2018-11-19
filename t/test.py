@@ -337,6 +337,12 @@ class TestJDateTime(unittest.TestCase):
                 }
         self.assertEqual(dt.replace(**args).locale, 'nl_NL')
 
+    def test_replace_remove_tzinfo(self):
+        teh = TehranTime()
+        dt = jdatetime.datetime(1397, 8, 17, 7, 54, 28, tzinfo=teh)
+        dt_naive = dt.replace(tzinfo=None)
+        self.assertEqual(dt_naive.tzinfo, None)
+
     def test_strptime(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
