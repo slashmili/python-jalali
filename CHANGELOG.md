@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.1.0] - 2018-12-25
+### Fixed
+* Handle naive datatime in replace function
+
 ## [3.0.2] - 2018-09-2
 ### Fixed
 * Handle joint alphabetic characters in strptime format
