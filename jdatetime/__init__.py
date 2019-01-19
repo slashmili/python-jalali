@@ -156,6 +156,10 @@ class date(object):
     def day(self):
         return self.__day
 
+    def timetuple(self):
+        "Return local time tuple compatible with time.localtime()."
+        return self.togregorian().timetuple()
+
     @property
     def locale(self):
         return self.__locale
@@ -814,6 +818,10 @@ class datetime(date):
             c_time.microsecond,
             c_time.tzinfo,
             locale=c_date.locale)
+
+    def timetuple(self):
+        "Return local time tuple compatible with time.localtime()."
+        return self.togregorian().timetuple()
 
     @staticmethod
     def fromordinal(ordinal):
