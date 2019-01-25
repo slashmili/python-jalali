@@ -823,7 +823,7 @@ class datetime(date):
         "Return local time tuple compatible with time.localtime()."
         return self.togregorian().timetuple()
     
-    def timezone(self):
+    def timestamp(self):
         return self.togregorian().timestamp()
 
     @staticmethod
