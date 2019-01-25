@@ -822,6 +822,9 @@ class datetime(date):
     def timetuple(self):
         "Return local time tuple compatible with time.localtime()."
         return self.togregorian().timetuple()
+    
+    def timezone(self):
+        return self.togregorian().timestamp()
 
     @staticmethod
     def fromordinal(ordinal):
