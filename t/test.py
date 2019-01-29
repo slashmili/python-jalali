@@ -599,7 +599,8 @@ class TestJDateTime(unittest.TestCase):
         '`datetime.datetime.timestamp` is not implemented in older pythons',
     )
     def test_timestamp_implemented(self):
-        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40)
+        teh = TehranTime()
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tz_info=teh)
         self.assertEqual(jdt.timestamp(), 1531552650.00004)
 
     @unittest.skipIf(
@@ -607,7 +608,8 @@ class TestJDateTime(unittest.TestCase):
         '`datetime.datetime.timestamp` is not implemented in older pythons',
     )
     def test_timestamp_not_implemented(self):
-        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40)
+        teh = TehranTime()
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tz_info=teh)
         with self.assertRaises(NotImplementedError):
             jdt.timestamp()
 
