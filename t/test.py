@@ -600,8 +600,8 @@ class TestJDateTime(unittest.TestCase):
     )
     def test_timestamp_implemented(self):
         teh = TehranTime()
-        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tz_info=teh)
-        self.assertEqual(jdt.timestamp(), 1531552650.00004)
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tzinfo=teh)
+        self.assertEqual(jdt.timestamp(), 1531556250.00004)
 
     @unittest.skipIf(
         hasattr(datetime.datetime, 'timestamp'),
@@ -609,7 +609,7 @@ class TestJDateTime(unittest.TestCase):
     )
     def test_timestamp_not_implemented(self):
         teh = TehranTime()
-        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tz_info=teh)
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tzinfo=teh)
         with self.assertRaises(NotImplementedError):
             jdt.timestamp()
 
