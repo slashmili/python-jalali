@@ -127,6 +127,13 @@ class TestJDate(unittest.TestCase):
         self.assertEqual(new_date.day, 21)
         self.assertEqual(new_date.locale, 'nl_NL')
 
+    def test_timetuple(self):
+        date = jdatetime.date(1397, 4, 22,)
+        self.assertEqual(
+            date.timetuple(),
+            time.struct_time((2018, 7, 13, 0, 0, 0, 4, 194, -1)),
+        )
+
 
 class TestJDateTime(unittest.TestCase):
     def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
@@ -579,6 +586,33 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(jdt_fa.second, 30)
         self.assertEqual(jdt_fa.microsecond, 40)
         self.assertEqual(jdt_fa.locale, 'fa_IR')
+
+    def test_timetuple(self):
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40)
+        self.assertEqual(
+            jdt.timetuple(),
+            time.struct_time((2018, 7, 14, 11, 47, 30, 5, 195, -1)),
+        )
+
+    @unittest.skipUnless(
+        hasattr(datetime.datetime, 'timestamp'),
+        '`datetime.datetime.timestamp` is not implemented in older pythons',
+    )
+    def test_timestamp_implemented(self):
+        teh = TehranTime()
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tzinfo=teh)
+        self.assertEqual(jdt.timestamp(), 1531556250.00004)
+
+    @unittest.skipIf(
+        hasattr(datetime.datetime, 'timestamp'),
+        '`datetime.datetime.timestamp` is not implemented in older pythons',
+    )
+    def test_timestamp_not_implemented(self):
+        teh = TehranTime()
+        jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tzinfo=teh)
+        with self.assertRaises(NotImplementedError):
+            jdt.timestamp()
+
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):

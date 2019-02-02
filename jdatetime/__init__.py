@@ -28,6 +28,9 @@ MAXYEAR = 9377
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
+timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and\
+    callable(py_datetime.datetime.timestamp)
+
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -155,6 +158,10 @@ class date(object):
     @property
     def day(self):
         return self.__day
+
+    def timetuple(self):
+        "Return local time tuple compatible with time.localtime()."
+        return self.togregorian().timetuple()
 
     @property
     def locale(self):
@@ -502,9 +509,6 @@ class date(object):
         """
         return self.strftime(format)
 
-    # TODO: create jtime !
-    # def timetuple(self):
-    #    pass
     def strftime(self, format):
         """format -> strftime() style string."""
         # TODO: change stupid str.replace
@@ -814,6 +818,13 @@ class datetime(date):
             c_time.microsecond,
             c_time.tzinfo,
             locale=c_date.locale)
+
+    def timestamp(self):
+        gregorian_datetime = self.togregorian()
+        if timestamp_is_supported:
+            return gregorian_datetime.timestamp()
+        raise NotImplementedError('`datetime.datetime.timestamp` is not '
+                                  'implemented in this version of python')
 
     @staticmethod
     def fromordinal(ordinal):
