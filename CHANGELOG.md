@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.2.0] - 2019-02-02
+### Add
+* add timetuple and timestamp function
+
 ## [3.1.0] - 2018-12-25
 ### Fixed
 * Handle naive datatime in replace function
