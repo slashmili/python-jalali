@@ -43,6 +43,30 @@ else:
     FA_LOCALE = 'fa_IR'
 
 
+def _format_time(hour, minute, second, microsecond, timespec='auto'):
+    specs = {
+        'hours': '{:02d}',
+        'minutes': '{:02d}:{:02d}',
+        'seconds': '{:02d}:{:02d}:{:02d}',
+        'milliseconds': '{:02d}:{:02d}:{:02d}.{:03d}',
+        'microseconds': '{:02d}:{:02d}:{:02d}.{:06d}',
+    }
+
+    if timespec == 'auto':
+        # Skip trailing microseconds when equals to 0
+        timespec = 'microseconds' if microsecond else 'seconds'
+    elif timespec == 'milliseconds':
+        # convert to millisecond
+        microsecond //= 1000
+
+    try:
+        fmt = specs[timespec]
+    except KeyError:
+        raise ValueError('Unknown timespec value: %s' % timespec)
+    else:
+        return fmt.format(hour, minute, second, microsecond)
+
+
 class time(py_datetime.time):
     def __repr__(self):
         return "jdatetime.time(%s, %s, %s)" % (self.hour,
@@ -1187,15 +1211,19 @@ class datetime(date):
             return self.tzinfo.dst(self)
         return None
 
-    def isoformat(self):
+    def isoformat(self, sep='T', timespec='auto'):
         """[sep] -> string in ISO 8601 format, YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
-        mil = self.strftime("%f")
-        if int(mil) == 0:
-            mil = ""
-        else:
-            mil = "." + mil
+        if not isinstance(sep, str) or len(sep) != 1:
+            raise TypeError('isoformat() argument 1 must be a unicode character, not str')
+
         tz = self.strftime("%z")
-        return self.strftime("%Y-%m-%dT%H:%M:%S") + "%s%s" % (mil, tz)
+
+        date_ = self.strftime("%Y-%m-%d")
+        time_ = _format_time(self.hour, self.minute, self.second,
+                             self.microsecond, timespec)
+
+        result = '%s%c%s%s' % (date_, sep, time_, tz)
+        return result
 
     def timetuple(self):
         """Return time tuple, compatible with time.localtime().
