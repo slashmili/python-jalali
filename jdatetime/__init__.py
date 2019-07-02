@@ -1212,9 +1212,10 @@ class datetime(date):
         return None
 
     def isoformat(self, sep='T', timespec='auto'):
-        """[sep] -> string in ISO 8601 format, YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
-        if not isinstance(sep, str) or len(sep) != 1:
-            raise TypeError('isoformat() argument 1 must be a unicode character, not str')
+        """[sep] -> string in ISO 8601 format,
+        YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
+        assert isinstance(sep, str) and len(sep) == 1, \
+            'argument 1 must be a single character'
 
         tz = self.strftime("%z")
 
