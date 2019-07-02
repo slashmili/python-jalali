@@ -613,6 +613,42 @@ class TestJDateTime(unittest.TestCase):
         with self.assertRaises(NotImplementedError):
             jdt.timestamp()
 
+    def test_isoformat_default_args(self):
+        jdt = jdatetime.datetime(1398, 4, 11)
+        jiso = jdt.isoformat()
+
+        self.assertAlmostEqual(jiso, '1398-04-11T00:00:00')
+
+    def test_isoformat_custom_sep(self):
+        jdt = jdatetime.datetime(1398, 4, 11)
+        jiso = jdt.isoformat('M')
+
+        self.assertAlmostEqual(jiso, '1398-04-11M00:00:00')
+
+    def test_isoformat_bad_sep(self):
+        jdt = jdatetime.datetime(1398, 4, 11)
+
+        with self.assertRaises(AssertionError):
+            jdt.isoformat('dummy')
+            jdt.isoformat(123)
+            jdt.isoformat(123.123)
+            jdt.isoformat((1, 2, 3))
+            jdt.isoformat([1, 2, 3])
+
+    def test_isoformat_custom_timespec(self):
+        jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456)
+
+        hours = jdt.isoformat(timespec='hours')
+        minutes = jdt.isoformat(timespec='minutes')
+        seconds = jdt.isoformat(timespec='seconds')
+        milliseconds = jdt.isoformat(timespec='milliseconds')
+        microseconds = jdt.isoformat(timespec='microseconds')
+
+        self.assertEqual(hours, '1398-04-11T11')
+        self.assertEqual(minutes, '1398-04-11T11:06')
+        self.assertEqual(seconds, '1398-04-11T11:06:05')
+        self.assertEqual(milliseconds, '1398-04-11T11:06:05.123')
+        self.assertEqual(microseconds, '1398-04-11T11:06:05.123456')
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):
