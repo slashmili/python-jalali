@@ -9,6 +9,7 @@ import platform
 import datetime as py_datetime
 import locale as _locale
 import re as _re
+from six import string_types
 
 try:
     from greenlet import getcurrent as get_ident
@@ -1214,8 +1215,8 @@ class datetime(date):
     def isoformat(self, sep='T', timespec='auto'):
         """[sep] -> string in ISO 8601 format,
         YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
-        assert isinstance(sep, str) and len(sep) == 1, \
-            'argument 1 must be a single character'
+        assert isinstance(sep, string_types) and len(sep) == 1, \
+            'argument 1 must be a single character: {}'.format(sep)
 
         tz = self.strftime("%z")
 
@@ -1223,7 +1224,7 @@ class datetime(date):
         time_ = _format_time(self.hour, self.minute, self.second,
                              self.microsecond, timespec)
 
-        return f'{date_}{sep}{time_}{tz}'
+        return '{}{}{}{}'.format(date_, sep, time_, tz)
 
     def timetuple(self):
         """Return time tuple, compatible with time.localtime().
