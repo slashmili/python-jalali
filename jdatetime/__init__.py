@@ -1222,8 +1222,7 @@ class datetime(date):
         time_ = _format_time(self.hour, self.minute, self.second,
                              self.microsecond, timespec)
 
-        result = '%s%c%s%s' % (date_, sep, time_, tz)
-        return result
+        return f'{date_}{sep}{time_}{tz}'
 
     def timetuple(self):
         """Return time tuple, compatible with time.localtime().
