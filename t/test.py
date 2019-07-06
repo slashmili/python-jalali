@@ -628,12 +628,9 @@ class TestJDateTime(unittest.TestCase):
     def test_isoformat_bad_sep(self):
         jdt = jdatetime.datetime(1398, 4, 11)
 
-        with self.assertRaises(AssertionError):
-            jdt.isoformat('dummy')
-            jdt.isoformat(123)
-            jdt.isoformat(123.123)
-            jdt.isoformat((1, 2, 3))
-            jdt.isoformat([1, 2, 3])
+        for t in ['dummy', 123, 123.123, (1, 2, 3), [1, 2, 3]]:
+            with self.assertRaises(AssertionError):
+                jdt.isoformat(t)
 
     def test_isoformat_custom_timespec(self):
         jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456)
