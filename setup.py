@@ -1,8 +1,5 @@
 from distutils.core import setup
 
-REQUIRES = (
-        'six==1.12.0',
-)
 
 setup(
         name='jdatetime',
@@ -12,7 +9,6 @@ setup(
         keywords='Jalali implementation of Python datetime',
         platforms='any',
         author = 'Milad Rastian',
-        install_requires=REQUIRES,
         author_email = 'eslashmili@gmail.com',
         description=("Jalali datetime binding for python"),
         url="https://github.com/slashmili/python-jalali",
