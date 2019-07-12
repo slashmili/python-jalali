@@ -312,21 +312,21 @@ class date(object):
     def __str__(self):
         return self.strftime("%Y-%m-%d")
 
-    def __add__(self, timedelta):
+        def __add__(self, other):
         """x.__add__(y) <==> x+y"""
-        if not isinstance(timedelta, py_datetime.timedelta):
-            raise TypeError(
+        if isinstance(other, py_datetime.timedelta):
+            return date.fromgregorian(date=self.togregorian() + other, locale=self.locale)
+        raise TypeError(
                 "unsupported operand type(s) for +: '%s' and '%s'" %
-                (type(self), type(timedelta)))
-        gd = self.togregorian() + timedelta
-        return date.fromgregorian(date=gd, locale=self.locale)
+                (type(self), type(other)))
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
-        if isinstance(other, py_datetime.timedelta):
-            gd = self.togregorian() - other
-            return date.fromgregorian(date=gd, locale=self.locale)
 
+        if isinstance(other, py_datetime.timedelta):
+            return date.fromgregorian(date=self.togregorian() - other, locale=self.locale)
+        if isinstance(other, py_datetime.date):
+            return self.togregorian() - other
         if isinstance(other, date):
             return self.togregorian() - other.togregorian()
 
@@ -334,22 +334,23 @@ class date(object):
             "unsupported operand type(s) for -: '%s' and '%s'" %
             (type(self), type(timedelta)))
 
-    def __radd__(self, timedelta):
+    def __radd__(self, other):
         """x.__radd__(y) <==> y+x"""
-        if not isinstance(timedelta, py_datetime.timedelta):
-            raise TypeError(
-                "unsupported operand type for +: '%s'" %
-                (type(timedelta)))
-
-        return self.__add__(timedelta)
+        if isinstance(other, py_datetime.timedelta):
+            return self.__add__(other)
+        raise TypeError(
+            "unsupported operand type for +: '%s' and '%s'" %
+            (type(other), type(self)))
 
     def __rsub__(self, other):
         """x.__rsub__(y) <==> y-x"""
         if isinstance(other, date):
-            return self.__sub__(other)
-        raise TypeError(
-            "unsupported operand type for -: '%s'" %
-            (type(other)))
+            return other.__sub__(self)
+        if isinstance(other, py_datetime.date):
+            return other - self.togregorian()
+        raise TypeError("unsupported operand type for -: '%s' and '%s'" %
+                            (type(other), type(self)))
+
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
@@ -964,52 +965,43 @@ class datetime(date):
             t_tz,
             locale=self.locale)
 
-    def __add__(self, timedelta):
+       def __add__(self, other):
         """x.__add__(y) <==> x+y"""
-        if isinstance(timedelta, py_datetime.timedelta):
-            return self.__calculation_on_timedelta('__add__', timedelta)
+        if isinstance(other, py_datetime.timedelta):
+            return datetime.fromgregorian(datetime=self.togregorian() + other, locale=self.locale)
         raise TypeError(
             "unsupported operand type(s) for +: '%s' and '%s'" %
-            (type(self), type(timedelta)))
+            (type(self), type(other)))
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
+
         if isinstance(other, py_datetime.timedelta):
-            return self.__calculation_on_timedelta('__sub__', other)
+            return datetime.fromgregorian(datetime=self.togregorian() - other, locale=self.locale)
+        if isinstance(other, py_datetime.datetime):
+            return self.togregorian() - other
         if isinstance(other, datetime):
-            return self.__calculation_on_datetime('__sub__', other)
+            return self.togregorian() - other.togregorian()
         raise TypeError(
             "unsupported operand type(s) for -: '%s' and '%s'" %
             (type(self), type(other)))
 
-    def __radd__(self, timedelta):
+    def __radd__(self, other):
         """x.__radd__(y) <==> y+x"""
-        if isinstance(timedelta, py_datetime.timedelta):
-            return self.__add__(timedelta)
+        if isinstance(other, py_datetime.timedelta):
+            return self.__add__(other)
         raise TypeError(
             "unsupported operand type for +: '%s' and '%s'" %
-            (type(py_datetime.timedelta), type(self)))
+            (type(other), type(self)))
 
     def __rsub__(self, other):
         """x.__rsub__(y) <==> y-x"""
         if isinstance(other, datetime):
-            return self.__calculation_on_datetime('__rsub__', other)
-
-        raise TypeError(
-            "unsupported operand type for -: '%s' and '%s'" %
-            (type(other), type(self)))
-
-    def __calculation_on_timedelta(self, action, timedelta):
-        gdatetime = self.togregorian()
-        new_gdatetime = getattr(gdatetime, action)(timedelta)
-
-        return datetime.fromgregorian(datetime=new_gdatetime, locale=self.locale)
-
-    def __calculation_on_datetime(self, action, another_datetime):
-        self_gdatetime = self.togregorian()
-        another_gdatetime = another_datetime.togregorian()
-
-        return getattr(self_gdatetime, action)(another_gdatetime)
+            return other.__sub__(self)
+        if isinstance(other, py_datetime.datetime):
+            return other - self.togregorian()
+        raise TypeError("unsupported operand type for -: '%s' and '%s'" %
+                            (type(other), type(self)))
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
