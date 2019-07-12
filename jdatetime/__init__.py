@@ -312,7 +312,7 @@ class date(object):
     def __str__(self):
         return self.strftime("%Y-%m-%d")
 
-        def __add__(self, timedelta):
+    def __add__(self, timedelta):
         """x.__add__(y) <==> x+y"""
         if isinstance(timedelta, py_datetime.timedelta):
             return date.fromgregorian(date=self.togregorian() + other, locale=self.locale)
