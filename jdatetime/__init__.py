@@ -29,7 +29,9 @@ MAXYEAR = 9377
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
-timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and callable(py_datetime.datetime.timestamp)
+timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and\
+    callable(py_datetime.datetime.timestamp)
+
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -105,6 +107,7 @@ def get_locale():
 
 
 class date(object):
+
     """date(year, month, day) --> date object"""
     j_months_en = ['Farvardin',
                    'Ordibehesht',
@@ -370,7 +373,8 @@ class date(object):
         if isinstance(other, py_datetime.date):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                        (type(other), type(self)))
+                            (type(other), type(self)))
+
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
@@ -697,7 +701,8 @@ class datetime(date):
         if microsecond is not None:
             tmp_micr = microsecond
 
-        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and self._check_arg(tmp_sec) and self._check_arg(tmp_micr)):
+        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and
+                self._check_arg(tmp_sec) and self._check_arg(tmp_micr)):
             raise TypeError("an integer is required")
 
         self.__time = time(tmp_hour, tmp_min, tmp_sec, tmp_micr, tzinfo)
@@ -1020,7 +1025,7 @@ class datetime(date):
         if isinstance(other, py_datetime.datetime):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                        (type(other), type(self)))
+                            (type(other), type(self)))
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
