@@ -204,7 +204,9 @@ class date(object):
 
     def __init__(self, year, month, day, **kwargs):
         """date(year, month, day) --> date object"""
-        if not (self._check_arg(year) and self._check_arg(month) and self._check_arg(day)):
+        if not (self._check_arg(year) and
+                self._check_arg(month) and
+                self._check_arg(day)):
             raise TypeError("an integer is required" + repr(type(year)))
         if year < MINYEAR or year > MAXYEAR:
             raise ValueError("year is out of range")
