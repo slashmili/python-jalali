@@ -28,9 +28,8 @@ MAXYEAR = 9377
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
-timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and\
-    callable(py_datetime.datetime.timestamp)
-
+timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and \
+                         callable(py_datetime.datetime.timestamp)
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -82,7 +81,6 @@ def get_locale():
 
 
 class date(object):
-
     """date(year, month, day) --> date object"""
     j_months_en = ['Farvardin',
                    'Ordibehesht',
@@ -235,6 +233,7 @@ class date(object):
     # min = date(MINYEAR, 1, 1)
     # TODO fixed errror:  name 'date' is not defined
     """The latest representable date, date(MAXYEAR, 12, 31)."""
+
     # max = date(MAXYEAR, 12,29)
 
     def isleap(self):
@@ -317,8 +316,8 @@ class date(object):
         if isinstance(timedelta, py_datetime.timedelta):
             return date.fromgregorian(date=self.togregorian() + other, locale=self.locale)
         raise TypeError(
-                "unsupported operand type(s) for +: '%s' and '%s'" %
-                (type(self), type(timedelta)))
+            "unsupported operand type(s) for +: '%s' and '%s'" %
+            (type(self), type(timedelta)))
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
@@ -349,8 +348,7 @@ class date(object):
         if isinstance(other, py_datetime.date):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                            (type(other), type(self)))
-
+                        (type(other), type(self)))
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
@@ -361,9 +359,9 @@ class date(object):
         if not isinstance(other_date, date):
             return False
         if self.year == other_date.year and \
-           self.month == other_date.month and \
-           self.day == other_date.day and \
-           self.locale == other_date.locale:
+                self.month == other_date.month and \
+                self.day == other_date.day and \
+                self.locale == other_date.locale:
             return True
         return False
 
@@ -626,7 +624,7 @@ class date(object):
             diff_min = tmp_min % 60
             format = format.replace(
                 "%z", '%s%02.d%02.d' %
-                (sign, diff_hour, diff_min))
+                      (sign, diff_hour, diff_min))
         except AttributeError:
             format = format.replace("%z", '')
 
@@ -1001,7 +999,7 @@ class datetime(date):
         if isinstance(other, py_datetime.datetime):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                            (type(other), type(self)))
+                        (type(other), type(self)))
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
@@ -1012,9 +1010,9 @@ class datetime(date):
         if not isinstance(other_datetime, datetime):
             return False
         if self.year == other_datetime.year and \
-           self.month == other_datetime.month and \
-           self.day == other_datetime.day and\
-           self.locale == other_datetime.locale:
+                self.month == other_datetime.month and \
+                self.day == other_datetime.day and \
+                self.locale == other_datetime.locale:
             return self.timetz() == other_datetime.timetz(
             ) and self.microsecond == other_datetime.microsecond
         return False
@@ -1035,13 +1033,13 @@ class datetime(date):
                 self.minute,
                 self.second,
                 self.microsecond) >= \
-            (other_datetime.year,
-             other_datetime.month,
-             other_datetime.day,
-             other_datetime.hour,
-             other_datetime.minute,
-             other_datetime.second,
-             other_datetime.microsecond)
+               (other_datetime.year,
+                other_datetime.month,
+                other_datetime.day,
+                other_datetime.hour,
+                other_datetime.minute,
+                other_datetime.second,
+                other_datetime.microsecond)
 
     def __gt__(self, other_datetime):
         """x.__gt__(y) <==> x>y"""
@@ -1059,13 +1057,13 @@ class datetime(date):
                 self.minute,
                 self.second,
                 self.microsecond) > \
-            (other_datetime.year,
-             other_datetime.month,
-             other_datetime.day,
-             other_datetime.hour,
-             other_datetime.minute,
-             other_datetime.second,
-             other_datetime.microsecond)
+               (other_datetime.year,
+                other_datetime.month,
+                other_datetime.day,
+                other_datetime.hour,
+                other_datetime.minute,
+                other_datetime.second,
+                other_datetime.microsecond)
 
     def __hash__(self):
         """x.__hash__() <==> hash(x)"""
