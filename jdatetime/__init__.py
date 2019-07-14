@@ -29,8 +29,7 @@ MAXYEAR = 9377
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
-timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and \
-                         callable(py_datetime.datetime.timestamp)
+timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and callable(py_datetime.datetime.timestamp)
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -202,9 +201,7 @@ class date(object):
 
     def __init__(self, year, month, day, **kwargs):
         """date(year, month, day) --> date object"""
-        if not (self._check_arg(year) and
-                self._check_arg(month) and
-                self._check_arg(day)):
+        if not (self._check_arg(year) and self._check_arg(month) and self._check_arg(day)):
             raise TypeError("an integer is required" + repr(type(year)))
         if year < MINYEAR or year > MAXYEAR:
             raise ValueError("year is out of range")
@@ -700,8 +697,7 @@ class datetime(date):
         if microsecond is not None:
             tmp_micr = microsecond
 
-        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and
-                self._check_arg(tmp_sec) and self._check_arg(tmp_micr)):
+        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and self._check_arg(tmp_sec) and self._check_arg(tmp_micr)):
             raise TypeError("an integer is required")
 
         self.__time = time(tmp_hour, tmp_min, tmp_sec, tmp_micr, tzinfo)
