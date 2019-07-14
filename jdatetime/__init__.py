@@ -311,7 +311,7 @@ class date(object):
     def __add__(self, timedelta):
         """x.__add__(y) <==> x+y"""
         if isinstance(timedelta, py_datetime.timedelta):
-            return date.fromgregorian(date=self.togregorian() + other, locale=self.locale)
+            return date.fromgregorian(date=self.togregorian() + timedelta, locale=self.locale)
         raise TypeError(
             "unsupported operand type(s) for +: '%s' and '%s'" %
             (type(self), type(timedelta)))
