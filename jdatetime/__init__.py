@@ -29,9 +29,8 @@ MAXYEAR = 9377
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
-timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and\
-    callable(py_datetime.datetime.timestamp)
-
+timestamp_is_supported = hasattr(py_datetime.datetime, 'timestamp') and \
+                         callable(py_datetime.datetime.timestamp)
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
@@ -107,7 +106,6 @@ def get_locale():
 
 
 class date(object):
-
     """date(year, month, day) --> date object"""
     j_months_en = ['Farvardin',
                    'Ordibehesht',
@@ -375,8 +373,7 @@ class date(object):
         if isinstance(other, py_datetime.date):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                            (type(other), type(self)))
-
+                        (type(other), type(self)))
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
@@ -1027,7 +1024,7 @@ class datetime(date):
         if isinstance(other, py_datetime.datetime):
             return other - self.togregorian()
         raise TypeError("unsupported operand type for -: '%s' and '%s'" %
-                            (type(other), type(self)))
+                        (type(other), type(self)))
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
