@@ -126,6 +126,11 @@ class TestJDate(unittest.TestCase):
         self.assertEqual(new_date.month, 4)
         self.assertEqual(new_date.day, 21)
         self.assertEqual(new_date.locale, 'nl_NL')
+    
+    def test_subtract_datetime_date(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        delta = date - datetime.date(2018, 7, 12)
+        self.assertEqual(delta.days, 1)
 
     def test_timetuple(self):
         date = jdatetime.date(1397, 4, 22,)
