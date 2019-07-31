@@ -147,6 +147,9 @@ class date(object):
                            'Fri']
     j_ampm_en = {'PM': 'PM', 'AM': 'AM'}
 
+    j_today_en = 'today'
+    j_yesterday_en = 'yesterday'
+
     j_months_fa = [u'فروردین',
                    u'اردیبهشت',
                    u'خرداد',
@@ -168,6 +171,9 @@ class date(object):
                      u'پنجشنبه',
                      u'جمعه']
     j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
+
+    j_today_fa = 'امروز'
+    j_yesterday_fa = 'دیروز'
 
     @property
     def year(self):
@@ -229,12 +235,16 @@ class date(object):
             self.j_weekdays = self.j_weekdays_fa
             self.j_weekdays_short = self.j_weekdays_fa
             self.j_ampm = self.j_ampm_fa
+            self.j_today = self.j_today_fa
+            self.j_yesterday = self.j_yesterday_fa
         else:
             self.j_months = self.j_months_en
             self.j_months_short = self.j_months_short_en
             self.j_weekdays = self.j_weekdays_en
             self.j_weekdays_short = self.j_weekdays_short_en
             self.j_ampm = self.j_ampm_en
+            self.j_today = self.j_today_en
+            self.j_yesterday = self.j_yesterday_en
 
     def _is_fa_locale(self):
         if self.__locale and self.__locale == FA_LOCALE:
@@ -660,9 +670,34 @@ class date(object):
     def aslocale(self, locale):
         return date(self.year, self.month, self.day, locale=locale)
 
+    def pretty(self):
+        today = datetime.today().date()
+
+        if today == self:
+            return self.j_today
+
+        elif today - timedelta(days=1) == self:
+            return self.j_yesterday
+
+        elif today - timedelta(days=today.weekday()) <= self < today:
+            return self.strftime("%A")
+
+        elif today.replace(month=1, day=1) <= self < today:
+            return self.strftime("%d %B")
+
+        else:
+            return self.strftime("%d %B %Y")
+
 
 class datetime(date):
     """datetime(year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]) --> datetime objects"""
+
+    j_just_now_en = 'just now'
+    j_moments_ago_en = 'moments ago'
+
+    j_just_now_fa = 'لحظاتی پیش'
+    j_moments_ago_fa = 'دقایقی پیش'
+
     __time = None
 
     def time(self):
@@ -684,6 +719,14 @@ class datetime(date):
             microsecond=None,
             tzinfo=None, **kwargs):
         date.__init__(self, year, month, day, **kwargs)
+
+        if self._is_fa_locale():
+            self.j_just_now = self.j_just_now_fa
+            self.j_moments_ago = self.j_moments_ago_fa
+        else:
+            self.j_just_now = self.j_just_now_en
+            self.j_moments_ago = self.j_moments_ago_en
+
         tmp_hour = 0
         tmp_min = 0
         tmp_sec = 0
@@ -1254,3 +1297,13 @@ class datetime(date):
     def aslocale(self, locale):
         return datetime(self.year, self.month, self.day, self.hour, self.minute,
                         self.second, self.microsecond, tzinfo=self.tzinfo, locale=locale)
+
+    def pretty(self):
+        now = datetime.now()
+        if now - timedelta(minutes=1) < self <= now:
+            return self.j_just_now
+
+        elif now - timedelta(minutes=5) < self <= now:
+            return self.j_moments_ago
+
+        return "{} {}".format(self.date().pretty(), self.strftime("%H:%M"))
