@@ -467,20 +467,7 @@ class date(object):
         """Return the day of the week represented by the date.
         Shanbeh == 0 ... Jomeh == 6"""
         gd = self.togregorian()
-        if gd.weekday() == 5:
-            return 0
-        if gd.weekday() == 6:
-            return 1
-        if gd.weekday() == 0:
-            return 2
-        if gd.weekday() == 1:
-            return 3
-        if gd.weekday() == 2:
-            return 4
-        if gd.weekday() == 3:
-            return 5
-        if gd.weekday() == 4:
-            return 6
+        return (gd.weekday()-5) % 7
 
     def isoweekday(self):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
