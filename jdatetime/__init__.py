@@ -570,7 +570,7 @@ class date(object):
                 format = format.replace("%I", '%02.d' % (12))
         except:
             format = format.replace("%I", '12')
-         
+
         try:
             if self.hour > 12:
                 format = format.replace("%-I", '%02.d' % (self.hour - 12))
