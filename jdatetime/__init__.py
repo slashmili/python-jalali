@@ -500,7 +500,7 @@ class date(object):
 
     def weeknumber(self):
         """Return week number """
-        return (self.day + date(self.year, 1, 1).weekday() - 1) // 7 + 1
+        return (self.yday() + date(self.year, 1, 1).weekday() - 1) // 7 + 1
 
     def isocalendar(self):
         """Return a 3-tuple, (ISO year, ISO week number, ISO weekday)."""
