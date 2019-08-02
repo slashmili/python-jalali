@@ -622,7 +622,7 @@ class date(object):
             format = format.replace("%x", self.strftime("%m/%d/%y"))
 
         if '%X' in format:
-            format = format.replace("%X", self.strftime('%H:%I:%S'))
+            format = format.replace("%X", self.strftime('%H:%M:%S'))
 
         format = format.replace("%Y", str(self.year))
 
