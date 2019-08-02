@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.4.0] - 2019-07-16
+### Add
+* support subtraction with python datetime
+
+## [3.3.0] - 2019-07-13
+### Add
+* add isoformat for jdatetime.datetime
+
 ## [3.2.0] - 2019-02-02
 ### Add
 * add timetuple and timestamp function

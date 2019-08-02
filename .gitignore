@@ -4,3 +4,5 @@ build
 
 .tags
 tags
+.idea/
+dist
