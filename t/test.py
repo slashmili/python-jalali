@@ -251,7 +251,7 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 00 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
+        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 12 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
