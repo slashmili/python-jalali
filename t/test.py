@@ -144,6 +144,11 @@ class TestJDate(unittest.TestCase):
             time.struct_time((2018, 7, 13, 0, 0, 0, 4, 194, -1)),
         )
 
+    def test_all_weekdays(self):
+        date = jdatetime.date(1394, 1, 1)  # it is saturday
+        for i in range(7):  # test th whole week
+            self.assertEqual((date + datetime.timedelta(days=i)).weekday(), i)
+
 
 class TestJDateTime(unittest.TestCase):
     def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):

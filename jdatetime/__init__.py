@@ -562,22 +562,12 @@ class date(object):
             format = format.replace("%-H", '0')
 
         try:
-            if self.hour > 12:
-                format = format.replace("%I", '%02.d' % (self.hour - 12))
-            elif self.hour > 0:
-                format = format.replace("%I", '%02.d' % (self.hour))
-            else:
-                format = format.replace("%I", '%02.d' % (12))
+            format = format.replace("%I", '%02.d' % (self.hour % 12 or 12))
         except:
             format = format.replace("%I", '12')
 
         try:
-            if self.hour > 12:
-                format = format.replace("%-I", '%02.d' % (self.hour - 12))
-            elif self.hour > 0:
-                format = format.replace("%-I", '%02.d' % (self.hour))
-            else:
-                format = format.replace("%-I", '%02.d' % (12))
+            format = format.replace("%-I", '%d' % (self.hour % 12 or 12))
         except:
             format = format.replace("%-I", '12')
 
