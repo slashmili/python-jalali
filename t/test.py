@@ -126,6 +126,11 @@ class TestJDate(unittest.TestCase):
         self.assertEqual(new_date.month, 4)
         self.assertEqual(new_date.day, 21)
         self.assertEqual(new_date.locale, 'nl_NL')
+    
+    def test_subtract_datetime_date(self):
+        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
+        delta = date - datetime.date(2018, 7, 12)
+        self.assertEqual(delta.days, 1)
 
     def test_subtract_datetime_date(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')
@@ -138,6 +143,11 @@ class TestJDate(unittest.TestCase):
             date.timetuple(),
             time.struct_time((2018, 7, 13, 0, 0, 0, 4, 194, -1)),
         )
+
+    def test_all_weekdays(self):
+        date = jdatetime.date(1394, 1, 1)  # it is saturday
+        for i in range(7):  # test th whole week
+            self.assertEqual((date + datetime.timedelta(days=i)).weekday(), i)
 
 
 class TestJDateTime(unittest.TestCase):
@@ -246,12 +256,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 00 054 02 00 AM 00 6 7 02/23/90 00:00:00 90 1390 000000  '
+        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 12 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
         unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 PM 14 6 7 02/23/90 12:12:14 90 1390 000001'
+        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 PM 14 6 8 02/23/90 12:13:14 90 1390 000001'
         self.assertEqual(dt.strftime(unicode_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)

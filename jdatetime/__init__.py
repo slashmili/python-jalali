@@ -492,20 +492,7 @@ class date(object):
         """Return the day of the week represented by the date.
         Shanbeh == 0 ... Jomeh == 6"""
         gd = self.togregorian()
-        if gd.weekday() == 5:
-            return 0
-        if gd.weekday() == 6:
-            return 1
-        if gd.weekday() == 0:
-            return 2
-        if gd.weekday() == 1:
-            return 3
-        if gd.weekday() == 2:
-            return 4
-        if gd.weekday() == 3:
-            return 5
-        if gd.weekday() == 4:
-            return 6
+        return (gd.weekday() - 5) % 7
 
     def isoweekday(self):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
@@ -513,7 +500,7 @@ class date(object):
 
     def weeknumber(self):
         """Return week number """
-        return self.yday() // 7
+        return (self.yday() + date(self.year, 1, 1).weekday() - 1) // 7 + 1
 
     def isocalendar(self):
         """Return a 3-tuple, (ISO year, ISO week number, ISO weekday)."""
@@ -575,12 +562,14 @@ class date(object):
             format = format.replace("%-H", '0')
 
         try:
-            if self.hour > 12:
-                format = format.replace("%I", '%02.d' % (self.hour - 12))
-            else:
-                format = format.replace("%I", '%02.d' % (self.hour))
+            format = format.replace("%I", '%02.d' % (self.hour % 12 or 12))
         except:
-            format = format.replace("%I", '00')
+            format = format.replace("%I", '12')
+
+        try:
+            format = format.replace("%-I", '%d' % (self.hour % 12 or 12))
+        except:
+            format = format.replace("%-I", '12')
 
         format = format.replace("%j", '%03.d' % (self.yday()))
 
@@ -623,7 +612,7 @@ class date(object):
             format = format.replace("%x", self.strftime("%m/%d/%y"))
 
         if '%X' in format:
-            format = format.replace("%X", self.strftime('%H:%I:%S'))
+            format = format.replace("%X", self.strftime('%H:%M:%S'))
 
         format = format.replace("%Y", str(self.year))
 
