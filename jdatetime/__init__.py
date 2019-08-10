@@ -671,7 +671,8 @@ class date(object):
         return date(self.year, self.month, self.day, locale=locale)
 
     def pretty(self):
-        today = datetime.today().date()
+        today = datetime.today()
+        today = date(today.year, today.month, today.day, locale=self.locale)
 
         if today == self:
             return self.j_today
@@ -693,10 +694,10 @@ class datetime(date):
     """datetime(year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]) --> datetime objects"""
 
     j_just_now_en = 'just now'
-    j_moments_ago_en = 'moments ago'
+    j_minutes_ago_en = 'minutes ago'
 
     j_just_now_fa = 'لحظاتی پیش'
-    j_moments_ago_fa = 'دقایقی پیش'
+    j_minutes_ago_fa = 'دقیقه پیش'
 
     __time = None
 
@@ -722,10 +723,10 @@ class datetime(date):
 
         if self._is_fa_locale():
             self.j_just_now = self.j_just_now_fa
-            self.j_moments_ago = self.j_moments_ago_fa
+            self.j_minutes_ago = self.j_minutes_ago_fa
         else:
             self.j_just_now = self.j_just_now_en
-            self.j_moments_ago = self.j_moments_ago_en
+            self.j_minutes_ago = self.j_minutes_ago_en
 
         tmp_hour = 0
         tmp_min = 0
@@ -1303,7 +1304,8 @@ class datetime(date):
         if now - timedelta(minutes=1) < self <= now:
             return self.j_just_now
 
-        elif now - timedelta(minutes=5) < self <= now:
-            return self.j_moments_ago
+        elif now - timedelta(minutes=60) < self <= now:
+            delta = now - self
+            return str(delta.seconds//60) + " " + self.j_minutes_ago
 
         return "{} {}".format(self.date().pretty(), self.strftime("%H:%M"))
