@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.5.0] - 2019-08-04
+## Add
+* Adds support for '%-I' format token
+### Fixed
+* Fixes '12:mm:ss am' display problem in strftime
+* Fixes '%X' token in strftime:
+* Fixes Week of year, currently it starts with zero and increases every 7 days, ignoring weekdays
+
 ## [3.4.0] - 2019-07-16
 ### Add
 * support subtraction with python datetime
