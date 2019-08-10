@@ -10,7 +10,6 @@ import datetime as py_datetime
 import locale as _locale
 import re as _re
 
-
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -40,6 +39,14 @@ if platform.system() == 'Windows':
     FA_LOCALE = 'Persian_Iran'
 else:
     FA_LOCALE = 'fa_IR'
+
+# Making translators
+maketrans = lambda x, y: dict((ord(a), b) for a, b in zip(x, y))
+number_converter = maketrans(
+    u'١٢٣٤٥٦٧٨٩٠۱۲۳۴۵۶۷۸۹۰٤٥٦₀₁₂₃₄₅₆₇₈₉¹²⁰⁴⁵⁶⁷⁸⁹①②③④⑤⑥⑦⑧⑨⑴⑵⑶⑷⑸⑹⑺⑻⑼⒈⒉⒊⒋⒌⒍⒎⒏⒐',
+    u'123456789012345678904560123456789120456789123456789123456789123456789'
+)
+persian_converter = maketrans(u'1234567890', u'۱۲۳۴۵۶۷۸۹۰')
 
 
 def _format_time(hour, minute, second, microsecond, timespec='auto'):
@@ -644,6 +651,9 @@ class date(object):
         except AttributeError:
             format = format.replace("%Z", '')
 
+        if self._is_fa_locale():
+            format = format.translate(persian_converter)
+
         return format
 
     def aslocale(self, locale):
@@ -686,7 +696,8 @@ class datetime(date):
         if microsecond is not None:
             tmp_micr = microsecond
 
-        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and self._check_arg(tmp_sec) and self._check_arg(tmp_micr)):
+        if not (self._check_arg(tmp_hour) and self._check_arg(tmp_min) and self._check_arg(tmp_sec) and self._check_arg(
+                tmp_micr)):
             raise TypeError("an integer is required")
 
         self.__time = time(tmp_hour, tmp_min, tmp_sec, tmp_micr, tzinfo)
@@ -867,6 +878,10 @@ class datetime(date):
     @staticmethod
     def strptime(date_string, format):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
+
+        # assure are glyphs are standard digits
+        date_string.translate(number_converter)
+
         if '*' in format:
             format = format.replace("*", "\*")
         if '+' in format:
