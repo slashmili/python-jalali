@@ -879,7 +879,7 @@ class datetime(date):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
 
         # assure are glyphs are standard digits
-        if type(date_string)==type(u""):
+        if type(date_string) == type(u""):
             date_string.translate(number_converter)
 
         if '*' in format:
