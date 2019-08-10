@@ -21,7 +21,7 @@ except ImportError:
 from jdatetime.jalali import (GregorianToJalali, JalaliToGregorian,
                               j_days_in_month)
 
-__VERSION__ = "3.1.0"
+__VERSION__ = "3.5.0"
 MINYEAR = 1
 MAXYEAR = 9377
 
@@ -879,7 +879,11 @@ class datetime(date):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
 
         # assure are glyphs are standard digits
-        date_string.translate(number_converter)
+        if sys.version_info < (3, 0, 0):
+            if isinstance(date_string, unicode):
+                date_string.translate(number_converter)
+        else:
+            date_string.translate(number_converter)
 
         if '*' in format:
             format = format.replace("*", "\*")

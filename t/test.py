@@ -127,7 +127,7 @@ class TestJDate(unittest.TestCase):
         self.assertEqual(new_date.month, 4)
         self.assertEqual(new_date.day, 21)
         self.assertEqual(new_date.locale, 'nl_NL')
-    
+
     def test_subtract_datetime_date(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')
         delta = date - datetime.date(2018, 7, 12)
@@ -295,12 +295,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime_in_fa_locale(self):
         s = jdatetime.date(1390, 2, 23, locale='fa_IR')
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = "جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۰۰:۰۰:۰۰ ۱۳۹۰ ۲۳ ۰۰ ۱۲ ۰۵۴ ۰۲ ۰۰ قبل از ظهر ۰۰ ۶ ۸ ۰۲/۲۳/۹۰ ۰۰:۰۰:۰۰ ۹۰ ۱۳۹۰ ۰۰۰۰۰۰  "
+        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۰۰:۰۰:۰۰ ۱۳۹۰ ۲۳ ۰۰ ۱۲ ۰۵۴ ۰۲ ۰۰ قبل از ظهر ۰۰ ۶ ۸ ۰۲/۲۳/۹۰ ۰۰:۰۰:۰۰ ۹۰ ۱۳۹۰ ۰۰۰۰۰۰  "
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1, locale='fa_IR')
         unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = 'جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۱۲:۱۳:۱۴ ۱۳۹۰ ۲۳ ۱۲ ۱۲ ۰۵۴ ۰۲ ۱۳ بعد از ظهر ۱۴ ۶ ۸ ۰۲/۲۳/۹۰ ۱۲:۱۳:۱۴ ۹۰ ۱۳۹۰ ۰۰۰۰۰۱'
+        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۱۲:۱۳:۱۴ ۱۳۹۰ ۲۳ ۱۲ ۱۲ ۰۵۴ ۰۲ ۱۳ بعد از ظهر ۱۴ ۶ ۸ ۰۲/۲۳/۹۰ ۱۲:۱۳:۱۴ ۹۰ ۱۳۹۰ ۰۰۰۰۰۱"
 
         self.assertEqual(dt.strftime(unicode_format), output)
 
