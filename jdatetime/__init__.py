@@ -41,12 +41,11 @@ else:
     FA_LOCALE = 'fa_IR'
 
 # Making translators
-maketrans = lambda x, y: dict((ord(a), b) for a, b in zip(x, y))
-number_converter = maketrans(
+number_converter = dict((ord(a), b) for a, b in zip(
     u'١٢٣٤٥٦٧٨٩٠۱۲۳۴۵۶۷۸۹۰٤٥٦₀₁₂₃₄₅₆₇₈₉¹²⁰⁴⁵⁶⁷⁸⁹①②③④⑤⑥⑦⑧⑨⑴⑵⑶⑷⑸⑹⑺⑻⑼⒈⒉⒊⒋⒌⒍⒎⒏⒐',
     u'123456789012345678904560123456789120456789123456789123456789123456789'
-)
-persian_converter = maketrans(u'1234567890', u'۱۲۳۴۵۶۷۸۹۰')
+))
+persian_converter = dict((ord(a), b) for a, b in zip(u'1234567890', u'۱۲۳۴۵۶۷۸۹۰'))
 
 
 def _format_time(hour, minute, second, microsecond, timespec='auto'):
