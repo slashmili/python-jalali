@@ -936,7 +936,7 @@ class datetime(date):
                 result_date['second'])
         except:
             raise ValueError(
-                "time data '%s' does not match format '%s'" %
+                u"time data '%s' does not match format '%s'" %
                 (date_string, format))
 
     def replace(
