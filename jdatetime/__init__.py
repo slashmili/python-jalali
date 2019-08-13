@@ -547,7 +547,7 @@ class date(object):
 
         if '%c' in format:
             format = format.replace(
-                "%c", self.strftime("%a %b %d %H:%M:%S %Y"))
+                "%c", self.strftime("%a %d %b %y, %H:%M:%S"))
 
         format = format.replace("%d", '%02.d' % (self.day))
         format = format.replace("%-d", '%d' % (self.day))
@@ -615,7 +615,7 @@ class date(object):
         format = format.replace("%W", str(self.weeknumber()))
 
         if '%x' in format:
-            format = format.replace("%x", self.strftime("%m/%d/%y"))
+            format = format.replace("%x", self.strftime("%Y/%m/%d"))
 
         if '%X' in format:
             format = format.replace("%X", self.strftime('%H:%M:%S'))
