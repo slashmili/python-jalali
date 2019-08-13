@@ -879,11 +879,12 @@ class datetime(date):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
 
         # assure are glyphs are standard digits
+        dt_string = date_string
         if sys.version_info < (3, 0, 0):
             if isinstance(date_string, unicode):
-                date_string.translate(number_converter)
+                dt_string = date_string.translate(number_converter)
         else:
-            date_string.translate(number_converter)
+            dt_string = date_string.translate(number_converter)
 
         if '*' in format:
             format = format.replace("*", "\*")
@@ -922,9 +923,9 @@ class datetime(date):
                 apply_order.append(format_map[form][1])
         try:
             p = _re.compile(regex)
-            if not p.match(date_string):
+            if not p.match(dt_string):
                 raise ValueError()
-            for i, el in enumerate(p.match(date_string).groups()):
+            for i, el in enumerate(p.match(dt_string).groups()):
                 result_date[apply_order[i]] = int(el)
             return datetime(
                 result_date['year'],
