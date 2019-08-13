@@ -261,12 +261,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 12 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
+        output = 'Fri Friday Ord Ordibehesht Fri 23 Ord 90, 00:00:00 23 00 12 054 02 00 AM 00 6 8 1390/02/23 00:00:00 90 1390 000000  '
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
         unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 PM 14 6 8 02/23/90 12:13:14 90 1390 000001'
+        output = 'Fri Friday Ord Ordibehesht Fri 23 Ord 90, 12:13:14 23 12 12 054 02 13 PM 14 6 8 1390/02/23 12:13:14 90 1390 000001'
         self.assertEqual(dt.strftime(unicode_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
@@ -295,12 +295,12 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime_in_fa_locale(self):
         s = jdatetime.date(1390, 2, 23, locale='fa_IR')
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۰۰:۰۰:۰۰ ۱۳۹۰ ۲۳ ۰۰ ۱۲ ۰۵۴ ۰۲ ۰۰ قبل از ظهر ۰۰ ۶ ۸ ۰۲/۲۳/۹۰ ۰۰:۰۰:۰۰ ۹۰ ۱۳۹۰ ۰۰۰۰۰۰  "
+        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه ۲۳ اردیبهشت ۹۰, ۰۰:۰۰:۰۰ ۲۳ ۰۰ ۱۲ ۰۵۴ ۰۲ ۰۰ قبل از ظهر ۰۰ ۶ ۸ ۱۳۹۰/۰۲/۲۳ ۰۰:۰۰:۰۰ ۹۰ ۱۳۹۰ ۰۰۰۰۰۰  "
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1, locale='fa_IR')
         unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه اردیبهشت ۲۳ ۱۲:۱۳:۱۴ ۱۳۹۰ ۲۳ ۱۲ ۱۲ ۰۵۴ ۰۲ ۱۳ بعد از ظهر ۱۴ ۶ ۸ ۰۲/۲۳/۹۰ ۱۲:۱۳:۱۴ ۹۰ ۱۳۹۰ ۰۰۰۰۰۱"
+        output = u"جمعه جمعه اردیبهشت اردیبهشت جمعه ۲۳ اردیبهشت ۹۰, ۱۲:۱۳:۱۴ ۲۳ ۱۲ ۱۲ ۰۵۴ ۰۲ ۱۳ بعد از ظهر ۱۴ ۶ ۸ ۱۳۹۰/۰۲/۲۳ ۱۲:۱۳:۱۴ ۹۰ ۱۳۹۰ ۰۰۰۰۰۱"
 
         self.assertEqual(dt.strftime(unicode_format), output)
 
