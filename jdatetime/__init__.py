@@ -285,12 +285,15 @@ class date(object):
         jdatetime.date.fromgregorian(date=datetime.date, locale='fa_IR')
         """
         locale = kw.get('locale')
-        if 'date' in kw and isinstance(kw['date'], py_datetime.date):
+        if 'date' in kw:
             d = kw['date']
-            (y, m, d) = GregorianToJalali(d.year,
-                                          d.month,
-                                          d.day).getJalaliList()
-            return date(y, m, d, locale=locale)
+            try:
+                (y, m, d) = GregorianToJalali(d.year,
+                                              d.month,
+                                              d.day).getJalaliList()
+                return date(y, m, d, locale=locale)
+            except AttributeError:
+                raise ValueError('When calling fromgregorian(date=) the parameter should be a date like object.')
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
@@ -1132,35 +1135,38 @@ class datetime(date):
         return not self.__eq__(other_datetime)
 
     @staticmethod
-    def fromgregorian(**kw):
-        """Convert gregorian to jalali and return jdatetime.datetime
-        jdatetime.date.fromgregorian(day=X,month=X,year=X,[hour=X, [minute=X, [second=X, [tzinfo=X]]]])
-        jdatetime.date.fromgregorian(date=datetime.date)
-        jdatetime.date.fromgregorian(datetime=datetime.datetime)
-        jdatetime.date.fromgregorian(datetime=datetime.datetime, locale='fa_IR')
+        def fromgregorian(**kw):
+        """Convert gregorian to jalali and return jadatetime.datetime
+        jadatetime.date.fromgregorian(day=X,month=X,year=X,[hour=X, [minute=X, [second=X, [tzinfo=X]]]])
+        jadatetime.date.fromgregorian(date=datetime.date)
+        jadatetime.date.fromgregorian(datetime=datetime.date)
+        jadatetime.date.fromgregorian(datetime=datetime.datetime)
+        jadatetime.date.fromgregorian(datetime=datetime.datetime, locale='fa_IR')
         """
         locale = kw.get('locale')
-        if 'date' in kw and isinstance(kw['date'], py_datetime.date):
-            d = kw['date']
-            (y, m, d) = GregorianToJalali(d.year,
-                                          d.month,
-                                          d.day).getJalaliList()
-            return datetime(y, m, d, locale=locale)
-        if 'datetime' in kw and isinstance(
-                kw['datetime'], py_datetime.datetime):
-            dt = kw['datetime']
-            (y, m, d) = GregorianToJalali(
-                dt.year, dt.month, dt.day).getJalaliList()
-            return datetime(
-                y,
-                m,
-                d,
-                dt.hour,
-                dt.minute,
-                dt.second,
-                dt.microsecond,
-                dt.tzinfo,
-                locale=locale)
+        date_param = kw.get('date') or kw.get('datetime')
+        if date_param:
+            try:
+                (y, m, d) = GregorianToJalali(date_param.year,
+                                              date_param.month,
+                                              date_param.day).getJalaliList()
+            except AttributeError:
+                raise ValueError(
+                    'When calling fromgregorian(date=) or fromgregorian(datetime=) the parameter should be date like.')
+            try:
+                return datetime(
+                    y,
+                    m,
+                    d,
+                    date_param.hour,
+                    date_param.minute,
+                    date_param.second,
+                    date_param.microsecond,
+                    date_param.tzinfo,
+                    locale=locale)
+            except AttributeError:
+                return datetime(y, m, d, locale=locale)
+
         if 'day' in kw and 'month' in kw and 'year' in kw:
             (year, month, day) = (kw['year'], kw['month'], kw['day'])
             (y, m, d) = GregorianToJalali(year, month, day).getJalaliList()
