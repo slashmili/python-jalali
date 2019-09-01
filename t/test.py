@@ -229,20 +229,22 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, dtg - jdatetime.timedelta(seconds=1) < dtg)
         self.assertEqual(False, dtg is None)
 
-    def test_dateconversion(self):
-        sample = jdatetime.date(1389, 9, 2)
+    def test_date_conversion_date_input(self):
+        # todo: add some corner cases
+        d1 = datetime.date(2010, 11, 23)
+        jd1 = jadatetime.date(1389, 9, 2)
+        d2 = datetime.date(2011, 5, 13)
+        jd2 = jadatetime.date(1390, 2, 23)
 
-        d_check_with = jdatetime.date(1390, 2, 23)
-        # TEST date
-        self.assertEqual(True, sample.togregorian() ==
-                         datetime.date(2010, 11, 23))
-        self.assertEqual(True, jdatetime.date.fromgregorian(
-            date=datetime.date(2011, 5, 13)) == d_check_with)
+        self.assertEqual(d1, jd1.togregorian())
+        self.assertEqual(d2, jd2.togregorian())
+        self.assertEqual(jd1, jadatetime.date.fromgregorian(date=d1))
+        self.assertEqual(jd2, jadatetime.date.fromgregorian(date=d2))
 
-        # TEST datetime
-        self.assertEqual(True, jdatetime.datetime.fromgregorian(
-            datetime=datetime.datetime(2011, 5, 13)).date() == d_check_with)
+    def test_date_conversion_integer_input(self):
+        d_check_with = jadatetime.date(1390, 2, 23)
 
+    
         jd_datetime = jdatetime.datetime.fromgregorian(year=2011,
                                                        month=5,
                                                        day=13,
@@ -483,6 +485,27 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(jdt.hour, 11)
         self.assertEqual(jdt.minute, 7)
         self.assertEqual(jdt.locale, 'nl_NL')
+     
+    def test_fromgregorian_accepts_named_argument_of_date_with_date_input(self):
+        gdt = datetime.date(2018, 7, 15)
+        jdt = jadatetime.datetime.fromgregorian(date=gdt, locale='nl_NL')
+        self.assertEqual(jdt.year, 1397)
+        self.assertEqual(jdt.month, 4)
+        self.assertEqual(jdt.day, 24)
+        self.assertEqual(jdt.hour, 0)
+        self.assertEqual(jdt.minute, 0)
+        self.assertEqual(jdt.locale, 'nl_NL')
+
+    def test_fromgregorian_accepts_named_argument_of_date_with_datetime_input(self):
+        gdt = datetime.datetime(2018, 7, 15, 11, 7, 0)
+        jdt = jadatetime.datetime.fromgregorian(date=gdt, locale='nl_NL')
+        self.assertEqual(jdt.year, 1397)
+        self.assertEqual(jdt.month, 4)
+        self.assertEqual(jdt.day, 24)
+        self.assertEqual(jdt.hour, 11)
+        self.assertEqual(jdt.minute, 7)
+        self.assertEqual(jdt.locale, 'nl_NL')
+
 
     def test_fromgregorian_accepts_year_month_day_and_locale(self):
         jdt = jdatetime.datetime.fromgregorian(year=2018, month=7, day=15, locale='nl_NL')
