@@ -1135,7 +1135,7 @@ class datetime(date):
         return not self.__eq__(other_datetime)
 
     @staticmethod
-        def fromgregorian(**kw):
+    def fromgregorian(**kw):
         """Convert gregorian to jalali and return jadatetime.datetime
         jadatetime.date.fromgregorian(day=X,month=X,year=X,[hour=X, [minute=X, [second=X, [tzinfo=X]]]])
         jadatetime.date.fromgregorian(date=datetime.date)
