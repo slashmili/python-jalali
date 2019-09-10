@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.0] - 2019-09-10
+### Fixed
+* improve fromgregorian to handle date and datetime input in Pythonic way
+
+
 ## [3.5.0] - 2019-08-04
 ## Add
 * Adds support for '%-I' format token
