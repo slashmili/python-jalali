@@ -896,7 +896,7 @@ class datetime(date):
             '%m': ['[0-9]{1,2}', 'month'],
             '%M': ['[0-9]{1,2}', 'minute'],
             '%S': ['[0-9]{1,2}', 'second'],
-            '%Y': ['[0-9]{4,5}', 'year'],
+            '%Y': ['[0-9]{4}', 'year'],
         }
         regex = format
         find = _re.compile("(%[a-zA-Z])")
