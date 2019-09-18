@@ -380,7 +380,7 @@ class TestJDateTime(unittest.TestCase):
         dt1 = jdatetime.datetime.strptime(date_string, date_format)
         dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
 
-        self.assertEqual(True, dt1 == dt2)
+        self.assertTrue(dt1 == dt2)
 
     def test_strptime_handles_alphabets_in_format(self):
         date_string = "1363-6-6T12:13:14"
