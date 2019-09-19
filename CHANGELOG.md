@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.1] - 2019-09-19
+### Fixed
+* Fixed %Y length in strptime
+
+
 ## [3.6.0] - 2019-09-10
 ### Fixed
 * improve fromgregorian to handle date and datetime input in Pythonic way
