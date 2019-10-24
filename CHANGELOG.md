@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.2] - 2019-10-24
+### Add
+* Support for python 3.7 and 3.8
+
+
 ## [3.6.1] - 2019-09-19
 ### Fixed
 * Fixed %Y length in strptime

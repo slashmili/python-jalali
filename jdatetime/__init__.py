@@ -22,7 +22,7 @@ except ImportError:
 from jdatetime.jalali import (GregorianToJalali, JalaliToGregorian,
                               j_days_in_month)
 
-__VERSION__ = "3.6.1"
+__VERSION__ = "3.6.2"
 MINYEAR = 1
 MAXYEAR = 9377
 
