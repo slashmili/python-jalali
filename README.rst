@@ -23,7 +23,7 @@ Documents
 ---------
 This module exactly follows Python Standard datetime module's methods http://docs.python.org/release/2.7.1/library/datetime.html
 
-Also these methods are addedd to jdatetime.date and jdatetime.datetime :
+Also these methods are added to jdatetime.date and jdatetime.datetime :
 
 
 .. code-block:: python
@@ -57,6 +57,17 @@ Example
     >>> jdatetime.date.today()
     jdatetime.date(1394, 12, 4)
 
+You can also convert jalali date string to jalali datetime object and from there convert it to gregorian datetime object:
+
+.. code-block:: python
+
+    >>> import jdatetime
+    >>> jalai_string_to_jdatetime = jdatetime.datetime.strptime('1398-8-14','%Y-%m-%d')
+    >>> jalai_string_to_jdatetime
+    jdatetime.datetime(1398, 8, 14, 0, 0)
+    >>> gregorian_datetime = jalai_string_to_jdatetime.togregorian()
+    >>> gregorian_datetime
+    datetime.datetime(2019, 11, 5, 0, 0)
 
 Locale
 ------
