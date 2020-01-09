@@ -131,20 +131,20 @@ class date(object):
                          'Bah',
                          'Esf']
 
-    j_weekdays_en = ['Saturday',
-                     'Sunday',
-                     'Monday',
-                     'Tuesday',
-                     'Wednesday',
-                     'Thursday',
-                     'Friday']
-    j_weekdays_short_en = ['Sat',
-                           'Sun',
-                           'Mon',
-                           'Tue',
-                           'Wed',
-                           'Thu',
-                           'Fri']
+    j_weekdays_en = ['Shanbe',
+                     '1-Shanbe',
+                     '2-Shanbe',
+                     '3-Shanbe',
+                     '4-Shanbe',
+                     '5-Shanbe',
+                     'Jome']
+    j_weekdays_short_en = ['Sha',
+                           '1-Sha',
+                           '2-Sha',
+                           '3-Sha',
+                           '4-Sha',
+                           '5-Sha',
+                           'Jom']
     j_ampm_en = {'PM': 'PM', 'AM': 'AM'}
 
     j_months_fa = [u'فروردین',
