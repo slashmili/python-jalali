@@ -1233,7 +1233,10 @@ class datetime(date):
     def utcoffset(self):
         """Return self.tzinfo.utcoffset(self)."""
         if self.tzinfo:
-            return self.tzinfo.utcoffset(self)
+            try:
+                return self.tzinfo.utcoffset(self)
+            except TypeError:
+                return self.tzinfo.utcoffset(None)
 
     def utctimetuple(self):
         """Return UTC time tuple, compatible with time.localtime().
