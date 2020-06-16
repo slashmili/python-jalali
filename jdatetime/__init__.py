@@ -625,10 +625,7 @@ class date(object):
 
         try:
             sign = "+"
-            try:
-                diff = self.tzinfo.utcoffset(self)
-            except TypeError:
-                diff = self.tzinfo.utcoffset(None)
+            diff = self.tzinfo.utcoffset(self)
             diff_sec = diff.seconds
             if diff.days > 0 or diff.days < -1:
                 raise ValueError(
@@ -647,8 +644,6 @@ class date(object):
 
         try:
             format = format.replace("%Z", self.tzinfo.tzname(self))
-        except TypeError:
-            format = format.replace("%Z", self.tzinfo.tzname(None))
         except AttributeError:
             format = format.replace("%Z", '')
 
