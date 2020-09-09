@@ -23,7 +23,7 @@ Documents
 ---------
 This module exactly follows Python Standard datetime module's methods http://docs.python.org/release/2.7.1/library/datetime.html
 
-Also these methods are addedd to jdatetime.date and jdatetime.datetime :
+Also these methods are added to jdatetime.date and jdatetime.datetime :
 
 
 .. code-block:: python
