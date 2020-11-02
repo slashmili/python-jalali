@@ -1,6 +1,6 @@
 language: python
 install:
-  - pip install pep8
+  - pip install flake8
 python:
     - "2.6"
     - "2.7"
@@ -13,7 +13,7 @@ python:
     - "3.9"
     - "nightly"
 before_script:
-  - "pep8 --ignore=E501  jdatetime/__init__.py"
+  - "flake8"
   - sudo locale-gen fa_IR
 script: python t/test.py
 matrix:
