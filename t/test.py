@@ -14,11 +14,11 @@ try:
 except ImportError:
     greenlet_installed = False
 
-BASEDIR = os.path.abspath(os.path.join(
-                          os.path.dirname(os.path.abspath(__file__)),
-                          ".."))
+BASEDIR = os.path.abspath(
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
+)
 sys.path.insert(0, BASEDIR)
-import jdatetime
+import jdatetime  # noqa
 
 
 class GMTTime(jdatetime.tzinfo):
@@ -126,11 +126,6 @@ class TestJDate(unittest.TestCase):
         self.assertEqual(new_date.month, 4)
         self.assertEqual(new_date.day, 21)
         self.assertEqual(new_date.locale, 'nl_NL')
-    
-    def test_subtract_datetime_date(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        delta = date - datetime.date(2018, 7, 12)
-        self.assertEqual(delta.days, 1)
 
     def test_subtract_datetime_date(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')
@@ -213,9 +208,7 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(False, today < today)
         self.assertEqual(True, today >= today)
         self.assertEqual(True, today <= today)
-        not_today = jdatetime.date(today.year,
-                                   today.month,
-                                   today.day) + jdatetime.timedelta(days=1)
+        not_today = jdatetime.date(today.year, today.month, today.day) + jdatetime.timedelta(days=1)
         self.assertEqual(True, today != not_today)
 
         dtg = jdatetime.datetime(1380, 12, 1, 1, 2, 4)
@@ -237,19 +230,18 @@ class TestJDateTime(unittest.TestCase):
 
     def test_date_conversion_integer_input(self):
         d_check_with = jdatetime.date(1390, 2, 23)
-
-    
-        jd_datetime = jdatetime.datetime.fromgregorian(year=2011,
-                                                       month=5,
-                                                       day=13,
-                                                       hour=14,
-                                                       minute=15,
-                                                       second=16)
-        self.assertEqual(True, jd_datetime ==
-                         jdatetime.datetime.combine(d_check_with,
-                                                    jdatetime.time(14,
-                                                                   15,
-                                                                   16)))
+        jd_datetime = jdatetime.datetime.fromgregorian(
+            year=2011,
+            month=5,
+            day=13,
+            hour=14,
+            minute=15,
+            second=16,
+        )
+        self.assertEqual(
+            True,
+            jd_datetime == jdatetime.datetime.combine(d_check_with, jdatetime.time(14, 15, 16))
+        )
 
         gdatetime = datetime.datetime(2011, 5, 13, 14, 15, 16)
         self.assertEqual(True, jd_datetime.togregorian() == gdatetime)
@@ -257,12 +249,18 @@ class TestJDateTime(unittest.TestCase):
     def test_strftime(self):
         s = jdatetime.date(1390, 2, 23)
         string_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f %z %Z"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 1390 23 00 12 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
+        output = (
+            'Fri Friday Ord Ordibehesht Fri Ord 23 00:00:00 '
+            '1390 23 00 12 054 02 00 AM 00 6 8 02/23/90 00:00:00 90 1390 000000  '
+        )
         self.assertEqual(s.strftime(string_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
         unicode_format = "%a %A %b %B %c %d %H %I %j %m %M %p %S %w %W %x %X %y %Y %f"
-        output = 'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 1390 23 12 12 054 02 13 PM 14 6 8 02/23/90 12:13:14 90 1390 000001'
+        output = (
+            'Fri Friday Ord Ordibehesht Fri Ord 23 12:13:14 '
+            '1390 23 12 12 054 02 13 PM 14 6 8 02/23/90 12:13:14 90 1390 000001'
+        )
         self.assertEqual(dt.strftime(unicode_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
@@ -289,14 +287,10 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(True, dt.strftime("%Z %z") == "IRDT +0330")
 
     def test_kabiseh(self):
-        kabiseh_year = jdatetime.date.fromgregorian(date=datetime.date(2013,
-                                                                       3,
-                                                                       20))
+        kabiseh_year = jdatetime.date.fromgregorian(date=datetime.date(2013, 3, 20))
         self.assertEqual(True, kabiseh_year.isleap() is True)
 
-        normal_year = jdatetime.date.fromgregorian(date=datetime.date(2014,
-                                                                      3,
-                                                                      20))
+        normal_year = jdatetime.date.fromgregorian(date=datetime.date(2014, 3, 20))
         self.assertEqual(True, normal_year.isleap() is False)
 
         kabiseh_year = jdatetime.date(1391, 12, 30)
@@ -339,14 +333,15 @@ class TestJDateTime(unittest.TestCase):
 
     def test_replace(self):
         dt = jdatetime.datetime.today()
-        args = {'year': 1390,
-                'month': 12,
-                'day': 1,
-                'hour': 13,
-                'minute': 14,
-                'second': 15,
-                'microsecond': 1233
-                }
+        args = {
+            'year': 1390,
+            'month': 12,
+            'day': 1,
+            'hour': 13,
+            'minute': 14,
+            'second': 15,
+            'microsecond': 1233,
+        }
         dtr = dt.replace(**args)
         dtn = jdatetime.datetime(1390, 12, 1, 13, 14, 15, 1233)
 
@@ -354,10 +349,7 @@ class TestJDateTime(unittest.TestCase):
 
     def test_replace_keeps_date_locale(self):
         dt = jdatetime.datetime(1397, 4, 24, locale='nl_NL')
-        args = {'year': 1390,
-                'month': 12,
-                'hour': 13,
-                }
+        args = {'year': 1390, 'month': 12, 'hour': 13}
         self.assertEqual(dt.replace(**args).locale, 'nl_NL')
 
     def test_replace_remove_tzinfo(self):
@@ -373,7 +365,7 @@ class TestJDateTime(unittest.TestCase):
         dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
 
         self.assertEqual(True, dt1 == dt2)
-    
+
     def test_strptime_bare(self):
         date_string = "13630606121314"
         date_format = "%Y%m%d%H%M%S"
@@ -412,7 +404,7 @@ class TestJDateTime(unittest.TestCase):
         teh = TehranTime()
 
         dt_gmt = datetime.datetime(2015, 6, 27, 1, 2, 3, tzinfo=teh)
-        self.assertEqual("01:02:03+03:30",dt_gmt.timetz().__str__())
+        self.assertEqual("01:02:03+03:30", dt_gmt.timetz().__str__())
 
     def test_datetime_eq_diff_tz(self):
         gmt = GMTTime()
@@ -455,7 +447,7 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(jdt.hour, 11)
         self.assertEqual(jdt.minute, 7)
         self.assertEqual(jdt.locale, 'nl_NL')
-     
+
     def test_fromgregorian_accepts_named_argument_of_date_with_date_input(self):
         gdt = datetime.date(2018, 7, 15)
         jdt = jdatetime.datetime.fromgregorian(date=gdt, locale='nl_NL')
@@ -476,7 +468,6 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(jdt.minute, 7)
         self.assertEqual(jdt.locale, 'nl_NL')
 
-
     def test_fromgregorian_accepts_year_month_day_and_locale(self):
         jdt = jdatetime.datetime.fromgregorian(year=2018, month=7, day=15, locale='nl_NL')
         self.assertEqual(jdt.year, 1397)
@@ -485,22 +476,22 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(jdt.locale, 'nl_NL')
 
     def test_datetime_raise_exception_on_invalid_calculation(self):
-        date_1395 = jdatetime.datetime(1395,1,1)
+        date_1395 = jdatetime.datetime(1395, 1, 1)
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 - 1
+            date_1395 - 1
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 + 1
+            date_1395 + 1
 
         with self.assertRaises(TypeError):
-            day_before = jdatetime.timedelta(days=1) - date_1395
+            jdatetime.timedelta(days=1) - date_1395
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 + date_1395
+            date_1395 + date_1395
 
     def test_datetime_calculation_on_timedelta(self):
-        date_1395 = jdatetime.datetime(1395,1,1)
+        date_1395 = jdatetime.datetime(1395, 1, 1)
         day_before = date_1395 - jdatetime.timedelta(days=1)
         day_after = date_1395 + jdatetime.timedelta(days=1)
 
@@ -513,8 +504,8 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(day_after, jdatetime.datetime(1395, 1, 2, 0, 0))
 
     def test_datetime_calculation_on_two_dates(self):
-        date_1394 = jdatetime.datetime(1394,1,1)
-        date_1395 = jdatetime.datetime(1395,1,1)
+        date_1394 = jdatetime.datetime(1394, 1, 1)
+        date_1395 = jdatetime.datetime(1395, 1, 1)
 
         day_diff = date_1395 - date_1394
 
@@ -525,22 +516,22 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(day_diff, datetime.timedelta(-365))
 
     def test_date_raise_exception_on_invalid_calculation(self):
-        date_1395 = jdatetime.date(1395,1,1)
+        date_1395 = jdatetime.date(1395, 1, 1)
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 - 1
+            date_1395 - 1
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 + 1
+            date_1395 + 1
 
         with self.assertRaises(TypeError):
-            day_before = jdatetime.timedelta(days=1) - date_1395
+            jdatetime.timedelta(days=1) - date_1395
 
         with self.assertRaises(TypeError):
-            day_before = date_1395 + date_1395
+            date_1395 + date_1395
 
     def test_date_calculation_on_timedelta(self):
-        date_1395 = jdatetime.date(1395,1,1)
+        date_1395 = jdatetime.date(1395, 1, 1)
         day_before = date_1395 - jdatetime.timedelta(days=1)
         day_after = date_1395 + jdatetime.timedelta(days=1)
 
@@ -553,13 +544,12 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(day_after, jdatetime.date(1395, 1, 2))
 
     def test_date_calculation_on_two_dates(self):
-        date_1394 = jdatetime.date(1394,1,1)
-        date_1395 = jdatetime.date(1395,1,1)
+        date_1394 = jdatetime.date(1394, 1, 1)
+        date_1395 = jdatetime.date(1395, 1, 1)
 
         day_diff = date_1395 - date_1394
 
         self.assertEqual(day_diff, datetime.timedelta(365))
-
 
         day_diff = date_1394 - date_1395
 
@@ -613,7 +603,7 @@ class TestJDateTime(unittest.TestCase):
         try:
             import pytz
             from pytz import timezone
-        except:
+        except Exception:
             pytz = None
         if pytz:
             tehran = timezone('Asia/Tehran')
