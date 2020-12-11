@@ -25,7 +25,7 @@ from jdatetime.jalali import (
     j_days_in_month,
 )
 
-__VERSION__ = "3.6.2"
+__VERSION__ = "3.6.3"
 MINYEAR = 1
 MAXYEAR = 9377
 

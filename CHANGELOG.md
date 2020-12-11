@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.6.3] - 2020-12-11
+### Change
+* Run test and publish package from github action
+
 ## [3.6.2] - 2019-10-24
 ### Add
 * Support for python 3.7 and 3.8
