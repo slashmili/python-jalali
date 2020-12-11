@@ -5,8 +5,9 @@ jdatetime is Jalali_ implementation of Python's datetime module
 Status
 ------
 
-.. image:: https://travis-ci.org/slashmili/python-jalali.svg?branch=master
-    :target: https://travis-ci.org/slashmili/python-jalali
+.. image:: https://github.com/slashmili/python-jalali/workflows/Tests/badge.svg?branch=main
+   :target: https://github.com/slashmili/python-jalali/actions
+
 
 .. image:: https://ci.appveyor.com/api/projects/status/ge5rk703ydx649a6?svg=true
    :target: https://ci.appveyor.com/project/slashmili/python-jalali
