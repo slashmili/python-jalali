@@ -180,6 +180,20 @@ class date(object):
         u'پنجشنبه',
         u'جمعه',
     ]
+    j_quarter_fa = [
+        u'بهار',
+        u'تابستان',
+        u'پاییز',
+        u'زمستان'
+    ]
+
+    MONTH_NUMS={
+        range(1,4):'0',
+        range(4,7):'1',
+        range(7,10):'2',
+        range(10,13):'3',
+    }
+    
     j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
 
     @property
@@ -242,6 +256,8 @@ class date(object):
             self.j_weekdays = self.j_weekdays_fa
             self.j_weekdays_short = self.j_weekdays_fa
             self.j_ampm = self.j_ampm_fa
+            self.quarter_fa = self.j_quarter_fa
+            self.month_nums = self.MONTH_NUMS
         else:
             self.j_months = self.j_months_en
             self.j_months_short = self.j_months_short_en
@@ -515,6 +531,11 @@ class date(object):
         gd = self.togregorian()
         return (gd.weekday() - 5) % 7
 
+    def quarter(self):
+        for key in self.month_nums:
+            if self.month in key:
+                return int(self.month_nums[key]) 
+
     def isoweekday(self):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
         return self.weekday() + 1
@@ -559,6 +580,8 @@ class date(object):
         format = format.replace("%b", self.j_months_short[self.month - 1])
 
         format = format.replace("%B", self.j_months[self.month - 1])
+
+        format = format.replace("%Q",self.j_quarter_fa[self.quarter()])
 
         if '%c' in format:
             format = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
