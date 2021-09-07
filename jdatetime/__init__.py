@@ -532,9 +532,9 @@ class date(object):
         return (gd.weekday() - 5) % 7
 
     def quarter(self):
-        for key in self.month_nums:
+        for key in self.MONTH_NUMS:
             if self.month in key:
-                return int(self.month_nums[key]) 
+                return int(self.MONTH_NUMS[key]) 
 
     def isoweekday(self):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
