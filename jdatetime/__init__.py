@@ -188,10 +188,10 @@ class date(object):
     ]
 
     MONTH_NUMS={
-        range(1,4):'0',
-        range(4,7):'1',
-        range(7,10):'2',
-        range(10,13):'3',
+        tuple([1,2,3]): '0', 
+        tuple([4,5,6]): '1', 
+        tuple([7,8,9]): '2', 
+        tuple([10,11,12]) : '3'
     }
     
     j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
@@ -581,7 +581,7 @@ class date(object):
 
         format = format.replace("%B", self.j_months[self.month - 1])
 
-        format = format.replace("%Q",self.j_quarter_fa[self.quarter()])
+        format = format.replace("%Q", self.j_quarter_fa[self.quarter()])
 
         if '%c' in format:
             format = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
