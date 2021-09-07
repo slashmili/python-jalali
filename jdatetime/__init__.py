@@ -187,13 +187,12 @@ class date(object):
         u'زمستان'
     ]
 
-    MONTH_NUMS={
-        tuple([1,2,3]): '0', 
-        tuple([4,5,6]): '1', 
-        tuple([7,8,9]): '2', 
-        tuple([10,11,12]) : '3'
+    MONTH_NUMS = {
+        tuple([1, 2, 3]): '0',
+        tuple([4, 5, 6]): '1',
+        tuple([7, 8, 9]): '2',
+        tuple([10, 11, 12]): '3'
     }
-    
     j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
 
     @property
@@ -534,7 +533,7 @@ class date(object):
     def quarter(self):
         for key in self.MONTH_NUMS:
             if self.month in key:
-                return int(self.MONTH_NUMS[key]) 
+                return int(self.MONTH_NUMS[key])
 
     def isoweekday(self):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
