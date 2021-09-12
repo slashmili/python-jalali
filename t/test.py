@@ -144,6 +144,21 @@ class TestJDate(unittest.TestCase):
         for i in range(7):  # test th whole week
             self.assertEqual((date + datetime.timedelta(days=i)).weekday(), i)
 
+    def test_max_year(self):
+        dmax = jdatetime.date.max
+        self.assertTrue(isinstance(dmax, jdatetime.date))
+        self.assertEqual(dmax.year, jdatetime.MAXYEAR)
+        self.assertRaises(ValueError, jdatetime.date, jdatetime.MAXYEAR + 1, 1, 1)
+        with self.assertRaises(ValueError, msg="Should raise an exception when we go over date.max"):
+            _ = dmax + jdatetime.date.resolution
+
+    def test_min_year(self):
+        dmin = jdatetime.date.min
+        self.assertTrue(isinstance(dmin, jdatetime.date))
+        self.assertEqual(dmin.year, jdatetime.MINYEAR)
+        self.assertRaises(ValueError, jdatetime.date, jdatetime.MINYEAR - 1, 1, 1)
+        with self.assertRaises(ValueError, msg="Should raise an exception when we ge below date.min"):
+            _ = dmin - jdatetime.date.resolution
 
 class TestJDateTime(unittest.TestCase):
     def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
