@@ -670,7 +670,7 @@ class date(object):
 date.min = date(MINYEAR, 1, 1)
 
 """The latest representable date, date(MAXYEAR, 12, 31)."""
-date.max = date(MAXYEAR, 12,29)
+date.max = date(MAXYEAR, 12, 30)
 
 
 class datetime(date):
