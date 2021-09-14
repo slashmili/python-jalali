@@ -666,6 +666,7 @@ class date(object):
     def aslocale(self, locale):
         return date(self.year, self.month, self.day, locale=locale)
 
+
 """The earliest representable date, date(MINYEAR, 1, 1)"""
 date.min = date(MINYEAR, 1, 1)
 
