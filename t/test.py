@@ -160,6 +160,7 @@ class TestJDate(unittest.TestCase):
         with self.assertRaises(ValueError, msg="Should raise an exception when we ge below date.min"):
             _ = dmin - jdatetime.date.resolution
 
+
 class TestJDateTime(unittest.TestCase):
     def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
         datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
