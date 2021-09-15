@@ -1,5 +1,10 @@
 # Changelog
 
+## [3.6.4] - 2021-09-15
+### Add
+* Add date.min based on cpython implementation
+* Add date.max based on cpython implementation
+
 ## [3.6.3] - 2020-12-11
 ### Change
 * Run test and publish package from github action
