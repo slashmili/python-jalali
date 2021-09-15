@@ -264,13 +264,6 @@ class date(object):
     non-equal date objects, timedelta(days=1)."""
     resolution = timedelta(1)
 
-    """The earliest representable date, date(MINYEAR, 1, 1)"""
-    # min = date(MINYEAR, 1, 1)
-    # TODO fixed errror:  name 'date' is not defined
-    """The latest representable date, date(MAXYEAR, 12, 31)."""
-
-    # max = date(MAXYEAR, 12,29)
-
     def isleap(self):
         """check if year is leap year
             algortim is based on http://en.wikipedia.org/wiki/Leap_year"""
@@ -672,6 +665,13 @@ class date(object):
 
     def aslocale(self, locale):
         return date(self.year, self.month, self.day, locale=locale)
+
+
+"""The earliest representable date, date(MINYEAR, 1, 1)"""
+date.min = date(MINYEAR, 1, 1)
+
+"""The latest representable date, date(MAXYEAR, 12, 31)."""
+date.max = date(MAXYEAR, 12, 30)
 
 
 class datetime(date):
