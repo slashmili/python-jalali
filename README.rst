@@ -120,7 +120,10 @@ Release Steps
 * Bump the version setup.py
 * Add release notes in CHANGELOG.md
 * Commit and create a tag with a name like v3.5.9
-* python setup.py sdist
+* python setup.py sdist bdist_wheel
+* twine upload --repository testpypi dist/jdatetime-3.5.9.tar.gz
+* verify the version in testpypi: https://test.pypi.org/project/jdatetime/
 * twine upload dist/jdatetime-3.5.9.tar.gz
+* verify the version in pypi: https://pypi.org/project/jdatetime/
 
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
