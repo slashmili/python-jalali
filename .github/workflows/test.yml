@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [2.7, 3.5, 3.6, 3.7, 3.8, 3.9]
+        python-version: ["2.7", "3.5", "3.6", "3.7", "3.8", "3.9", "3.10"]
     name: OS ${{ matrix.os}} - Python ${{ matrix.python-version }}
     steps:
       - uses: actions/checkout@v2
@@ -32,7 +32,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: "3.7"
           architecture: x64
       - run: |
           pip install -q flake8
