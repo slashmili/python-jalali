@@ -14,6 +14,12 @@ try:
 except ImportError:
     greenlet_installed = False
 
+try:
+    import zoneinfo
+except ImportError:
+    zoneinfo = None
+
+
 BASEDIR = os.path.abspath(
     os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
 )
@@ -697,6 +703,12 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(seconds, '1398-04-11T11:06:05')
         self.assertEqual(milliseconds, '1398-04-11T11:06:05.123')
         self.assertEqual(microseconds, '1398-04-11T11:06:05.123456')
+
+    @unittest.skipIf(zoneinfo is None, "ZoneInfo not supported!")
+    def test_zoneinfo_as_timezone(self):
+        tzinfo = zoneinfo.ZoneInfo('Asia/Tehran')
+        jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456, tzinfo=tzinfo)
+        self.assertEqual(str(jdt), '1398-04-11 11:06:05.123456+0430')
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):

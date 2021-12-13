@@ -635,10 +635,7 @@ class date(object):
 
         try:
             sign = "+"
-            try:
-                diff = self.tzinfo.utcoffset(self)
-            except TypeError:
-                diff = self.tzinfo.utcoffset(None)
+            diff = self.utcoffset()
             diff_sec = diff.seconds
             if diff.days > 0 or diff.days < -1:
                 raise ValueError(
@@ -654,11 +651,9 @@ class date(object):
         except AttributeError:
             format = format.replace("%z", '')
 
-        try:
-            format = format.replace("%Z", self.tzinfo.tzname(self))
-        except TypeError:
-            format = format.replace("%Z", self.tzinfo.tzname(None))
-        except AttributeError:
+        if hasattr(self, 'tzname') and self.tzname() is not None:
+            format = format.replace("%Z", self.tzname())
+        else:
             format = format.replace("%Z", '')
 
         return format
@@ -1294,13 +1289,13 @@ class datetime(date):
     def tzname(self):
         """Return self.tzinfo.tzname(self)"""
         if self.tzinfo:
-            return self.tzinfo.tzname(self)
+            return self.tzinfo.tzname(self.togregorian())
         return None
 
     def utcoffset(self):
         """Return self.tzinfo.utcoffset(self)."""
         if self.tzinfo:
-            return self.tzinfo.utcoffset(self)
+            return self.tzinfo.utcoffset(self.togregorian())
 
     def utctimetuple(self):
         """Return UTC time tuple, compatible with time.localtime().
@@ -1310,11 +1305,10 @@ class datetime(date):
         return dt.utctimetuple()
 
     def __str__(self):
-        mil = self.strftime("%f")
-        if int(mil) == 0:
+        if self.microsecond == 0:
             mil = ""
         else:
-            mil = "." + mil
+            mil = "." + str(self.microsecond)
         tz = self.strftime("%z")
         return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
 

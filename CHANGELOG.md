@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Add
+* Add ZoneInfo support
+
 ## [3.6.4] - 2021-09-15
 ### Add
 * Add date.min based on cpython implementation
