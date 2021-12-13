@@ -15,5 +15,8 @@ environment:
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 
+install:
+  - py -m pip install tzdata
+
 test_script:
-  - "%PYTHON%\\python.exe t/test.py"
+  - py t/test.py
