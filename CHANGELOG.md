@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [3.7.0] - 2021-12-20
 ### Add
 * Add ZoneInfo support
 
