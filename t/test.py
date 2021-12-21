@@ -94,7 +94,7 @@ class TestJDate(unittest.TestCase):
         month = 0
         for date in range(12):
             month += 1
-            j_month_fa = jdatetime.date(year=1400, month=month, day=10).strftime("%e")
+            j_month_fa = jdatetime.date(year=1400, month=month, day=10).strftime("%E")
             self.assertEqual(j_month_fa, j_months_fa[month - 1])
 
     def test_dates_are_not_equal_if_locales_are_different(self):
