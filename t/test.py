@@ -89,14 +89,6 @@ class TestJDate(unittest.TestCase):
         date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
         self.assertEqual(date.strftime('%A'), u'شنبه')
 
-    def test_strftime_fa_month(self):
-        j_months_fa = jdatetime.date.j_months_fa
-        month = 0
-        for date in range(12):
-            month += 1
-            j_month_fa = jdatetime.date(year=1400, month=month, day=10).strftime("%E")
-            self.assertEqual(j_month_fa, j_months_fa[month - 1])
-
     def test_dates_are_not_equal_if_locales_are_different(self):
         date_fa = jdatetime.date(1397, 4, 22, locale='fa_IR')
         date_nl = jdatetime.date(1397, 4, 22, locale='nl_NL')
