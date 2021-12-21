@@ -1,6 +1,6 @@
 # Changelog
 
-## [3.7.1] - 2021-12-21
+## Unreleased
 * Add support for jalali months in persian alphabets
 
 ## [3.7.0] - 2021-12-20
