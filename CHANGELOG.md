@@ -1,8 +1,5 @@
 # Changelog
 
-## [3.7.1] - 2021-12-21
-* Add support for jalali months in persian alphabets
-
 ## [3.7.0] - 2021-12-20
 ### Add
 * Add ZoneInfo support
