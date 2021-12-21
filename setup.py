@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
     name='jdatetime',
-    version='3.7.0',
+    version='3.7.1',
     packages=['jdatetime', ],
     license='Python Software Foundation License',
     keywords='Jalali implementation of Python datetime',
