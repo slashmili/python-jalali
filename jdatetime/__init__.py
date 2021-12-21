@@ -553,6 +553,8 @@ class date(object):
 
         format = format.replace("%B", self.j_months[self.month - 1])
 
+        format = format.replace("%e", self.j_months_fa[self.month - 1])
+
         if '%c' in format:
             format = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
 
