@@ -643,7 +643,7 @@ class date(object):
         else:
             raise ValueError("Invalid symbol")
         return format_
-    
+
     def _get_regex_pattern(self):
         formats = [
             "%a", "%A",
@@ -675,7 +675,7 @@ class date(object):
             format = self._strftime_functions(format=format, symbol=symbol)
 
         return format
-        
+
     def aslocale(self, locale):
         return date(self.year, self.month, self.day, locale=locale)
 
