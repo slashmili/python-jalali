@@ -540,8 +540,6 @@ class date(object):
             format_ = format.replace("%b", self.j_months_short[self.month - 1])
         elif symbol == "%B":
             format_ = format.replace("%B", self.j_months[self.month - 1])
-        elif symbol == "%E":
-            format_ = format.replace("%E", self.j_months_fa[self.month - 1])
         elif symbol == "%c":
             format_ = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
         elif symbol == "%d":
@@ -650,7 +648,6 @@ class date(object):
         formats = [
             "%a", "%A",
             "%b", "%B",
-            "%E",
             "%c",
             "%d", "%-d",
             "%f",
