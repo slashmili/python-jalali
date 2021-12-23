@@ -249,6 +249,37 @@ class date(object):
             self.j_weekdays_short = self.j_weekdays_short_en
             self.j_ampm = self.j_ampm_en
 
+        self._strftime_mapping = {
+            "%a": self._strftime_replace_func("%a", lambda obj: obj.j_weekdays_short[obj.weekday()]),
+            "%A": self._strftime_replace_func("%A", lambda obj: obj.j_weekdays[obj.weekday()]),
+            "%b": self._strftime_replace_func("%b", lambda obj: obj.j_months_short[obj.month - 1]),
+            "%B": self._strftime_replace_func("%B", lambda obj: obj.j_months[obj.month - 1]),
+            "%c": self._strftime_replace_func("%c", lambda obj: obj.strftime("%a %b %d %H:%M:%S %Y")),
+            "%d": self._strftime_replace_func("%d", lambda obj: "%02.d" % (obj.day)),
+            "%-d": self._strftime_replace_func("%-d", lambda obj: "%d" % (obj.day)),
+            "%j": self._strftime_replace_func("%j", lambda obj: "%03.d" % (obj.yday())),
+            "%m": self._strftime_replace_func("%m", lambda obj: "%02.d" % (obj.month)),
+            "%-m": self._strftime_replace_func("%m", lambda obj: "%d" % (obj.month)),
+            "%w": self._strftime_replace_func("%w", lambda obj: str(obj.weekday())),
+            "%W": self._strftime_replace_func("%W", lambda obj: str(obj.weeknumber())),
+            "%x": self._strftime_replace_func("%x", lambda obj: obj.strftime("%m/%d/%y")),
+            "%X": self._strftime_replace_func("%X", lambda obj: obj.strftime('%H:%M:%S')),
+            "%Y": self._strftime_replace_func("%Y", lambda obj: str(obj.year)),
+            "%y": self._strftime_replace_func("%y", lambda obj: str(obj.year)[2:]),
+            "%f": self._strftime_replace_func("%f", lambda obj: "%06.d" % (obj.microsecond), "000000"),
+            "%H": self._strftime_replace_func("%H", lambda obj: "%02.d" % (obj.hour), "00"),
+            "%-H": self._strftime_replace_func("%-H", lambda obj: "%d" % (obj.hour), "0"),
+            "%I": self._strftime_replace_func("%I", lambda obj: "%02.d" % (obj.hour % 12 or 12), "12"),
+            "%-I": self._strftime_replace_func("%I", lambda obj: "%d" % (obj.hour % 12 or 12), "12"),
+            "%M": self._strftime_replace_func("%M", lambda obj: "%02.d" % (obj.minute), "00"),
+            "%-M": self._strftime_replace_func("%M", lambda obj: "%d" % (obj.minute), "0"),
+            "%S": self._strftime_replace_func("%S", lambda obj: "%02.d" % (obj.second), "00"),
+            "%-S": self._strftime_replace_func("%S", lambda obj: "%d" % (obj.second), "0"),
+            "%p": self._strftime_p_func(),
+            "%z": self._strftime_z_func(),
+            "%Z": self._strftime_cap_z_func(),
+        }
+
     def _is_fa_locale(self):
         if self.__locale and self.__locale == FA_LOCALE:
             return True
@@ -531,131 +562,74 @@ class date(object):
         """
         return self.strftime(format)
 
-    def strftime(self, format):
-        """format -> strftime() style string."""
-        # TODO: change stupid str.replace
-        # formats = {
-        #           '%a': lambda: self.j_weekdays_short[self.weekday()]
-        # }
-        # find all %[a-zA-Z] and call method if it in formats
+    def _strftime_replace_func(self, symbol, value_func, fallback=None):
+        """Return a function to replace `symbol` with the result of `value_func`"""
+        def simple_replace(f):
+            return f.replace(symbol, value_func(self))
 
+        def replace_with_fallback(f):
+            try:
+                return f.replace(symbol, value_func(self))
+            except Exception:
+                return f.replace(symbol, fallback)
+
+        if fallback:
+            return replace_with_fallback
+        else:
+            return simple_replace
+
+    def _strftime_p_func(self):
+        def strftime_p(f):
+            try:
+                if self.hour >= 12:
+                    return f.replace("%p", self.j_ampm['PM'])
+                return f.replace("%p", self.j_ampm['AM'])
+            except Exception:
+                return f.replace("%p", self.j_ampm['AM'])
+
+        return strftime_p
+
+    def _strftime_z_func(self):
+        def str_z(f):
+            try:
+                sign = "+"
+                diff = self.utcoffset()
+                diff_sec = diff.seconds
+                if diff.days > 0 or diff.days < -1:
+                    raise ValueError(
+                        "tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439"
+                    )
+                if diff.days != 0:
+                    sign = "-"
+                    diff_sec = (1 * 24 * 60 * 60) - diff_sec
+                tmp_min = diff_sec / 60
+                diff_hour = tmp_min / 60
+                diff_min = tmp_min % 60
+                return f.replace("%z", '%s%02.d%02.d' % (sign, diff_hour, diff_min))
+            except AttributeError:
+                return f.replace("%z", '')
+
+        return str_z
+
+    def _strftime_cap_z_func(self):
+        def strftime_cap_z(f):
+            if hasattr(self, 'tzname') and self.tzname() is not None:
+                return f.replace("%Z", self.tzname())
+            else:
+                return f.replace("%Z", '')
+
+        return strftime_cap_z
+
+    def strftime(self, format):
         # convert to unicode
         try:
             format = format.decode('utf-8')
         except Exception:
             pass
 
-        format = format.replace("%a", self.j_weekdays_short[self.weekday()])
-
-        format = format.replace("%A", self.j_weekdays[self.weekday()])
-
-        format = format.replace("%b", self.j_months_short[self.month - 1])
-
-        format = format.replace("%B", self.j_months[self.month - 1])
-
-        if '%c' in format:
-            format = format.replace("%c", self.strftime("%a %b %d %H:%M:%S %Y"))
-
-        format = format.replace("%d", '%02.d' % (self.day))
-        format = format.replace("%-d", '%d' % (self.day))
-
-        try:
-            format = format.replace("%f", '%06.d' % (self.microsecond))
-        except Exception:
-            format = format.replace("%f", "000000")
-
-        try:
-            format = format.replace("%H", '%02.d' % (self.hour))
-        except Exception:
-            format = format.replace("%H", '00')
-
-        try:
-            format = format.replace("%-H", '%d' % (self.hour))
-        except Exception:
-            format = format.replace("%-H", '0')
-
-        try:
-            format = format.replace("%I", '%02.d' % (self.hour % 12 or 12))
-        except Exception:
-            format = format.replace("%I", '12')
-
-        try:
-            format = format.replace("%-I", '%d' % (self.hour % 12 or 12))
-        except Exception:
-            format = format.replace("%-I", '12')
-
-        format = format.replace("%j", '%03.d' % (self.yday()))
-
-        format = format.replace("%m", '%02.d' % (self.month))
-        format = format.replace("%-m", '%d' % (self.month))
-
-        try:
-            format = format.replace("%M", '%02.d' % (self.minute))
-        except Exception:
-            format = format.replace("%M", '00')
-
-        try:
-            format = format.replace("%-M", '%d' % (self.minute))
-        except Exception:
-            format = format.replace("%-M", '0')
-
-        try:
-            if self.hour >= 12:
-                format = format.replace("%p", self.j_ampm['PM'])
-            else:
-                format = format.replace("%p", self.j_ampm['AM'])
-        except Exception:
-            format = format.replace("%p", self.j_ampm['AM'])
-
-        try:
-            format = format.replace("%S", '%02.d' % (self.second))
-        except Exception:
-            format = format.replace("%S", '00')
-
-        try:
-            format = format.replace("%-S", '%d' % (self.second))
-        except Exception:
-            format = format.replace("%-S", '0')
-
-        format = format.replace("%w", str(self.weekday()))
-
-        format = format.replace("%W", str(self.weeknumber()))
-
-        if '%x' in format:
-            format = format.replace("%x", self.strftime("%m/%d/%y"))
-
-        if '%X' in format:
-            format = format.replace("%X", self.strftime('%H:%M:%S'))
-
-        format = format.replace("%Y", str(self.year))
-
-        format = format.replace("%y", str(self.year)[2:])
-
-        format = format.replace("%Y", str(self.year))
-
-        try:
-            sign = "+"
-            diff = self.utcoffset()
-            diff_sec = diff.seconds
-            if diff.days > 0 or diff.days < -1:
-                raise ValueError(
-                    "tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439"
-                )
-            if diff.days != 0:
-                sign = "-"
-                diff_sec = (1 * 24 * 60 * 60) - diff_sec
-            tmp_min = diff_sec / 60
-            diff_hour = tmp_min / 60
-            diff_min = tmp_min % 60
-            format = format.replace("%z", '%s%02.d%02.d' % (sign, diff_hour, diff_min))
-        except AttributeError:
-            format = format.replace("%z", '')
-
-        if hasattr(self, 'tzname') and self.tzname() is not None:
-            format = format.replace("%Z", self.tzname())
-        else:
-            format = format.replace("%Z", '')
-
+        for symbol in _re.findall("\%[a-zA-z-]", format):
+            if symbol in self._strftime_mapping:
+                format = self._strftime_mapping[symbol](format)
         return format
 
     def aslocale(self, locale):
