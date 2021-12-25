@@ -308,6 +308,10 @@ class TestJDateTime(unittest.TestCase):
         dt = jdatetime.datetime(1389, 2, 17, 19, 10, 2, tzinfo=teh)
         self.assertEqual(True, dt.strftime("%Z %z") == "IRDT +0330")
 
+    def test_strftime_unicode(self):
+        s = jdatetime.date(1390, 2, 23)
+        self.assertEqual(s.strftime("%a %A".encode("utf-8")), "Fri Friday")
+
     def test_kabiseh(self):
         kabiseh_year = jdatetime.date.fromgregorian(date=datetime.date(2013, 3, 20))
         self.assertEqual(True, kabiseh_year.isleap() is True)
