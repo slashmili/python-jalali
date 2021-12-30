@@ -408,6 +408,15 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(dt1, dt2)
 
+    def test_strptime_special_chars(self):
+        date_string = "[1363*6*6] ? (12+13+14)"
+        date_format = "[%Y*%m*%d] ? (%H+%M+%S)"
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+        dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
+
+        self.assertEqual(dt1, dt2)
+
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"

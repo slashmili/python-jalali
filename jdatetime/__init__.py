@@ -882,16 +882,7 @@ class datetime(date):
     @staticmethod
     def strptime(date_string, format):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
-        if '*' in format:
-            format = format.replace("*", "\*")
-        if '+' in format:
-            format = format.replace("+", "\+")
-        if '(' in format or ')' in format:
-            format = format.replace("(", "\(")
-            format = format.replace(")", "\)")
-        if '[' in format or ']' in format:
-            format = format.replace("[", "\[")
-            format = format.replace("]", "\]")
+        format = _re.escape(format)
         result_date = {
             'day': 1,
             'month': 1,
