@@ -416,6 +416,17 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(dt1, dt2)
 
+    def test_strptime_small_y(self):
+        date_string = "01/1/1"
+        date_format = "%y/%m/%d"
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+        dt2 = jdatetime.datetime(1401, 1, 1)
+
+        self.assertEqual(dt1, dt2)
+
+    def test_strptime_do_match_excessive_characters(self):
+        self.assertRaises(
+            ValueError, jdatetime.datetime.strptime, '21 ', '%y')
 
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
