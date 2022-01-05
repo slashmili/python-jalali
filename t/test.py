@@ -686,6 +686,14 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertAlmostEqual(jiso, '1398-04-11M00:00:00')
 
+    def test_isoformat_unicode_arg_python2(self):
+        jdt = jdatetime.datetime(1398, 4, 11)
+        jiso = jdt.isoformat('M')
+        # Used to raise:
+        # AssertionError: argument 1 must be a single character: M
+        ujiso = jdt.isoformat(u'M')
+        self.assertEqual(jiso, ujiso)
+
     def test_isoformat_bad_sep(self):
         jdt = jdatetime.datetime(1398, 4, 11)
 

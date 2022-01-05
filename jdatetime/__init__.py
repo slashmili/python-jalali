@@ -39,8 +39,10 @@ timestamp_is_supported = (
 
 if sys.version_info[0] >= 3:  # py3
     _int_types = (int,)
+    _basestring = str
 else:
     _int_types = (int, long)  # noqa
+    _basestring = basestring  # noqa: F821
 
 if platform.system() == 'Windows':
     FA_LOCALE = 'Persian_Iran'
@@ -1235,11 +1237,11 @@ class datetime(date):
             return self.tzinfo.dst(self)
         return None
 
-    def isoformat(self, sep=str('T'), timespec='auto'):
+    def isoformat(self, sep='T', timespec='auto'):
         """[sep] -> string in ISO 8601 format,
         YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
 
-        assert isinstance(sep, str) and len(sep) == 1, \
+        assert isinstance(sep, _basestring) and len(sep) == 1, \
             'argument 1 must be a single character: {}'.format(sep)
 
         tz = self.strftime("%z")
