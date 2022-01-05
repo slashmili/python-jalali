@@ -408,6 +408,26 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(dt1, dt2)
 
+    def test_strptime_special_chars(self):
+        date_string = "[1363*6*6] ? (12+13+14)"
+        date_format = "[%Y*%m*%d] ? (%H+%M+%S)"
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+        dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
+
+        self.assertEqual(dt1, dt2)
+
+    def test_strptime_small_y(self):
+        self.assertEqual(
+            jdatetime.datetime(1468, 1, 1),
+            jdatetime.datetime.strptime("68/1/1", "%y/%m/%d"))
+        self.assertEqual(
+            jdatetime.datetime(1369, 1, 1),
+            jdatetime.datetime.strptime("69/1/1", "%y/%m/%d"))
+
+    def test_strptime_do_match_excessive_characters(self):
+        self.assertRaises(
+            ValueError, jdatetime.datetime.strptime, '21 ', '%y')
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
