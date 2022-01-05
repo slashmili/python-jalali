@@ -408,6 +408,41 @@ class TestJDateTime(unittest.TestCase):
 
         self.assertEqual(dt1, dt2)
 
+    def test_strptime_special_chars(self):
+        date_string = "[1363*6*6] ? (12+13+14)"
+        date_format = "[%Y*%m*%d] ? (%H+%M+%S)"
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+        dt2 = jdatetime.datetime(1363, 6, 6, 12, 13, 14)
+
+        self.assertEqual(dt1, dt2)
+
+    def test_strptime_small_y(self):
+        self.assertEqual(
+            jdatetime.datetime(1468, 1, 1),
+            jdatetime.datetime.strptime("68/1/1", "%y/%m/%d")
+        )
+        self.assertEqual(
+            jdatetime.datetime(1369, 1, 1),
+            jdatetime.datetime.strptime("69/1/1", "%y/%m/%d")
+        )
+
+    def test_strptime_do_not_match_excessive_characters(self):
+        with self.assertRaises(
+            ValueError,
+            msg='%y should not match the trailing space character'
+        ):
+            jdatetime.datetime.strptime('21 ', '%y')
+
+    def test_strptime_nanoseconds(self):
+        self.assertEqual(
+            jdatetime.datetime(1279, 1, 1, 0, 0, 0, 700000),
+            jdatetime.datetime.strptime("7", "%f")
+        )
+        self.assertEqual(
+            jdatetime.datetime(1279, 1, 1, 0, 0, 0, 12300),
+            jdatetime.datetime.strptime("0123", "%f")
+        )
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"

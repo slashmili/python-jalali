@@ -9,6 +9,7 @@ import platform
 import datetime as py_datetime
 import locale as _locale
 import re as _re
+from functools import partial as _partial
 
 
 try:
@@ -645,6 +646,35 @@ date.min = date(MINYEAR, 1, 1)
 date.max = date(MAXYEAR, 12, 30)
 
 
+if sys.version_info[:2] < (3, 7):
+    # Prior to Python 3.7, `%` is escaped by re.escape. We don't want that.
+    def _escape(pattern):
+        if isinstance(pattern, bytes):  # only happens in Python 2
+            pattern = pattern.decode()
+        return _re.escape(pattern).replace(r'\%', '%')
+else:
+    _escape = _re.escape
+
+
+_DIRECTIVE_PATTERNS = {
+    '%Y': '(?P<Y>[0-9]{4})',
+    '%y': '(?P<y>[0-9]{2})',
+    '%m': '(?P<m>[0-9]{1,2})',
+    '%d': '(?P<d>[0-9]{1,2})',
+    '%H': '(?P<H>[0-9]{1,2})',
+    '%M': '(?P<M>[0-9]{1,2})',
+    '%S': '(?P<S>[0-9]{1,2})',
+    '%f': '(?P<f>[0-9]{1,6})',
+}
+
+
+# replace directives with patterns according to _DIRECTIVE_PATTERNS
+_directives_to_pattern = _partial(
+    _re.compile('|'.join(_DIRECTIVE_PATTERNS)).sub,
+    lambda match: _DIRECTIVE_PATTERNS[match.group()]
+)
+
+
 class datetime(date):
     """datetime(
         year, month, day, [hour, [minute, [seconds, [microsecond, [tzinfo]]]]]
@@ -884,61 +914,30 @@ class datetime(date):
     @staticmethod
     def strptime(date_string, format):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
-        if '*' in format:
-            format = format.replace("*", "\*")
-        if '+' in format:
-            format = format.replace("+", "\+")
-        if '(' in format or ')' in format:
-            format = format.replace("(", "\(")
-            format = format.replace(")", "\)")
-        if '[' in format or ']' in format:
-            format = format.replace("[", "\[")
-            format = format.replace("]", "\]")
-        result_date = {
-            'day': 1,
-            'month': 1,
-            'year': 1279,
-            'microsecond': 0,
-            'second': 0,
-            'minute': 0,
-            'hour': 0,
-        }
-        apply_order = []
-        format_map = {
-            '%d': ['[0-9]{1,2}', 'day'],
-            '%f': ['[0-9]{1,6}', 'microsecond'],
-            '%H': ['[0-9]{1,2}', 'hour'],
-            '%m': ['[0-9]{1,2}', 'month'],
-            '%M': ['[0-9]{1,2}', 'minute'],
-            '%S': ['[0-9]{1,2}', 'second'],
-            '%Y': ['[0-9]{4}', 'year'],
-        }
-        regex = format
-        find = _re.compile("(%[a-zA-Z])")
+        regex = _directives_to_pattern(_escape(format))
 
-        for form in find.findall(format):
-            if form in format_map:
-                regex = regex.replace(form, "(" + format_map[form][0] + ")")
-                apply_order.append(format_map[form][1])
-        try:
-            p = _re.compile(regex)
-            if not p.match(date_string):
-                raise ValueError()
-            for i, el in enumerate(p.match(date_string).groups()):
-                result_date[apply_order[i]] = int(el)
-            return datetime(
-                result_date['year'],
-                result_date['month'],
-                result_date['day'],
-                result_date['hour'],
-                result_date['minute'],
-                result_date['second'],
-            )
-        except Exception:
+        # Cannot use `fullmatch`, it requires Python 3.4+. Use `$` instead.
+        match = _re.match(regex + '$', date_string)
+        if match is None:
             raise ValueError(
                 "time data '%s' does not match format '%s'" %
                 (date_string, format)
             )
+
+        get = match.groupdict().get
+
+        year = int(get('Y') or get('y') or 1279)
+        if year < 100:  # %y, see the discussion at #100
+            year += (1400 if year <= 68 else 1300)
+        return datetime(
+            year,
+            int(get('m', 1)),
+            int(get('d', 1)),
+            int(get('H', 0)),
+            int(get('M', 0)),
+            int(get('S', 0)),
+            None if get('f') is None else int('{0:0<6}'.format(get('f'))),
+        )
 
     def replace(
         self,
