@@ -117,13 +117,10 @@ This supports both Python threads, and greenlets.
 
 Release Steps
 ~~~~~~~~~~~~~~
-* Bump the version setup.py
+* Bump the version in `setup.py` and `jdatetime/__init__.py`. We are using Semantic Versioning.
 * Add release notes in CHANGELOG.md
-* Commit and create a tag with a name like v3.5.9
-* python setup.py sdist bdist_wheel
-* twine upload --repository testpypi dist/jdatetime-3.5.9.tar.gz
-* verify the version in testpypi: https://test.pypi.org/project/jdatetime/
-* twine upload dist/jdatetime-3.5.9.tar.gz
-* verify the version in pypi: https://pypi.org/project/jdatetime/
+* Commit and push the changes. Create a PR
+* After the PR is merged, create a release with a tag name like `v<version>`
+* Github Action creates the package and deploys it to pypi.
 
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
