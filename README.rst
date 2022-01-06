@@ -117,7 +117,7 @@ This supports both Python threads, and greenlets.
 
 Release Steps
 ~~~~~~~~~~~~~~
-* Bump the version `setup.py` and `jdatetime/__init__.py`. We are using Semantic Versioning.
+* Bump the version in `setup.py` and `jdatetime/__init__.py`. We are using Semantic Versioning.
 * Add release notes in CHANGELOG.md
 * Commit and push the changes. Create a PR
 * After the PR is merged, create a release with a tag name like `v<version>`
