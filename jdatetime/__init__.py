@@ -928,7 +928,7 @@ class datetime(date):
 
         year = int(get('Y') or get('y') or 1279)
         if year < 100:  # %y, see the discussion at #100
-            year += (1400 if year <= 68 else 1300)
+            year += 1400 if year <= 68 else 1300
         return datetime(
             year,
             int(get('m', 1)),
