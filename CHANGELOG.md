@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.0] - 2022-01-07
+### Fixed
+* Fixed unicode literal problem in isoformat
+
 ## [3.7.0] - 2021-12-20
 ### Add
 * Add ZoneInfo support
