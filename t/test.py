@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pickle
 import sys
 import os
 import time
@@ -165,6 +166,10 @@ class TestJDate(unittest.TestCase):
         self.assertRaises(ValueError, jdatetime.date, jdatetime.MINYEAR - 1, 1, 1)
         with self.assertRaises(ValueError, msg="Should raise an exception when we ge below date.min"):
             _ = dmin - jdatetime.date.resolution
+
+    def test_pickle(self):
+        d = jdatetime.date.today()
+        self.assertEqual(pickle.loads(pickle.dumps(d)), d)
 
 
 class TestJDateTime(unittest.TestCase):
@@ -728,6 +733,10 @@ class TestJDateTime(unittest.TestCase):
         tzinfo = zoneinfo.ZoneInfo('Asia/Tehran')
         jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456, tzinfo=tzinfo)
         self.assertEqual(str(jdt), '1398-04-11 11:06:05.123456+0430')
+
+    def test_pickle(self):
+        dt = jdatetime.datetime.now()
+        self.assertEqual(pickle.loads(pickle.dumps(dt)), dt)
 
 
 class TestJdatetimeGetSetLocale(unittest.TestCase):
