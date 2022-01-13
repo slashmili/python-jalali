@@ -10,7 +10,6 @@ import datetime as py_datetime
 import locale as _locale
 import re as _re
 
-
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -189,6 +188,10 @@ class date(object):
         return self.__year
 
     @property
+    def cyear(self):
+        return self.__year % 100
+
+    @property
     def month(self):
         return self.__month
 
@@ -252,34 +255,33 @@ class date(object):
             self.j_ampm = self.j_ampm_en
 
         self._strftime_mapping = {
-            "%a": self._strftime_replace_func("%a", lambda obj: obj.j_weekdays_short[obj.weekday()]),
-            "%A": self._strftime_replace_func("%A", lambda obj: obj.j_weekdays[obj.weekday()]),
-            "%b": self._strftime_replace_func("%b", lambda obj: obj.j_months_short[obj.month - 1]),
-            "%B": self._strftime_replace_func("%B", lambda obj: obj.j_months[obj.month - 1]),
-            "%c": self._strftime_replace_func("%c", lambda obj: obj.strftime("%a %b %d %H:%M:%S %Y")),
-            "%d": self._strftime_replace_func("%d", lambda obj: "%02.d" % (obj.day)),
-            "%-d": self._strftime_replace_func("%-d", lambda obj: "%d" % (obj.day)),
-            "%j": self._strftime_replace_func("%j", lambda obj: "%03.d" % (obj.yday())),
-            "%m": self._strftime_replace_func("%m", lambda obj: "%02.d" % (obj.month)),
-            "%-m": self._strftime_replace_func("%m", lambda obj: "%d" % (obj.month)),
-            "%w": self._strftime_replace_func("%w", lambda obj: str(obj.weekday())),
-            "%W": self._strftime_replace_func("%W", lambda obj: str(obj.weeknumber())),
-            "%x": self._strftime_replace_func("%x", lambda obj: obj.strftime("%m/%d/%y")),
-            "%X": self._strftime_replace_func("%X", lambda obj: obj.strftime('%H:%M:%S')),
-            "%Y": self._strftime_replace_func("%Y", lambda obj: str(obj.year)),
-            "%y": self._strftime_replace_func("%y", lambda obj: str(obj.year)[2:]),
-            "%f": self._strftime_replace_func("%f", lambda obj: "%06.d" % (obj.microsecond), "000000"),
-            "%H": self._strftime_replace_func("%H", lambda obj: "%02.d" % (obj.hour), "00"),
-            "%-H": self._strftime_replace_func("%-H", lambda obj: "%d" % (obj.hour), "0"),
-            "%I": self._strftime_replace_func("%I", lambda obj: "%02.d" % (obj.hour % 12 or 12), "12"),
-            "%-I": self._strftime_replace_func("%I", lambda obj: "%d" % (obj.hour % 12 or 12), "12"),
-            "%M": self._strftime_replace_func("%M", lambda obj: "%02.d" % (obj.minute), "00"),
-            "%-M": self._strftime_replace_func("%M", lambda obj: "%d" % (obj.minute), "0"),
-            "%S": self._strftime_replace_func("%S", lambda obj: "%02.d" % (obj.second), "00"),
-            "%-S": self._strftime_replace_func("%S", lambda obj: "%d" % (obj.second), "0"),
-            "%p": self._strftime_p_func(),
-            "%z": self._strftime_z_func(),
-            "%Z": self._strftime_cap_z_func(),
+            # A mapping between symbol to it's helper function and function kwargs
+            # symbol: (helper_function_name, {kwargs})
+            "%a": ("_strftime_get_method_value", {"attr": "jweekday_short", "fmt": "%s"}),
+            "%A": ("_strftime_get_method_value", {"attr": "jweekday", "fmt": "%s"}),
+            "%b": ("_strftime_get_method_value", {"attr": "jmonth_short", "fmt": "%s"}),
+            "%B": ("_strftime_get_method_value", {"attr": "jmonth", "fmt": "%s"}),
+            "%d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%02.d"}),
+            "%-d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%d"}),
+            "%j": ("_strftime_get_method_value", {"attr": "yday", "fmt": "%03.d"}),
+            "%m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%02.d"}),
+            "%-m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%d"}),
+            "%w": ("_strftime_get_method_value", {"attr": "weekday", "fmt": "%d"}),
+            "%W": ("_strftime_get_method_value", {"attr": "weeknumber", "fmt": "%d"}),
+            "%Y": ("_strftime_get_attr_value", {"attr": "year", "fmt": "%d"}),
+            "%y": ("_strftime_get_attr_value", {"attr": "cyear", "fmt": "%02.d"}),
+            "%f": ("_strftime_get_attr_value", {"attr": "microsecond", "fmt": "%06.d", "fb": "000000"}),
+            "%H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "00"}),
+            "%-H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "0"}),
+            "%I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "12"}),
+            "%-I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "12"}),
+            "%M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%02.d", "fb": "00"}),
+            "%-M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%d", "fb": "0"}),
+            "%S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%02.d", "fb": "00"}),
+            "%-S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%d", "fb": "0"}),
+            "%p": ("_strftime_p", {}),
+            "%z": ("_strftime_z", {}),
+            "%Z": ("_strftime_cap_z", {}),
         }
 
     def _is_fa_locale(self):
@@ -545,9 +547,21 @@ class date(object):
         """Return the day of the week as an integer, where Shanbeh is 1 and Jomeh is 7"""
         return self.weekday() + 1
 
+    def jweekday_short(self):
+        return self.j_weekdays_short[self.weekday()]
+
+    def jweekday(self):
+        return self.j_weekdays[self.weekday()]
+
     def weeknumber(self):
         """Return week number """
         return (self.yday() + date(self.year, 1, 1).weekday() - 1) // 7 + 1
+
+    def jmonth_short(self):
+        return self.j_months_short[self.month - 1]
+
+    def jmonth(self):
+        return self.j_months[self.month - 1]
 
     def isocalendar(self):
         """Return a 3-tuple, (ISO year, ISO week number, ISO weekday)."""
@@ -564,74 +578,69 @@ class date(object):
         """
         return self.strftime(format)
 
-    def _strftime_replace_func(self, symbol, value_func, fallback=None):
-        """Return a function to replace `symbol` with the result of `value_func`"""
-        def simple_replace(f):
-            return f.replace(symbol, value_func(self))
+    # strftime helper functions
+    def _strftime_get_attr_value(self, format, symbol, attr, fmt, fb=None):
+        try:
+            return format.replace(symbol, fmt % getattr(self, attr))
+        except Exception:
+            return format.replace(symbol, fb)
 
-        def replace_with_fallback(f):
-            try:
-                return f.replace(symbol, value_func(self))
-            except Exception:
-                return f.replace(symbol, fallback)
+    def _strftime_get_method_value(self, format, symbol, attr, fmt):
+        return format.replace(symbol, fmt % getattr(self, attr)())
 
-        if fallback:
-            return replace_with_fallback
+    def _strftime_p(self, format, **kwrgs):
+        try:
+            if self.hour >= 12:
+                return format.replace("%p", self.j_ampm['PM'])
+            return format.replace("%p", self.j_ampm['AM'])
+        except Exception:
+            return format.replace("%p", self.j_ampm['AM'])
+
+    def _strftime_z(self, format, **kwrgs):
+        try:
+            sign = "+"
+            diff = self.utcoffset()
+            diff_sec = diff.seconds
+            if diff.days > 0 or diff.days < -1:
+                raise ValueError(
+                    "tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439"
+                )
+            if diff.days != 0:
+                sign = "-"
+                diff_sec = (1 * 24 * 60 * 60) - diff_sec
+            tmp_min = diff_sec / 60
+            diff_hour = tmp_min / 60
+            diff_min = tmp_min % 60
+            return format.replace("%z", '%s%02.d%02.d' % (sign, diff_hour, diff_min))
+        except AttributeError:
+            return format.replace("%z", '')
+
+    def _strftime_cap_z(self, format, **kwrgs):
+        if hasattr(self, 'tzname') and self.tzname() is not None:
+            return format.replace("%Z", self.tzname())
         else:
-            return simple_replace
-
-    def _strftime_p_func(self):
-        def strftime_p(f):
-            try:
-                if self.hour >= 12:
-                    return f.replace("%p", self.j_ampm['PM'])
-                return f.replace("%p", self.j_ampm['AM'])
-            except Exception:
-                return f.replace("%p", self.j_ampm['AM'])
-
-        return strftime_p
-
-    def _strftime_z_func(self):
-        def str_z(f):
-            try:
-                sign = "+"
-                diff = self.utcoffset()
-                diff_sec = diff.seconds
-                if diff.days > 0 or diff.days < -1:
-                    raise ValueError(
-                        "tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439"
-                    )
-                if diff.days != 0:
-                    sign = "-"
-                    diff_sec = (1 * 24 * 60 * 60) - diff_sec
-                tmp_min = diff_sec / 60
-                diff_hour = tmp_min / 60
-                diff_min = tmp_min % 60
-                return f.replace("%z", '%s%02.d%02.d' % (sign, diff_hour, diff_min))
-            except AttributeError:
-                return f.replace("%z", '')
-
-        return str_z
-
-    def _strftime_cap_z_func(self):
-        def strftime_cap_z(f):
-            if hasattr(self, 'tzname') and self.tzname() is not None:
-                return f.replace("%Z", self.tzname())
-            else:
-                return f.replace("%Z", '')
-
-        return strftime_cap_z
+            return format.replace("%Z", '')
 
     def strftime(self, format):
-        # convert to unicode
+        # Convert to unicode
         try:
             format = format.decode('utf-8')
         except Exception:
             pass
 
-        for symbol in _re.findall("\%[a-zA-z-]", format):
+        symbols = {
+            "%c": "%a %b %d %H:%M:%S %Y",
+            "%x": "%m/%d/%y",
+            "%X": "%H:%M:%S",
+        }
+        for s, r in symbols.items():
+            format = format.replace(s, r)
+
+        for symbol in _re.findall("\%-?[a-zA-z-]", format):
             if symbol in self._strftime_mapping:
-                format = self._strftime_mapping[symbol](format)
+                replace_method_name, kwargs = self._strftime_mapping[symbol]
+                kwargs.update({"format": format, "symbol": symbol})
+                format = getattr(self, replace_method_name)(**kwargs)
         return format
 
     def aslocale(self, locale):
