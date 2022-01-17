@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.1] - 2022-01-17
+### Fixed
+* Fixed pickle problem of jdate and jdatetime objects(#108)
+
 ## [3.8.0] - 2022-01-07
 ### Fixed
 * Fixed unicode literal problem in isoformat
