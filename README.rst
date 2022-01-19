@@ -115,6 +115,36 @@ This supports both Python threads, and greenlets.
     jdatetime.datetime.now().strftime('%A %B')
     # u'\u062f\u0648\u0634\u0646\u0628\u0647 \u062e\u0631\u062f\u0627\u062f'
 
+Development
+-----------
+
+You can contribute to this project forking it from GitHub and sending pull requests.
+
+First fork_ the repository_ and then clone it:
+
+.. code:: shell
+
+    $ git clone git@github.com:<you>/python-jalali.git
+
+Before committing, you can run all the above tests against all supported Python versions with tox.
+You need to install tox first:
+
+.. code:: shell
+
+    $ pip install tox
+
+And then you can run all tests:
+
+.. code:: shell
+
+    $ tox
+
+If you wish to limit the testing to specific Python version, you can parametrize the tox run:
+
+.. code:: shell
+
+    $ tox -e py39
+
 Release Steps
 ~~~~~~~~~~~~~~
 * Bump the version in `setup.py` and `jdatetime/__init__.py`. We are using Semantic Versioning.
@@ -124,3 +154,5 @@ Release Steps
 * Github Action creates the package and deploys it to pypi.
 
 .. _Jalali: http://en.wikipedia.org/wiki/Iranian_calendar
+.. _fork: https://help.github.com/en/articles/fork-a-repo
+.. _repository: https://github.com/slashmili/python-jalali

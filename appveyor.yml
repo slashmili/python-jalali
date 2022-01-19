@@ -19,4 +19,4 @@ install:
   - py -m pip install tzdata
 
 test_script:
-  - py t/test.py
+  - py -m unittest discover tests

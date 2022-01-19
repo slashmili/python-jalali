@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 import pickle
-import sys
-import os
 import time
 import datetime
 import platform
 import threading
 import locale
-import unittest
+from unittest import TestCase, skipIf, skipUnless
+
+import jdatetime
 
 try:
     import greenlet
@@ -19,13 +19,6 @@ try:
     import zoneinfo
 except ImportError:
     zoneinfo = None
-
-
-BASEDIR = os.path.abspath(
-    os.path.join(os.path.dirname(os.path.abspath(__file__)), "..")
-)
-sys.path.insert(0, BASEDIR)
-import jdatetime  # noqa
 
 
 class GMTTime(jdatetime.tzinfo):
@@ -50,129 +43,7 @@ class TehranTime(jdatetime.tzinfo):
         return jdatetime.timedelta(0)
 
 
-class TestJDate(unittest.TestCase):
-    def test_as_locale_returns_same_date_with_specified_locale(self):
-        jdate_en = jdatetime.date(1397, 4, 23, locale='en_US')
-        jdate_fa = jdate_en.aslocale('fa_IR')
-        self.assertEqual(jdate_fa.year, 1397)
-        self.assertEqual(jdate_fa.month, 4)
-        self.assertEqual(jdate_fa.day, 23)
-        self.assertEqual(jdate_fa.locale, 'fa_IR')
-
-    def test_init_locale_is_effective_only_if_not_none(self):
-        orig_locale = jdatetime.get_locale()
-        jdatetime.set_locale('en_US')
-        self.addCleanup(jdatetime.set_locale, orig_locale)
-        date = jdatetime.date(1397, 4, 22, locale=None)
-        self.assertEqual(date.locale, 'en_US')
-
-    def test_init_locale_is_effective_only_if_not_empty(self):
-        orig_locale = jdatetime.get_locale()
-        jdatetime.set_locale('nl_NL')
-        self.addCleanup(jdatetime.set_locale, orig_locale)
-        date = jdatetime.date(1397, 4, 22, locale='')
-        self.assertEqual(date.locale, 'nl_NL')
-
-    def test_locale_property_is_read_only(self):
-        date = jdatetime.date(1397, 4, 22)
-        with self.assertRaises(AttributeError):
-            date.locale = jdatetime.FA_LOCALE
-
-    def test_locale_property_returns_locale(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        self.assertEqual(date.locale, 'nl_NL')
-
-    def test_init_locale_is_named_argument_only(self):
-        with self.assertRaises(TypeError):
-            datetime.date(1397, 4, 22, 'nl_NL')
-
-    def test_init_accepts_instance_locale(self):
-        date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
-        self.assertEqual(date.strftime('%A'), u'شنبه')
-
-    def test_dates_are_not_equal_if_locales_are_different(self):
-        date_fa = jdatetime.date(1397, 4, 22, locale='fa_IR')
-        date_nl = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        self.assertNotEqual(date_fa, date_nl)
-
-    def test_fromgregorian_accepts_locale_keyword_arg_when_datetime_passed(self):
-        today = datetime.datetime.today().date()
-        j_today = jdatetime.date.fromgregorian(date=today, locale='nl_NL')
-        self.assertEqual(j_today.locale, 'nl_NL')
-
-    def test_fromgregorian_accepts_locale_keyword_arg_when_int_passed(self):
-        j_today = jdatetime.date.fromgregorian(day=15, month=7, year=2018, locale='nl_NL')
-        self.assertEqual(j_today.locale, 'nl_NL')
-
-    def test_replace_keeps_the_locale_of_source_date(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        other_date = date.replace(day=20)
-        self.assertEqual(other_date.day, 20)
-        self.assertEqual(other_date.locale, 'nl_NL')
-
-    def test_add_time_delta(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        new_date = date + datetime.timedelta(days=1)
-        self.assertEqual(new_date.year, 1397)
-        self.assertEqual(new_date.month, 4)
-        self.assertEqual(new_date.day, 23)
-        self.assertEqual(new_date.locale, 'nl_NL')
-
-    def test_reverse_add_time_delta(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        new_date = datetime.timedelta(days=2) + date
-        self.assertEqual(new_date.year, 1397)
-        self.assertEqual(new_date.month, 4)
-        self.assertEqual(new_date.day, 24)
-        self.assertEqual(new_date.locale, 'nl_NL')
-
-    def test_subtract_time_delta(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        new_date = date - datetime.timedelta(days=1)
-        self.assertEqual(new_date.year, 1397)
-        self.assertEqual(new_date.month, 4)
-        self.assertEqual(new_date.day, 21)
-        self.assertEqual(new_date.locale, 'nl_NL')
-
-    def test_subtract_datetime_date(self):
-        date = jdatetime.date(1397, 4, 22, locale='nl_NL')
-        delta = date - datetime.date(2018, 7, 12)
-        self.assertEqual(delta.days, 1)
-
-    def test_timetuple(self):
-        date = jdatetime.date(1397, 4, 22,)
-        self.assertEqual(
-            date.timetuple(),
-            time.struct_time((2018, 7, 13, 0, 0, 0, 4, 194, -1)),
-        )
-
-    def test_all_weekdays(self):
-        date = jdatetime.date(1394, 1, 1)  # it is saturday
-        for i in range(7):  # test th whole week
-            self.assertEqual((date + datetime.timedelta(days=i)).weekday(), i)
-
-    def test_max_year(self):
-        dmax = jdatetime.date.max
-        self.assertTrue(isinstance(dmax, jdatetime.date))
-        self.assertEqual(dmax.year, jdatetime.MAXYEAR)
-        self.assertRaises(ValueError, jdatetime.date, jdatetime.MAXYEAR + 1, 1, 1)
-        with self.assertRaises(ValueError, msg="Should raise an exception when we go over date.max"):
-            _ = dmax + jdatetime.date.resolution
-
-    def test_min_year(self):
-        dmin = jdatetime.date.min
-        self.assertTrue(isinstance(dmin, jdatetime.date))
-        self.assertEqual(dmin.year, jdatetime.MINYEAR)
-        self.assertRaises(ValueError, jdatetime.date, jdatetime.MINYEAR - 1, 1, 1)
-        with self.assertRaises(ValueError, msg="Should raise an exception when we ge below date.min"):
-            _ = dmin - jdatetime.date.resolution
-
-    def test_pickle(self):
-        d = jdatetime.date.today()
-        self.assertEqual(pickle.loads(pickle.dumps(d)), d)
-
-
-class TestJDateTime(unittest.TestCase):
+class TestJDateTime(TestCase):
     def test_datetime_date_method_keeps_datetime_locale_on_date_instance(self):
         datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
         date = datetime.date()
@@ -702,7 +573,7 @@ class TestJDateTime(unittest.TestCase):
             time.struct_time((2018, 7, 14, 11, 47, 30, 5, 195, -1)),
         )
 
-    @unittest.skipUnless(
+    @skipUnless(
         hasattr(datetime.datetime, 'timestamp'),
         '`datetime.datetime.timestamp` is not implemented in older pythons',
     )
@@ -711,7 +582,7 @@ class TestJDateTime(unittest.TestCase):
         jdt = jdatetime.datetime(1397, 4, 23, 11, 47, 30, 40, tzinfo=teh)
         self.assertEqual(jdt.timestamp(), 1531556250.00004)
 
-    @unittest.skipIf(
+    @skipIf(
         hasattr(datetime.datetime, 'timestamp'),
         '`datetime.datetime.timestamp` is not implemented in older pythons',
     )
@@ -763,7 +634,7 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(milliseconds, '1398-04-11T11:06:05.123')
         self.assertEqual(microseconds, '1398-04-11T11:06:05.123456')
 
-    @unittest.skipIf(zoneinfo is None, "ZoneInfo not supported!")
+    @skipIf(zoneinfo is None, "ZoneInfo not supported!")
     def test_zoneinfo_as_timezone(self):
         tzinfo = zoneinfo.ZoneInfo('Asia/Tehran')
         jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456, tzinfo=tzinfo)
@@ -774,7 +645,7 @@ class TestJDateTime(unittest.TestCase):
         self.assertEqual(pickle.loads(pickle.dumps(dt)), dt)
 
 
-class TestJdatetimeGetSetLocale(unittest.TestCase):
+class TestJdatetimeGetSetLocale(TestCase):
     @staticmethod
     def record_thread_locale(record, event, locale):
         """Set and capture locale in current thread.
@@ -790,7 +661,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
     def test_get_locale_returns_none_if_no_locale_set_yet(self):
         self.assertIsNone(jdatetime.get_locale())
 
-    @unittest.skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
+    @skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
     def test_set_locale_is_per_thread_with_no_effect_on_other_threads(self):
         event = threading.Event()
         fa_record = []
@@ -810,7 +681,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
         self.assertEqual('nl_NL', nl_record[0])
         self.assertIsNone(jdatetime.get_locale())  # MainThread is not affected neither
 
-    @unittest.skipUnless(greenlet_installed, 'greenelts ident is used when greenlet module is installed')
+    @skipUnless(greenlet_installed, 'greenelts ident is used when greenlet module is installed')
     def test_set_locale_is_per_greenlet_with_no_effect_on_other_greenlets(self):
         fa_record = []
 
@@ -837,7 +708,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
         self.assertEqual(1, len(nl_record))
         self.assertEqual('nl_NL', nl_record[0])
 
-    @unittest.skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
+    @skipIf(greenlet_installed, 'thread ident is used when greenlet is not installed')
     def test_set_locale_sets_default_locale_for_date_objects(self):
         def record_locale_formatted_date(record, locale):
             jdatetime.set_locale(locale)
@@ -852,7 +723,7 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
 
         self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
 
-    @unittest.skipUnless(greenlet_installed, 'greenlets ident is used when greenlet module is installed')
+    @skipUnless(greenlet_installed, 'greenlets ident is used when greenlet module is installed')
     def test_set_locale_sets_default_locale_for_date_objects_with_greenlets(self):
         def record_locale_formatted_date(record, locale):
             jdatetime.set_locale(locale)
@@ -865,7 +736,3 @@ class TestJdatetimeGetSetLocale(unittest.TestCase):
         fa_greenlet.switch(fa_record, jdatetime.FA_LOCALE)
 
         self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
-
-
-if __name__ == "__main__":
-    unittest.main()
