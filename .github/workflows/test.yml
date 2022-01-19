@@ -7,7 +7,7 @@ on:
       - main
 
 jobs:
-  "unit-test":
+  unit-test:
     runs-on: ${{ matrix.os}}
     strategy:
       matrix:
@@ -21,10 +21,15 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           architecture: x64
-      - run: |
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade tox tox-gh-actions
           sudo locale-gen fa_IR
-          python t/test.py
-  "flake8":
+      - name: Tox tests
+        run: |
+          tox -v
+  flake8:
     runs-on: ubuntu-latest
     name: flake8
     steps:
@@ -32,8 +37,12 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.8"
           architecture: x64
-      - run: |
-          pip install -q flake8
-          flake8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --upgrade tox tox-gh-actions
+      - name: Run flake8
+        run: |
+          tox -e flake8
