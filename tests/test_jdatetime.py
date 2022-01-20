@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
-import pickle
-import time
 import datetime
+import locale
+import pickle
 import platform
 import threading
-import locale
+import time
 from unittest import TestCase, skipIf, skipUnless
 
 import jdatetime

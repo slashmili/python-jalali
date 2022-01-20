@@ -1,6 +1,6 @@
-import setuptools
 from distutils.core import setup
 
+import setuptools
 
 setup(
     name='jdatetime',

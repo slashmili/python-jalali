@@ -4,11 +4,12 @@
 # was licensed under the Python license. Same license applies to all files in
 # the jdatetime package project.
 from __future__ import unicode_literals
-import sys
-import platform
+
 import datetime as py_datetime
 import locale as _locale
+import platform
 import re as _re
+import sys
 from functools import partial as _partial
 
 try:
@@ -20,9 +21,7 @@ except ImportError:
         from thread import get_ident  # Python 2 used thread module instead of _thread
 
 from jdatetime.jalali import (
-    GregorianToJalali,
-    JalaliToGregorian,
-    j_days_in_month,
+    GregorianToJalali, JalaliToGregorian, j_days_in_month,
 )
 
 __VERSION__ = "3.8.1"

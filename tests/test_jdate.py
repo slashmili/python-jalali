@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
-import time
 import pickle
+import time
 from unittest import TestCase
 
 import jdatetime
