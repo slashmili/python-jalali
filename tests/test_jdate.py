@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 import pickle
+import sys
 import time
 from unittest import TestCase
 
@@ -127,3 +128,13 @@ class TestJDate(TestCase):
     def test_pickle(self):
         d = jdatetime.date.today()
         self.assertEqual(pickle.loads(pickle.dumps(d)), d)
+
+    def test_unpickle_older_date_object(self):
+        if sys.version_info[0] >= 3:  # py3
+            pickled_object_file = 'jdate_py3_jdatetime3.7.pickle'
+        else:
+            pickled_object_file = 'jdate_py2_jdatetime3.7.pickle'
+
+        with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
+            d = pickle.load(f)
+        assert d == jdatetime.date(1400, 10, 11)
