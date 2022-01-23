@@ -28,6 +28,36 @@ __VERSION__ = "3.8.1"
 MINYEAR = 1
 MAXYEAR = 9377
 
+STRFTIME_MAPPING = {
+    # A mapping between symbol to it's helper function and function kwargs
+    # symbol: (helper_function_name, {kwargs})
+    "%a": ("_strftime_get_method_value", {"attr": "jweekday_short", "fmt": "%s"}),
+    "%A": ("_strftime_get_method_value", {"attr": "jweekday", "fmt": "%s"}),
+    "%b": ("_strftime_get_method_value", {"attr": "jmonth_short", "fmt": "%s"}),
+    "%B": ("_strftime_get_method_value", {"attr": "jmonth", "fmt": "%s"}),
+    "%d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%02.d"}),
+    "%-d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%d"}),
+    "%j": ("_strftime_get_method_value", {"attr": "yday", "fmt": "%03.d"}),
+    "%m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%02.d"}),
+    "%-m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%d"}),
+    "%w": ("_strftime_get_method_value", {"attr": "weekday", "fmt": "%d"}),
+    "%W": ("_strftime_get_method_value", {"attr": "weeknumber", "fmt": "%d"}),
+    "%Y": ("_strftime_get_attr_value", {"attr": "year", "fmt": "%d"}),
+    "%y": ("_strftime_get_attr_value", {"attr": "cyear", "fmt": "%02.d"}),
+    "%f": ("_strftime_get_attr_value", {"attr": "microsecond", "fmt": "%06.d", "fb": "000000"}),
+    "%H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "00"}),
+    "%-H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "0"}),
+    "%I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "12"}),
+    "%-I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "12"}),
+    "%M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%02.d", "fb": "00"}),
+    "%-M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%d", "fb": "0"}),
+    "%S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%02.d", "fb": "00"}),
+    "%-S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%d", "fb": "0"}),
+    "%p": ("_strftime_p", {}),
+    "%z": ("_strftime_z", {}),
+    "%Z": ("_strftime_cap_z", {}),
+}
+
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
@@ -263,36 +293,6 @@ class date(object):
             self.j_weekdays = self.j_weekdays_en
             self.j_weekdays_short = self.j_weekdays_short_en
             self.j_ampm = self.j_ampm_en
-
-        self._strftime_mapping = {
-            # A mapping between symbol to it's helper function and function kwargs
-            # symbol: (helper_function_name, {kwargs})
-            "%a": ("_strftime_get_method_value", {"attr": "jweekday_short", "fmt": "%s"}),
-            "%A": ("_strftime_get_method_value", {"attr": "jweekday", "fmt": "%s"}),
-            "%b": ("_strftime_get_method_value", {"attr": "jmonth_short", "fmt": "%s"}),
-            "%B": ("_strftime_get_method_value", {"attr": "jmonth", "fmt": "%s"}),
-            "%d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%02.d"}),
-            "%-d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%d"}),
-            "%j": ("_strftime_get_method_value", {"attr": "yday", "fmt": "%03.d"}),
-            "%m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%02.d"}),
-            "%-m": ("_strftime_get_attr_value", {"attr": "month", "fmt": "%d"}),
-            "%w": ("_strftime_get_method_value", {"attr": "weekday", "fmt": "%d"}),
-            "%W": ("_strftime_get_method_value", {"attr": "weeknumber", "fmt": "%d"}),
-            "%Y": ("_strftime_get_attr_value", {"attr": "year", "fmt": "%d"}),
-            "%y": ("_strftime_get_attr_value", {"attr": "cyear", "fmt": "%02.d"}),
-            "%f": ("_strftime_get_attr_value", {"attr": "microsecond", "fmt": "%06.d", "fb": "000000"}),
-            "%H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "00"}),
-            "%-H": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "0"}),
-            "%I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%02.d", "fb": "12"}),
-            "%-I": ("_strftime_get_attr_value", {"attr": "hour", "fmt": "%d", "fb": "12"}),
-            "%M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%02.d", "fb": "00"}),
-            "%-M": ("_strftime_get_attr_value", {"attr": "minute", "fmt": "%d", "fb": "0"}),
-            "%S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%02.d", "fb": "00"}),
-            "%-S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%d", "fb": "0"}),
-            "%p": ("_strftime_p", {}),
-            "%z": ("_strftime_z", {}),
-            "%Z": ("_strftime_cap_z", {}),
-        }
 
     def _is_fa_locale(self):
         if self.__locale and self.__locale == FA_LOCALE:
@@ -647,8 +647,8 @@ class date(object):
             format = format.replace(s, r)
 
         for symbol in _re.findall("\%-?[a-zA-z-]", format):
-            if symbol in self._strftime_mapping:
-                replace_method_name, kwargs = self._strftime_mapping[symbol]
+            if symbol in STRFTIME_MAPPING:
+                replace_method_name, kwargs = STRFTIME_MAPPING[symbol]
                 kwargs.update({"format": format, "symbol": symbol})
                 format = getattr(self, replace_method_name)(**kwargs)
         return format

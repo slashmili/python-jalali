@@ -3,6 +3,7 @@ import datetime
 import locale
 import pickle
 import platform
+import sys
 import threading
 import time
 from unittest import TestCase, skipIf, skipUnless
@@ -643,6 +644,16 @@ class TestJDateTime(TestCase):
     def test_pickle(self):
         dt = jdatetime.datetime.now()
         self.assertEqual(pickle.loads(pickle.dumps(dt)), dt)
+
+    def test_unpickle_older_datetime_object(self):
+        if sys.version_info[0] >= 3:  # py3
+            pickled_object_file = 'jdatetime_py3_jdatetime3.7.pickle'
+        else:
+            pickled_object_file = 'jdatetime_py2_jdatetime3.7.pickle'
+
+        with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
+            dt = pickle.load(f)
+        assert dt == jdatetime.datetime(1400, 10, 11, 1, 2, 3, 30)
 
 
 class TestJdatetimeGetSetLocale(TestCase):
