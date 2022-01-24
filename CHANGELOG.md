@@ -1,5 +1,9 @@
 # Changelog
 
+## [3.8.2] - 2022-01-24
+### Fixed
+* Fix older version objects unpickling problem
+
 ## [3.8.1] - 2022-01-17
 ### Fixed
 * Fixed pickle problem of jdate and jdatetime objects(#108)
