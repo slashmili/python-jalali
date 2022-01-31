@@ -149,6 +149,8 @@ class date(object):
 
     j_today_en = 'today'
     j_yesterday_en = 'yesterday'
+    j_tomorrow_en = 'tomorrow'
+    j_the_day_after_tomorrow_en = 'the day after tomorrow'
 
     j_months_fa = [u'فروردین',
                    u'اردیبهشت',
@@ -174,6 +176,8 @@ class date(object):
 
     j_today_fa = 'امروز'
     j_yesterday_fa = 'دیروز'
+    j_tomorrow_fa = 'فردا'
+    j_the_day_after_tomorrow_fa = 'پس‌فردا'
 
     @property
     def year(self):
@@ -237,6 +241,8 @@ class date(object):
             self.j_ampm = self.j_ampm_fa
             self.j_today = self.j_today_fa
             self.j_yesterday = self.j_yesterday_fa
+            self.j_tomorrow = self.j_tomorrow_fa
+            self.j_the_day_after_tomorrow = self.j_the_day_after_tomorrow_fa
         else:
             self.j_months = self.j_months_en
             self.j_months_short = self.j_months_short_en
@@ -245,6 +251,9 @@ class date(object):
             self.j_ampm = self.j_ampm_en
             self.j_today = self.j_today_en
             self.j_yesterday = self.j_yesterday_en
+            self.j_tomorrow = self.j_tomorrow_en
+            self.j_the_day_after_tomorrow = self.j_the_day_after_tomorrow_en
+
 
     def _is_fa_locale(self):
         if self.__locale and self.__locale == FA_LOCALE:
@@ -679,6 +688,12 @@ class date(object):
 
         elif today - timedelta(days=1) == self:
             return self.j_yesterday
+
+        elif today + timedelta(days=1) == self:
+            return self.j_tomorrow
+
+        elif today + timedelta(days=2) == self:
+            return self.j_the_day_after_tomorrow
 
         elif today - timedelta(days=today.weekday()) <= self < today:
             return self.strftime("%A")
