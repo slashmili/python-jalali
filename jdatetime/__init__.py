@@ -376,6 +376,14 @@ class date(object):
         (y, m, d) = GregorianToJalali(d.year, d.month, d.day).getJalaliList()
         return date(y, m, d)
 
+    @staticmethod
+    def j_month_to_month(name):
+        return date.j_months_en.index(name.lower().capitalize()) + 1
+
+    @staticmethod
+    def j_month_short_to_month(name):
+        return date.j_months_short_en.index(name.lower().capitalize()) + 1
+
     def __repr__(self):
         return "jdatetime.date(%s, %s, %s)" % (self.year, self.month, self.day)
 
@@ -672,6 +680,8 @@ _DIRECTIVE_PATTERNS = {
     '%M': '(?P<M>[0-9]{1,2})',
     '%S': '(?P<S>[0-9]{1,2})',
     '%f': '(?P<f>[0-9]{1,6})',
+    '%B': '(?P<B>[a-zA-Z]{3,12})',
+    '%b': '(?P<b>[a-zA-Z]{3})',
 }
 
 
@@ -936,9 +946,21 @@ class datetime(date):
         year = int(get('Y') or get('y') or 1279)
         if year < 100:  # %y, see the discussion at #100
             year += 1400 if year <= 68 else 1300
+        month = get('B') or get('b') or int(get('m', 1))
+        if isinstance(month, str):
+            try:
+                if get('b'):
+                    month = date.j_month_short_to_num(name=month)
+                else:
+                    month = date.j_month_to_num(name=month)
+            except ValueError:
+                raise ValueError(
+                    "time data '%s' does not match format '%s'" %
+                    (date_string, format)
+                )
         return datetime(
             year,
-            int(get('m', 1)),
+            month,
             int(get('d', 1)),
             int(get('H', 0)),
             int(get('M', 0)),
