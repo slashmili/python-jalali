@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 import pickle
 import sys
@@ -46,7 +45,7 @@ class TestJDate(TestCase):
 
     def test_init_accepts_instance_locale(self):
         date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
-        self.assertEqual(date.strftime('%A'), u'شنبه')
+        self.assertEqual(date.strftime('%A'), 'شنبه')
 
     def test_dates_are_not_equal_if_locales_are_different(self):
         date_fa = jdatetime.date(1397, 4, 22, locale='fa_IR')

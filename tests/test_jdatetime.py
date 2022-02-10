@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import datetime
 import locale
 import pickle
@@ -79,7 +78,7 @@ class TestJDateTime(TestCase):
 
     def test_init_accepts_instance_locale(self):
         datetime = jdatetime.datetime(1397, 4, 23, locale=jdatetime.FA_LOCALE)
-        self.assertEqual(datetime.strftime('%A'), u'شنبه')
+        self.assertEqual(datetime.strftime('%A'), 'شنبه')
 
     def test_today(self):
         today = datetime.date.today()
@@ -163,8 +162,8 @@ class TestJDateTime(TestCase):
         self.assertEqual(dt.strftime(unicode_format), output)
 
         dt = jdatetime.datetime(1390, 2, 23, 12, 13, 14, 1)
-        string_format = u"ﺱﺎﻟ = %y، ﻡﺎﻫ = %m، ﺭﻭﺯ = %d"
-        output = u"ﺱﺎﻟ = 90، ﻡﺎﻫ = 02، ﺭﻭﺯ = 23"
+        string_format = "ﺱﺎﻟ = %y، ﻡﺎﻫ = %m، ﺭﻭﺯ = %d"
+        output = "ﺱﺎﻟ = 90، ﻡﺎﻫ = 02، ﺭﻭﺯ = 23"
         self.assertEqual(dt.strftime(string_format), output)
 
         class NYCTime(jdatetime.tzinfo):
@@ -187,7 +186,7 @@ class TestJDateTime(TestCase):
 
     def test_strftime_unicode(self):
         s = jdatetime.date(1390, 2, 23)
-        self.assertEqual(s.strftime("%a %A".encode("utf-8")), "Fri Friday")
+        self.assertEqual(s.strftime(b"%a %A"), "Fri Friday")
 
     def test_strftime_single_digit(self):
         dt = jdatetime.datetime(1390, 2, 3, 4, 5, 6)
@@ -532,7 +531,7 @@ class TestJDateTime(TestCase):
         self.set_fa_locale()
         day_of_week = jdatetime.date(1395, 1, 2).strftime("%a")
 
-        self.assertEqual(day_of_week, u"دوشنبه")
+        self.assertEqual(day_of_week, "دوشنبه")
 
     def set_fa_locale(self):
         if platform.system() == 'Windows':
@@ -610,7 +609,7 @@ class TestJDateTime(TestCase):
         jiso = jdt.isoformat('M')
         # Used to raise:
         # AssertionError: argument 1 must be a single character: M
-        ujiso = jdt.isoformat(u'M')
+        ujiso = jdt.isoformat('M')
         self.assertEqual(jiso, ujiso)
 
     def test_isoformat_bad_sep(self):
@@ -732,7 +731,7 @@ class TestJdatetimeGetSetLocale(TestCase):
         fa_th.start()
         fa_th.join()
 
-        self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
+        self.assertEqual(['یکشنبه', 'خرداد'], fa_record)
 
     @skipUnless(greenlet_installed, 'greenlets ident is used when greenlet module is installed')
     def test_set_locale_sets_default_locale_for_date_objects_with_greenlets(self):
@@ -746,4 +745,4 @@ class TestJdatetimeGetSetLocale(TestCase):
         fa_greenlet = greenlet.greenlet(record_locale_formatted_date)
         fa_greenlet.switch(fa_record, jdatetime.FA_LOCALE)
 
-        self.assertEqual([u'یکشنبه', u'خرداد'], fa_record)
+        self.assertEqual(['یکشنبه', 'خرداد'], fa_record)
