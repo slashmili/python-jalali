@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+### Change
+* Drop Python < 3.7 support
+
 ## [3.8.2] - 2022-01-24
 ### Fixed
 * Fix older version objects unpickling problem

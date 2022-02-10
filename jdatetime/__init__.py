@@ -1,24 +1,18 @@
-# -*- coding: utf-8 -*-
 # jdatetime is (c) 2010-2011 Milad Rastian <eslashmili at gmail.com>.
 # The jdatetime module was contributed to Python as of Python 2.7 and thus
 # was licensed under the Python license. Same license applies to all files in
 # the jdatetime package project.
-from __future__ import unicode_literals
 
 import datetime as py_datetime
 import locale as _locale
 import platform
-import re as _re
-import sys
+import re
 from functools import partial as _partial
 
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
-    try:
-        from _thread import get_ident
-    except ImportError:
-        from thread import get_ident  # Python 2 used thread module instead of _thread
+    from _thread import get_ident
 
 from jdatetime.jalali import (
     GregorianToJalali, JalaliToGregorian, j_days_in_month,
@@ -61,32 +55,10 @@ STRFTIME_MAPPING = {
 timedelta = py_datetime.timedelta
 tzinfo = py_datetime.tzinfo
 
-timestamp_is_supported = (
-    hasattr(py_datetime.datetime, 'timestamp') and
-    callable(py_datetime.datetime.timestamp)
-)
-
-if sys.version_info[0] >= 3:  # py3
-    _int_types = (int,)
-    _basestring = str
-else:
-    _int_types = (int, long)  # noqa
-    _basestring = basestring  # noqa: F821
-
 if platform.system() == 'Windows':
     FA_LOCALE = 'Persian_Iran'
 else:
     FA_LOCALE = 'fa_IR'
-
-
-if sys.version_info[:2] < (3, 7):
-    # Prior to Python 3.7, `%` is escaped by re.escape. We don't want that.
-    def _escape(pattern):
-        if isinstance(pattern, bytes):  # only happens in Python 2
-            pattern = pattern.decode()
-        return _re.escape(pattern).replace(r'\%', '%')
-else:
-    _escape = _re.escape
 
 
 def _format_time(hour, minute, second, microsecond, timespec='auto'):
@@ -115,7 +87,7 @@ def _format_time(hour, minute, second, microsecond, timespec='auto'):
 
 class time(py_datetime.time):
     def __repr__(self):
-        return "jdatetime.time(%s, %s, %s)" % (self.hour, self.minute, self.second)
+        return f"jdatetime.time({self.hour}, {self.minute}, {self.second})"
 
 
 _thread_local_locales = dict()
@@ -149,7 +121,7 @@ def get_locale():
     return _thread_local_locales.get(get_ident())
 
 
-class date(object):
+class date:
     """date(year, month, day) --> date object"""
     j_months_en = [
         'Farvardin',
@@ -199,29 +171,29 @@ class date(object):
     ]
     j_ampm_en = {'PM': 'PM', 'AM': 'AM'}
     j_months_fa = [
-        u'فروردین',
-        u'اردیبهشت',
-        u'خرداد',
-        u'تیر',
-        u'مرداد',
-        u'شهریور',
-        u'مهر',
-        u'آبان',
-        u'آذر',
-        u'دی',
-        u'بهمن',
-        u'اسفند',
+        'فروردین',
+        'اردیبهشت',
+        'خرداد',
+        'تیر',
+        'مرداد',
+        'شهریور',
+        'مهر',
+        'آبان',
+        'آذر',
+        'دی',
+        'بهمن',
+        'اسفند',
     ]
     j_weekdays_fa = [
-        u'شنبه',
-        u'یکشنبه',
-        u'دوشنبه',
-        u'سه شنبه',
-        u'چهارشنبه',
-        u'پنجشنبه',
-        u'جمعه',
+        'شنبه',
+        'یکشنبه',
+        'دوشنبه',
+        'سه شنبه',
+        'چهارشنبه',
+        'پنجشنبه',
+        'جمعه',
     ]
-    j_ampm_fa = {'PM': u'بعد از ظهر', 'AM': u'قبل از ظهر'}
+    j_ampm_fa = {'PM': 'بعد از ظهر', 'AM': 'قبل از ظهر'}
 
     @property
     def year(self):
@@ -253,7 +225,7 @@ class date(object):
     __locale = None
 
     def _check_arg(self, value):
-        if isinstance(value, _int_types):
+        if isinstance(value, int):
             return True
         return False
 
@@ -377,7 +349,7 @@ class date(object):
         return date(y, m, d)
 
     def __repr__(self):
-        return "jdatetime.date(%s, %s, %s)" % (self.year, self.month, self.day)
+        return f"jdatetime.date({self.year}, {self.month}, {self.day})"
 
     def __str__(self):
         return self.strftime("%Y-%m-%d")
@@ -646,7 +618,7 @@ class date(object):
         for s, r in symbols.items():
             format = format.replace(s, r)
 
-        for symbol in _re.findall("\%-?[a-zA-z-]", format):
+        for symbol in re.findall(r"\%-?[a-zA-z-]", format):
             if symbol in STRFTIME_MAPPING:
                 replace_method_name, kwargs = STRFTIME_MAPPING[symbol]
                 kwargs.update({"format": format, "symbol": symbol})
@@ -677,7 +649,7 @@ _DIRECTIVE_PATTERNS = {
 
 # Replace directives with patterns according to _DIRECTIVE_PATTERNS
 _directives_to_pattern = _partial(
-    _re.compile('|'.join(_DIRECTIVE_PATTERNS)).sub,
+    re.compile('|'.join(_DIRECTIVE_PATTERNS)).sub,
     lambda match: _DIRECTIVE_PATTERNS[match.group()]
 )
 
@@ -733,7 +705,7 @@ class datetime(date):
 
     def __repr__(self):
         if self.__time.tzinfo is not None:
-            return "jdatetime.datetime(%s, %s, %s, %s, %s, %s, %s, tzinfo=%s)" % (
+            return "jdatetime.datetime({}, {}, {}, {}, {}, {}, {}, tzinfo={})".format(
                 self.year,
                 self.month,
                 self.day, self.hour,
@@ -744,7 +716,7 @@ class datetime(date):
             )
 
         if self.__time.microsecond != 0:
-            return "jdatetime.datetime(%s, %s, %s, %s, %s, %s, %s)" % (
+            return "jdatetime.datetime({}, {}, {}, {}, {}, {}, {})".format(
                 self.year,
                 self.month,
                 self.day,
@@ -755,7 +727,7 @@ class datetime(date):
             )
 
         if self.__time.second != 0:
-            return "jdatetime.datetime(%s, %s, %s, %s, %s, %s)" % (
+            return "jdatetime.datetime({}, {}, {}, {}, {}, {})".format(
                 self.year,
                 self.month,
                 self.day,
@@ -764,7 +736,7 @@ class datetime(date):
                 self.second,
             )
 
-        return "jdatetime.datetime(%s, %s, %s, %s, %s)" % (
+        return "jdatetime.datetime({}, {}, {}, {}, {})".format(
             self.year, self.month, self.day, self.hour, self.minute
         )
 
@@ -880,12 +852,7 @@ class datetime(date):
         )
 
     def timestamp(self):
-        gregorian_datetime = self.togregorian()
-        if timestamp_is_supported:
-            return gregorian_datetime.timestamp()
-        raise NotImplementedError(
-            '`datetime.datetime.timestamp` is not implemented in this version of python'
-        )
+        return self.togregorian().timestamp()
 
     @staticmethod
     def fromordinal(ordinal):
@@ -921,10 +888,9 @@ class datetime(date):
     @staticmethod
     def strptime(date_string, format):
         """string, format -> new datetime parsed from a string (like time.strptime())"""
-        regex = _directives_to_pattern(_escape(format))
+        regex = _directives_to_pattern(re.escape(format))
 
-        # Cannot use `fullmatch`, it requires Python 3.4+. Use `$` instead.
-        match = _re.match(regex + '$', date_string)
+        match = re.fullmatch(regex, date_string)
         if match is None:
             raise ValueError(
                 "time data '%s' does not match format '%s'" %
@@ -943,7 +909,7 @@ class datetime(date):
             int(get('H', 0)),
             int(get('M', 0)),
             int(get('S', 0)),
-            None if get('f') is None else int('{0:0<6}'.format(get('f'))),
+            None if get('f') is None else int('{:0<6}'.format(get('f'))),
         )
 
     def replace(
@@ -1247,15 +1213,15 @@ class datetime(date):
         """[sep] -> string in ISO 8601 format,
         YYYY-MM-DDTHH:MM:SS[.mmmmmm][+HH:MM]."""
 
-        assert isinstance(sep, _basestring) and len(sep) == 1, \
-            'argument 1 must be a single character: {}'.format(sep)
+        assert isinstance(sep, str) and len(sep) == 1, \
+            f'argument 1 must be a single character: {sep}'
 
         tz = self.strftime("%z")
 
         date_ = self.strftime("%Y-%m-%d")
         time_ = _format_time(self.hour, self.minute, self.second, self.microsecond, timespec)
 
-        return '{}{}{}{}'.format(date_, sep, time_, tz)
+        return f'{date_}{sep}{time_}{tz}'
 
     def timetuple(self):
         """Return time tuple, compatible with time.localtime().
@@ -1292,7 +1258,7 @@ class datetime(date):
         else:
             mil = "." + str(self.microsecond)
         tz = self.strftime("%z")
-        return self.strftime("%Y-%m-%d %H:%M:%S") + "%s%s" % (mil, tz)
+        return self.strftime("%Y-%m-%d %H:%M:%S") + f"{mil}{tz}"
 
     def aslocale(self, locale):
         return datetime(
