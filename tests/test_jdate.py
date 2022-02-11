@@ -136,4 +136,4 @@ class TestJDate(TestCase):
 
         with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
             d = pickle.load(f)
-        assert d == jdatetime.date(1400, 10, 11)
+        self.assertEqual(d, jdatetime.date(1400, 10, 11))
