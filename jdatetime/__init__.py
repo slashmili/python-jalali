@@ -662,7 +662,7 @@ class datetime(date):
 
     def time(self):
         """Return time object with same time but with tzinfo=None."""
-        return time(self.hour, self.minute, self.second, self.microsecond)
+        return time(self.hour, self.minute, self.second, self.microsecond, fold=self.fold)
 
     def date(self):
         """Return date object with same year, month and day."""
@@ -677,7 +677,10 @@ class datetime(date):
         minute=None,
         second=None,
         microsecond=None,
-        tzinfo=None, **kwargs
+        tzinfo=None,
+        *,
+        fold=0,
+        **kwargs,
     ):
         date.__init__(self, year, month, day, **kwargs)
         tmp_hour = 0
@@ -693,6 +696,10 @@ class datetime(date):
         if microsecond is not None:
             tmp_micr = microsecond
 
+        if fold not in (0, 1):
+            raise ValueError('fold must be either 0 or 1', fold)
+        self._fold = fold
+
         if not (
             self._check_arg(tmp_hour) and
             self._check_arg(tmp_min) and
@@ -701,7 +708,7 @@ class datetime(date):
         ):
             raise TypeError("an integer is required")
 
-        self.__time = time(tmp_hour, tmp_min, tmp_sec, tmp_micr, tzinfo)
+        self.__time = time(tmp_hour, tmp_min, tmp_sec, tmp_micr, tzinfo, fold=fold)
 
     def __repr__(self):
         if self.__time.tzinfo is not None:
@@ -849,6 +856,7 @@ class datetime(date):
             c_time.microsecond,
             c_time.tzinfo,
             locale=c_date.locale,
+            fold=c_time.fold,
         )
 
     def timestamp(self):
@@ -884,6 +892,10 @@ class datetime(date):
     @property
     def tzinfo(self):
         return self.__time.tzinfo
+
+    @property
+    def fold(self):
+        return self._fold
 
     @staticmethod
     def strptime(date_string, format):
@@ -922,6 +934,7 @@ class datetime(date):
         second=None,
         microsecond=None,
         tzinfo=True,
+        fold=None,
     ):
         """Return datetime with new specified fields."""
         t_year = self.year
@@ -955,6 +968,10 @@ class datetime(date):
         t_tz = self.tzinfo
         if tzinfo is not True:
             t_tz = tzinfo
+
+        if fold is None:
+            fold = self._fold
+
         return datetime(
             t_year,
             t_month,
@@ -965,6 +982,7 @@ class datetime(date):
             t_mic,
             t_tz,
             locale=self.locale,
+            fold=fold,
         )
 
     def __add__(self, timedelta):
