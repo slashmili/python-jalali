@@ -68,6 +68,37 @@ class TestJDateTime(TestCase):
         with self.assertRaises(AttributeError):
             datetime.locale = jdatetime.FA_LOCALE
 
+    def test_fold(self):
+        # Test default value
+        dt = jdatetime.datetime(1400, 11, 22)
+        self.assertEqual(dt.fold, 0)
+        self.assertEqual(dt.time().fold, 0)
+
+        # Test custome value for fold
+        dt = jdatetime.datetime(1400, 11, 22, fold=1)
+        self.assertEqual(dt.fold, 1)
+        self.assertEqual(dt.time().fold, 1)
+
+        # Test invalid value for fold
+        with self.assertRaises(
+            ValueError,
+            msg='fold must be either 0 or 1'
+        ):
+            jdatetime.datetime(1400, 11, 22, fold=2)
+
+        # Test combine
+        t = jdatetime.time(12, 13, 14, fold=1)
+        d = jdatetime.date(1400, 11, 22)
+        self.assertEqual(
+            jdatetime.datetime.combine(d, t),
+            jdatetime.datetime(1400, 11, 22, 12, 13, 14, fold=1),
+        )
+
+        # Test replace
+        dt = jdatetime.datetime(1400, 11, 22, fold=0)
+        new_dt = dt.replace(fold=1)
+        self.assertEqual(new_dt.fold, 1)
+
     def test_locale_property_returns_locale(self):
         datetime = jdatetime.datetime(1397, 4, 22, locale='nl_NL')
         self.assertEqual(datetime.locale, 'nl_NL')

@@ -1,6 +1,9 @@
 # Changelog
 
 ## Unreleased
+### Add
+* Add ``fold`` attribute to ``jdatetime.datetime``
+
 ### Change
 * Drop Python < 3.7 support
 
