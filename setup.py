@@ -14,6 +14,7 @@ setup(
     description=("Jalali datetime binding for python"),
     url="https://github.com/slashmili/python-jalali",
     long_description=open('README').read(),
+    python_requires=">=3.7",
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
