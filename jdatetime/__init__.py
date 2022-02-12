@@ -18,7 +18,7 @@ from jdatetime.jalali import (
     GregorianToJalali, JalaliToGregorian, j_days_in_month,
 )
 
-__VERSION__ = "3.8.2"
+__VERSION__ = "4.0.0"
 MINYEAR = 1
 MAXYEAR = 9377
 

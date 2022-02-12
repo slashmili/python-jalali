@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [4.0.0] - 2022-02-14
 ### Add
 * Add ``fold`` attribute to ``jdatetime.datetime``
 
