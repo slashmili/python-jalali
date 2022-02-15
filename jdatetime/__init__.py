@@ -348,6 +348,18 @@ class date:
         (y, m, d) = GregorianToJalali(d.year, d.month, d.day).getJalaliList()
         return date(y, m, d)
 
+    @staticmethod
+    def j_month_to_num(month_name):
+        return date.j_months_en.index(month_name.lower().capitalize()) + 1
+
+    @staticmethod
+    def j_month_short_to_num(month_name):
+        return date.j_months_short_en.index(month_name.lower().capitalize()) + 1
+
+    @staticmethod
+    def j_month_fa_to_num(month_name):
+        return date.j_months_fa.index(month_name) + 1
+
     def __repr__(self):
         return f"jdatetime.date({self.year}, {self.month}, {self.day})"
 
@@ -636,14 +648,16 @@ date.min = date(MINYEAR, 1, 1)
 date.max = date(MAXYEAR, 12, 30)
 
 _DIRECTIVE_PATTERNS = {
-    '%Y': '(?P<Y>[0-9]{4})',
-    '%y': '(?P<y>[0-9]{2})',
-    '%m': '(?P<m>[0-9]{1,2})',
-    '%d': '(?P<d>[0-9]{1,2})',
-    '%H': '(?P<H>[0-9]{1,2})',
-    '%M': '(?P<M>[0-9]{1,2})',
-    '%S': '(?P<S>[0-9]{1,2})',
-    '%f': '(?P<f>[0-9]{1,6})',
+    '%Y': '(?P<Y>\d{4})',
+    '%y': '(?P<y>\d{2})',
+    '%m': '(?P<m>\d{1,2})',
+    '%d': '(?P<d>\d{1,2})',
+    '%H': '(?P<H>\d{1,2})',
+    '%M': '(?P<M>\d{1,2})',
+    '%S': '(?P<S>\d{1,2})',
+    '%f': '(?P<f>\d{1,6})',
+    '%B': '(?P<B>[a-zA-Z\u0600-\u06EF\uFB8A\u067E\u0686\u06AF]{3,12})',
+    '%b': '(?P<b>[a-zA-Z]{3})',
 }
 
 
@@ -914,9 +928,23 @@ class datetime(date):
         year = int(get('Y') or get('y') or 1279)
         if year < 100:  # %y, see the discussion at #100
             year += 1400 if year <= 68 else 1300
+        month = get('B') or get('b') or int(get('m', 1))
+        if isinstance(month, str):
+            try:
+                if get('b'):
+                    month = date.j_month_short_to_num(month_name=month)
+                elif month.isascii():
+                    month = date.j_month_to_num(month_name=month)
+                else:
+                    month = date.j_month_fa_to_num(month_name=month)
+            except ValueError:
+                raise ValueError(
+                    "time data '%s' does not match format '%s'" %
+                    (date_string, format)
+                )
         return datetime(
             year,
-            int(get('m', 1)),
+            month,
             int(get('d', 1)),
             int(get('H', 0)),
             int(get('M', 0)),
