@@ -358,7 +358,7 @@ class TestJDateTime(TestCase):
         )
 
     def test_strptime_handle_b_B_directive(self):
-        date_format_list = [
+        tests = [
             ('14 Ordibehesht 1400', '%d %B %Y'),
             ('14 ordibehesht 1400', '%d %B %Y'),
             ('14 ordiBehesHt 1400', '%d %B %Y'),
@@ -381,9 +381,10 @@ class TestJDateTime(TestCase):
             ('۱4 ord 14۰0', '%d %b %Y'),
             ('۱4 ORD 14۰0', '%d %b %Y'),
         ]
-        for date_format in date_format_list:
-            date = jdatetime.datetime.strptime(date_format[0], date_format[1])
-            self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
+        for date_string, date_format in tests:
+            with self.subTest(date_string=date_string, date_format=date_format):
+                date = jdatetime.datetime.strptime(date_string, date_format)
+                self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
 
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
