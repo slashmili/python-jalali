@@ -357,6 +357,43 @@ class TestJDateTime(TestCase):
             jdatetime.datetime.strptime("0123", "%f")
         )
 
+    def test_strptime_handle_b_B_directive(self):
+        tests = [
+            ('14 Ordibehesht 1400', '%d %B %Y'),
+            ('14 ordibehesht 1400', '%d %B %Y'),
+            ('14 ordiBehesHt 1400', '%d %B %Y'),
+            ('۱۴ Ordibehesht ۱۴۰۰', '%d %B %Y'),
+            ('۱۴ ordibehesht ۱۴۰۰', '%d %B %Y'),
+            ('۱۴ orDibeHesht ۱۴۰۰', '%d %B %Y'),
+            ('1۴ Ordibehesht 14۰۰', '%d %B %Y'),
+            ('۱4 ordibehesht 14۰0', '%d %B %Y'),
+            ('۱4 OrdiBeheshT 14۰0', '%d %B %Y'),
+            ('۱۴ اردیبهشت ۱۴۰۰', '%d %B %Y'),
+            ('14 اردیبهشت 1400', '%d %B %Y'),
+            ('1۴ اردیبهشت ۱4۰0', '%d %B %Y'),
+            ('14 Ord 1400', '%d %b %Y'),
+            ('14 ord 1400', '%d %b %Y'),
+            ('14 oRD 1400', '%d %b %Y'),
+            ('۱۴ Ord ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ ord ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ OrD ۱۴۰۰', '%d %b %Y'),
+            ('۱4 Ord 14۰0', '%d %b %Y'),
+            ('۱4 ord 14۰0', '%d %b %Y'),
+            ('۱4 ORD 14۰0', '%d %b %Y'),
+        ]
+        for date_string, date_format in tests:
+            with self.subTest(date_string=date_string, date_format=date_format):
+                date = jdatetime.datetime.strptime(date_string, date_format)
+                self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
+
+    def test_strptime_invalid_date_string_b_directive(self):
+        with self.assertRaises(ValueError, msg="time data '14 DRO 1400' does not match format '%d %b %Y'"):
+            jdatetime.datetime.strptime('14 DRO 1400', '%d %b %Y')
+
+    def test_strptime_invalid_date_string_B_directive(self):
+        with self.assertRaises(ValueError, msg="time data '14 ordi 1400' does not match format '%d %B %Y'"):
+            jdatetime.datetime.strptime('14 ordi 1400', '%d %B %Y')
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
