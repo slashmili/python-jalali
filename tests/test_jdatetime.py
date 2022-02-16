@@ -357,6 +357,34 @@ class TestJDateTime(TestCase):
             jdatetime.datetime.strptime("0123", "%f")
         )
 
+    def test_strptime_handle_b_B_directive(self):
+        date_format_list = [
+            ('14 Ordibehesht 1400', '%d %B %Y'),
+            ('14 ordibehesht 1400', '%d %B %Y'),
+            ('14 ordiBehesHt 1400', '%d %B %Y'),
+            ('۱۴ Ordibehesht ۱۴۰۰', '%d %B %Y'),
+            ('۱۴ ordibehesht ۱۴۰۰', '%d %B %Y'),
+            ('۱۴ orDibeHesht ۱۴۰۰', '%d %B %Y'),
+            ('1۴ Ordibehesht 14۰۰', '%d %B %Y'),
+            ('۱4 ordibehesht 14۰0', '%d %B %Y'),
+            ('۱4 OrdiBeheshT 14۰0', '%d %B %Y'),
+            ('۱۴ اردیبهشت ۱۴۰۰', '%d %B %Y'),
+            ('14 اردیبهشت 1400', '%d %B %Y'),
+            ('1۴ اردیبهشت ۱4۰0', '%d %B %Y'),
+            ('14 Ord 1400', '%d %b %Y'),
+            ('14 ord 1400', '%d %b %Y'),
+            ('14 oRD 1400', '%d %b %Y'),
+            ('۱۴ Ord ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ ord ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ OrD ۱۴۰۰', '%d %b %Y'),
+            ('۱4 Ord 14۰0', '%d %b %Y'),
+            ('۱4 ord 14۰0', '%d %b %Y'),
+            ('۱4 ORD 14۰0', '%d %b %Y'),
+        ]
+        for date_format in date_format_list:
+            date = jdatetime.datetime.strptime(date_format[0], date_format[1])
+            self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
