@@ -386,6 +386,14 @@ class TestJDateTime(TestCase):
                 date = jdatetime.datetime.strptime(date_string, date_format)
                 self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
 
+    def test_strptime_invalid_date_string_b_directive(self):
+        with self.assertRaises(ValueError,msg="time data '14 DRO 1400' does not match format '%d %b %Y'"):
+            jdatetime.datetime.strptime('14 DRO 1400', '%d %b %Y')
+
+    def test_strptime_invalid_date_string_B_directive(self):
+        with self.assertRaises(ValueError,msg="time data '14 ordi 1400' does not match format '%d %B %Y'"):
+            jdatetime.datetime.strptime('14 ordi 1400', '%d %B %Y')
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
