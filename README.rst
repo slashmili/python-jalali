@@ -1,5 +1,6 @@
 jdatetime
 =========
+
 jdatetime is Jalali_ implementation of Python's datetime module
 
 Status
@@ -24,7 +25,7 @@ Install
 
 Documents
 ---------
-This module exactly follows Python Standard datetime module's methods http://docs.python.org/release/2.7.1/library/datetime.html
+This module exactly follows Python Standard datetime module's methods http://docs.python.org/release/3.7.1/library/datetime.html
 
 Also these methods are added to jdatetime.date and jdatetime.datetime :
 
@@ -43,17 +44,11 @@ Also these methods are added to jdatetime.date and jdatetime.datetime :
         algortim is based on http://en.wikipedia.org/wiki/Leap_year
 
 
-
 Example
 -------
 
 .. code-block:: shell
 
-    $ python
-    Python 2.6.6 (r266:84292, Sep 15 2010, 15:52:39)
-    [GCC 4.4.5] on linux2
-    Type "help", "copyright", "credits" or "license" for more information.
-    (InteractiveConsole)
     >>> import jdatetime
     >>> jdatetime.datetime.now()
     jdatetime.datetime(1394, 12, 4, 8, 37, 31, 855729)
@@ -87,11 +82,6 @@ the desired locale, unless explicitly specified otherwise.
 
 .. code-block:: shell
 
-    $ python
-    Python 2.7.9 (default, Mar  1 2015, 12:57:24)
-    [GCC 4.9.2] on linux2
-    Type "help", "copyright", "credits" or "license" for more information.
-    (InteractiveConsole)
     >>> import locale
     >>> import jdatetime
     >> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
@@ -147,7 +137,7 @@ If you wish to limit the testing to specific Python version, you can parametrize
 
 Release Steps
 ~~~~~~~~~~~~~~
-* Bump the version in `setup.py` and `jdatetime/__init__.py`. We are using Semantic Versioning.
+* Bump the version in ``setup.py`` and ``jdatetime/__init__.py``. We are using Semantic Versioning.
 * Add release notes in CHANGELOG.md
 * Commit and push the changes. Create a PR
 * After the PR is merged, create a release with a tag name like `v<version>`
