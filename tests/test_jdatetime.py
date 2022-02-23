@@ -799,7 +799,7 @@ class TestJdatetimeGetSetLocale(TestCase):
         fa_th.start()
         fa_th.join()
 
-        self.assertEqual(['یکشنبه', 'خرداد'], fa_record)
+        self.assertEqual(['یک‌شنبه', 'خرداد'], fa_record)
 
     @skipUnless(greenlet_installed, 'greenlets ident is used when greenlet module is installed')
     def test_set_locale_sets_default_locale_for_date_objects_with_greenlets(self):
@@ -813,4 +813,4 @@ class TestJdatetimeGetSetLocale(TestCase):
         fa_greenlet = greenlet.greenlet(record_locale_formatted_date)
         fa_greenlet.switch(fa_record, jdatetime.FA_LOCALE)
 
-        self.assertEqual(['یکشنبه', 'خرداد'], fa_record)
+        self.assertEqual(['یک‌شنبه', 'خرداد'], fa_record)
