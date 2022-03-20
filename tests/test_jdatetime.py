@@ -394,6 +394,38 @@ class TestJDateTime(TestCase):
         with self.assertRaises(ValueError, msg="time data '14 ordi 1400' does not match format '%d %B %Y'"):
             jdatetime.datetime.strptime('14 ordi 1400', '%d %B %Y')
 
+    def test_strptime_handle_z_directive(self):
+        tests = [
+            ('+0123', '%z', datetime.timedelta(seconds=4980)),
+            ('-0123', '%z', datetime.timedelta(seconds=-4980)),
+            ('+۰۱۲۳', '%z', datetime.timedelta(seconds=4980)),
+            ('-۰۱۲3', '%z', datetime.timedelta(seconds=-4980)),
+            ('+012345', '%z', datetime.timedelta(seconds=5025)),
+            ('+012345.012345', '%z', datetime.timedelta(seconds=5025, microseconds=12345)),
+            ('-012345.012345', '%z', datetime.timedelta(seconds=-5025, microseconds=-12345)),
+            ('+01:23', '%z', datetime.timedelta(seconds=4980)),
+            ('+01:23:45', '%z', datetime.timedelta(seconds=5025)),
+            ('+01:23:45.123', '%z', datetime.timedelta(seconds=5025, microseconds=123000))
+        ]
+        for date_string, date_format, time_delta in tests:
+            with self.subTest(date_string=date_string, date_format=date_format):
+                date = jdatetime.datetime.strptime(date_string, date_format)
+                self.assertEqual(datetime.timezone(time_delta), date.tzinfo)
+
+    def test_strptime_invalid_date_string_z_directive(self):
+        tests = [
+            ('0123', '%z', "time data '0123' does not match format '%z'"),
+            ('-01', '%z', "time data '-01' does not match format '%z'"),
+            ('+012', '%z', "time data '+012' does not match format '%z'"),
+            ('+01:2356', '%z', "Inconsistent use of : in -01:2356"),
+            ('+0123:56', '%z', "invalid literal for int() with base 10: ':5'"),
+            ('+012345123456', '%z', "time data '+012345123456' does not match format '%z'"),
+        ]
+        for date_string, date_format, msg in tests:
+            with self.subTest(date_string=date_string, date_format=date_format, msg=msg):
+                with self.assertRaises(ValueError, msg=msg):
+                    jdatetime.datetime.strptime(date_string, date_format)
+
     def test_datetime_eq(self):
         date_string = "1363-6-6 12:13:14"
         date_format = "%Y-%m-%d %H:%M:%S"
