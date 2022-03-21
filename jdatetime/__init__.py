@@ -943,29 +943,10 @@ class datetime(date):
                     "time data '%s' does not match format '%s'" %
                     (date_string, format)
                 )
-        z = get('z', None)
-        if z:
-            if z[3] == ':':
-                z = z[:3] + z[4:]
-                if len(z) > 5:
-                    if z[5] != ':':
-                        msg = f"Inconsistent use of : in {get('z')}"
-                        raise ValueError(msg)
-                    z = z[:5] + z[6:]
-            hours = int(z[1:3])
-            minutes = int(z[3:5])
-            seconds = int(z[5:7] or 0)
-            gmtoff = (hours * 60 * 60) + (minutes * 60) + seconds
-            gmtoff_remainder = z[8:]
-            # Pad to always return microseconds.
-            gmtoff_remainder_padding = "0" * (6 - len(gmtoff_remainder))
-            gmtoff_fraction = int(gmtoff_remainder + gmtoff_remainder_padding)
-            if z.startswith("-"):
-                gmtoff = -gmtoff
-                gmtoff_fraction = -gmtoff_fraction
-            timezone = py_datetime.timezone(timedelta(seconds=gmtoff, microseconds=gmtoff_fraction))
-        else:
-            timezone = None
+
+        timezone_string = get('z', None)
+        timezone = datetime._timezone_from_string(timezone_string)
+
         return datetime(
             year,
             month,
@@ -1343,3 +1324,30 @@ class datetime(date):
             tzinfo=self.tzinfo,
             locale=locale,
         )
+
+    @staticmethod
+    def _timezone_from_string(timezone_string):
+        z = timezone_string  # keep the original string for value error exception.
+        if z:
+            if z[3] == ':':
+                z = z[:3] + z[4:]
+                if len(z) > 5:
+                    if z[5] != ':':
+                        msg = f"Inconsistent use of : in {timezone_string}"
+                        raise ValueError(msg)
+                    z = z[:5] + z[6:]
+            hours = int(z[1:3])
+            minutes = int(z[3:5])
+            seconds = int(z[5:7] or 0)
+            gmtoff = (hours * 60 * 60) + (minutes * 60) + seconds
+            gmtoff_remainder = z[8:]
+            # Pad to always return microseconds.
+            gmtoff_remainder_padding = "0" * (6 - len(gmtoff_remainder))
+            gmtoff_fraction = int(gmtoff_remainder + gmtoff_remainder_padding)
+            if z.startswith("-"):
+                gmtoff = -gmtoff
+                gmtoff_fraction = -gmtoff_fraction
+            timezone = py_datetime.timezone(timedelta(seconds=gmtoff, microseconds=gmtoff_fraction))
+        else:
+            timezone = None
+        return timezone
