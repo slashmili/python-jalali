@@ -2,7 +2,10 @@
 
 ## [4.1.0] - 2022-03-22
 ### Add
-* Add support for parsing ``%z`` in ``jdatetime.datetime.strptime`
+* Add support for ``%z`` directive in ``jdatetime.datetime.strptime`
+* Add support for ``%b`` and ``%B`` directive directive in ``jdatetime.datetime.strptime`
+### Changed 
+* Potential breaking change: Replace spaces with ZWNJ (نیم‌فاصله) in output of ``jdatetime.datetime.strftime`
 
 ## [4.0.0] - 2022-02-14
 ### Add
