@@ -1,5 +1,9 @@
 # Changelog
 
+## [4.1.0] - 2022-03-22
+### Add
+* Add support for parsing ``%z`` in ``jdatetime.datetime.strptime`
+
 ## [4.0.0] - 2022-02-14
 ### Add
 * Add ``fold`` attribute to ``jdatetime.datetime``
