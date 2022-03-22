@@ -1326,7 +1326,8 @@ class datetime(date):
 
     @staticmethod
     def _timezone_from_string(timezone_string):
-        if timezone_string is None: return None
+        if timezone_string is None:
+            return None
         z = timezone_string  # keep the original string for value error exception.
         if z[3] == ':':
             z = z[:3] + z[4:]
