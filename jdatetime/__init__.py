@@ -333,6 +333,22 @@ class date:
         (y, m, d) = GregorianToJalali(d.year, d.month, d.day).getJalaliList()
         return date(y, m, d)
 
+    @staticmethod
+    def fromisoformat(date_string: str):
+        """
+        Convert an ISO 8601 formatted string to a jdatetime.date
+        """
+        if not isinstance(date_string, str):
+            raise TypeError("fromisoformat: argument must be str")
+
+        iso_format_regex = r"(\d{4})-(\d{2})-(\d{2})"
+        matched_str = re.fullmatch(iso_format_regex, date_string)
+        if matched_str is not None:
+            y, m, d = list(map(int, date_string.split('-')))
+            return date(y, m, d)
+        else:
+            raise ValueError(f'Invalid isoformat string: {date_string!r}')
+
     def toordinal(self):
         """Return proleptic jalali ordinal. Farvardin 1 of year 1 which is equal to 622-3-21 of Gregorian."""
         d = self.togregorian()
