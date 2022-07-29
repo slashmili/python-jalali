@@ -137,3 +137,15 @@ class TestJDate(TestCase):
         with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
             d = pickle.load(f)
         self.assertEqual(d, jdatetime.date(1400, 10, 11))
+
+    def test_fromisoformat(self):
+        self.assertEqual(
+            jdatetime.date.fromisoformat("1378-02-22"),
+            jdatetime.date(day=22, month=2, year=1378),
+        )
+
+        with self.assertRaises(ValueError, msg="Invalid isoformat string: 'some-invalid-format'"):
+            jdatetime.date.fromisoformat("some-invalid-format")
+
+        with self.assertRaises(TypeError, msg="fromisoformat: argument must be str"):
+            jdatetime.date.fromisoformat(1)

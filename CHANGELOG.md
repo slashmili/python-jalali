@@ -1,5 +1,8 @@
 # Changelog
 
+### Add
+* Add `fromisoformat` method to `jdatetime.date`
+
 ## [4.1.0] - 2022-03-22
 ### Add
 * Add support for ``%z`` directive in ``jdatetime.datetime.strptime`
