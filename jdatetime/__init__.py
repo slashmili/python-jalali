@@ -664,17 +664,17 @@ date.min = date(MINYEAR, 1, 1)
 date.max = date(MAXYEAR, 12, 30)
 
 _DIRECTIVE_PATTERNS = {
-    '%Y': '(?P<Y>\d{4})',
-    '%y': '(?P<y>\d{2})',
-    '%m': '(?P<m>\d{1,2})',
-    '%d': '(?P<d>\d{1,2})',
-    '%H': '(?P<H>\d{1,2})',
-    '%M': '(?P<M>\d{1,2})',
-    '%S': '(?P<S>\d{1,2})',
-    '%f': '(?P<f>\d{1,6})',
-    '%B': '(?P<B>[a-zA-Z\u0600-\u06EF\uFB8A\u067E\u0686\u06AF]{3,12})',
-    '%b': '(?P<b>[a-zA-Z]{3})',
-    '%z': '(?P<z>[+-]\d\d:?[0-5\u06F0-\u06F5]\d(:?[0-5\u06F0-\u06F5]\d(\.\d{1,6})?)?)',
+    '%Y': r'(?P<Y>\d{4})',
+    '%y': r'(?P<y>\d{2})',
+    '%m': r'(?P<m>\d{1,2})',
+    '%d': r'(?P<d>\d{1,2})',
+    '%H': r'(?P<H>\d{1,2})',
+    '%M': r'(?P<M>\d{1,2})',
+    '%S': r'(?P<S>\d{1,2})',
+    '%f': r'(?P<f>\d{1,6})',
+    '%B': r'(?P<B>[a-zA-Z\u0600-\u06EF\uFB8A\u067E\u0686\u06AF]{3,12})',
+    '%b': r'(?P<b>[a-zA-Z]{3})',
+    '%z': r'(?P<z>[+-]\d\d:?[0-5\u06F0-\u06F5]\d(:?[0-5\u06F0-\u06F5]\d(\.\d{1,6})?)?)',
 }
 
 # Replace directives with patterns according to _DIRECTIVE_PATTERNS
