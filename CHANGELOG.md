@@ -2,6 +2,7 @@
 
 ### Add
 * Add `fromisoformat` method to `jdatetime.date`
+* Add support for Python 3.11
 
 ## [4.1.0] - 2022-03-22
 ### Add
