@@ -11,6 +11,7 @@ import jdatetime
 
 try:
     import greenlet
+
     greenlet_installed = True
 except ImportError:
     greenlet_installed = False
@@ -81,8 +82,8 @@ class TestJDateTime(TestCase):
 
         # Test invalid value for fold
         with self.assertRaises(
-            ValueError,
-            msg='fold must be either 0 or 1'
+                ValueError,
+                msg='fold must be either 0 or 1'
         ):
             jdatetime.datetime(1400, 11, 22, fold=2)
 
@@ -342,8 +343,8 @@ class TestJDateTime(TestCase):
 
     def test_strptime_do_not_match_excessive_characters(self):
         with self.assertRaises(
-            ValueError,
-            msg='%y should not match the trailing space character'
+                ValueError,
+                msg='%y should not match the trailing space character'
         ):
             jdatetime.datetime.strptime('21 ', '%y')
 
@@ -385,6 +386,25 @@ class TestJDateTime(TestCase):
             with self.subTest(date_string=date_string, date_format=date_format):
                 date = jdatetime.datetime.strptime(date_string, date_format)
                 self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
+        # for two chars month
+        tests = [
+            ('۱۴ دی ۱۴۰۰', '%d %B %Y'),
+            ('14 دی 1400', '%d %B %Y'),
+            ('1۴ دی ۱4۰0', '%d %B %Y'),
+            ('14 DEY 1400', '%d %b %Y'),
+            ('14 Dey 1400', '%d %b %Y'),
+            ('14 dEy 1400', '%d %b %Y'),
+            ('۱۴ deY ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ dey ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ DeY ۱۴۰۰', '%d %b %Y'),
+            ('۱4 DEy 14۰0', '%d %b %Y'),
+            ('۱4 dEY 14۰0', '%d %b %Y'),
+        ]
+        for date_string, date_format in tests:
+            with self.subTest(date_string=date_string, date_format=date_format):
+                date = jdatetime.datetime.strptime(date_string, date_format)
+                self.assertEqual(jdatetime.datetime(1400, 10, 14), date)
+
 
     def test_strptime_invalid_date_string_b_directive(self):
         with self.assertRaises(ValueError, msg="time data '14 DRO 1400' does not match format '%d %b %Y'"):
