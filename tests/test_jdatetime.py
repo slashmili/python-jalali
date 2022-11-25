@@ -386,8 +386,25 @@ class TestJDateTime(TestCase):
             with self.subTest(date_string=date_string, date_format=date_format):
                 date = jdatetime.datetime.strptime(date_string, date_format)
                 self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
-        two_chars_month = jdatetime.datetime.strptime('14 دی 1400', '%d %B %Y')
-        self.assertEqual(jdatetime.datetime(1400, 10, 14), two_chars_month)
+
+    def test_strptime_handle_b_B_directive_two_chars_month(self):
+        tests = [
+            ('۱۴ دی ۱۴۰۰', '%d %B %Y'),
+            ('14 دی 1400', '%d %B %Y'),
+            ('1۴ دی ۱4۰0', '%d %B %Y'),
+            ('14 DEY 1400', '%d %b %Y'),
+            ('14 Dey 1400', '%d %b %Y'),
+            ('14 dEy 1400', '%d %b %Y'),
+            ('۱۴ deY ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ dey ۱۴۰۰', '%d %b %Y'),
+            ('۱۴ DeY ۱۴۰۰', '%d %b %Y'),
+            ('۱4 DEy 14۰0', '%d %b %Y'),
+            ('۱4 dEY 14۰0', '%d %b %Y'),
+        ]
+        for date_string, date_format in tests:
+            with self.subTest(date_string=date_string, date_format=date_format):
+                date = jdatetime.datetime.strptime(date_string, date_format)
+                self.assertEqual(jdatetime.datetime(1400, 10, 14), date)
 
     def test_strptime_invalid_date_string_b_directive(self):
         with self.assertRaises(ValueError, msg="time data '14 DRO 1400' does not match format '%d %b %Y'"):
