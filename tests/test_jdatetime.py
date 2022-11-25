@@ -11,6 +11,7 @@ import jdatetime
 
 try:
     import greenlet
+
     greenlet_installed = True
 except ImportError:
     greenlet_installed = False
@@ -359,32 +360,34 @@ class TestJDateTime(TestCase):
 
     def test_strptime_handle_b_B_directive(self):
         tests = [
-            ('14 Ordibehesht 1400', '%d %B %Y'),
-            ('14 ordibehesht 1400', '%d %B %Y'),
-            ('14 ordiBehesHt 1400', '%d %B %Y'),
-            ('۱۴ Ordibehesht ۱۴۰۰', '%d %B %Y'),
-            ('۱۴ ordibehesht ۱۴۰۰', '%d %B %Y'),
-            ('۱۴ orDibeHesht ۱۴۰۰', '%d %B %Y'),
-            ('1۴ Ordibehesht 14۰۰', '%d %B %Y'),
-            ('۱4 ordibehesht 14۰0', '%d %B %Y'),
-            ('۱4 OrdiBeheshT 14۰0', '%d %B %Y'),
-            ('۱۴ اردیبهشت ۱۴۰۰', '%d %B %Y'),
-            ('14 اردیبهشت 1400', '%d %B %Y'),
-            ('1۴ اردیبهشت ۱4۰0', '%d %B %Y'),
-            ('14 Ord 1400', '%d %b %Y'),
-            ('14 ord 1400', '%d %b %Y'),
-            ('14 oRD 1400', '%d %b %Y'),
-            ('۱۴ Ord ۱۴۰۰', '%d %b %Y'),
-            ('۱۴ ord ۱۴۰۰', '%d %b %Y'),
-            ('۱۴ OrD ۱۴۰۰', '%d %b %Y'),
-            ('۱4 Ord 14۰0', '%d %b %Y'),
-            ('۱4 ord 14۰0', '%d %b %Y'),
-            ('۱4 ORD 14۰0', '%d %b %Y'),
+            ('14 Ordibehesht 1400', '%d %B %Y', (1400, 2, 14)),
+            ('14 ordibehesht 1400', '%d %B %Y', (1400, 2, 14)),
+            ('14 ordiBehesHt 1400', '%d %B %Y', (1400, 2, 14)),
+            ('۱۴ Ordibehesht ۱۴۰۰', '%d %B %Y', (1400, 2, 14)),
+            ('۱۴ ordibehesht ۱۴۰۰', '%d %B %Y', (1400, 2, 14)),
+            ('۱۴ orDibeHesht ۱۴۰۰', '%d %B %Y', (1400, 2, 14)),
+            ('1۴ Ordibehesht 14۰۰', '%d %B %Y', (1400, 2, 14)),
+            ('۱4 ordibehesht 14۰0', '%d %B %Y', (1400, 2, 14)),
+            ('۱4 OrdiBeheshT 14۰0', '%d %B %Y', (1400, 2, 14)),
+            ('۱۴ اردیبهشت ۱۴۰۰', '%d %B %Y', (1400, 2, 14)),
+            ('14 اردیبهشت 1400', '%d %B %Y', (1400, 2, 14)),
+            ('1۴ اردیبهشت ۱4۰0', '%d %B %Y', (1400, 2, 14)),
+            ('14 Ord 1400', '%d %b %Y', (1400, 2, 14)),
+            ('14 ord 1400', '%d %b %Y', (1400, 2, 14)),
+            ('14 oRD 1400', '%d %b %Y', (1400, 2, 14)),
+            ('۱۴ Ord ۱۴۰۰', '%d %b %Y', (1400, 2, 14)),
+            ('۱۴ ord ۱۴۰۰', '%d %b %Y', (1400, 2, 14)),
+            ('۱۴ OrD ۱۴۰۰', '%d %b %Y', (1400, 2, 14)),
+            ('۱4 Ord 14۰0', '%d %b %Y', (1400, 2, 14)),
+            ('۱4 ord 14۰0', '%d %b %Y', (1400, 2, 14)),
+            ('۱4 ORD 14۰0', '%d %b %Y', (1400, 2, 14)),
+            ('۱۴ دی ۱۴۰۰', '%d %B %Y', (1400, 10, 14)),
+            ('۱۴ dey ۱۴۰۰', '%d %b %Y', (1400, 10, 14)),
         ]
-        for date_string, date_format in tests:
+        for date_string, date_format, expected_date in tests:
             with self.subTest(date_string=date_string, date_format=date_format):
                 date = jdatetime.datetime.strptime(date_string, date_format)
-                self.assertEqual(jdatetime.datetime(1400, 2, 14), date)
+                self.assertEqual(jdatetime.datetime(*expected_date), date)
 
     def test_strptime_invalid_date_string_b_directive(self):
         with self.assertRaises(ValueError, msg="time data '14 DRO 1400' does not match format '%d %b %Y'"):
