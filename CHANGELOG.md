@@ -4,6 +4,9 @@
 * Add `fromisoformat` method to `jdatetime.date`
 * Add support for Python 3.11
 
+### Fixed
+* Fix two chars month handling in ``jdatetime.datetime.strptime``
+
 ## [4.1.0] - 2022-03-22
 ### Add
 * Add support for ``%z`` directive in ``jdatetime.datetime.strptime`
