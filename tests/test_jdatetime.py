@@ -872,7 +872,7 @@ class TestJdatetimeGetSetLocale(TestCase):
             jdatetime.datetime.fromisoformat('1400-11-04T00:05:23+04:00'),
             jdatetime.datetime(
                 1400, 11, 4, 0, 5, 23, 0,
-                tzinfo=datetime.timezone(datetime.timedelta(seconds=14400))
+                tzinfo=datetime.timezone(datetime.timedelta(seconds=14400)),
             ),
         )
 

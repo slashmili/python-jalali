@@ -823,7 +823,7 @@ class datetime(date):
         separator_position = 10 if date_string[4] == '-' else 8
         time_string = date_string[separator_position + 1:]
         return cls.combine(
-            super().fromisoformat(date_string[:separator_position]),
+            date.fromisoformat(date_string[:separator_position]),
             time.fromisoformat(time_string) if time_string else time(),
         )
 
