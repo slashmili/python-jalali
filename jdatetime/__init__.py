@@ -341,11 +341,10 @@ class date:
         if not isinstance(date_string, str):
             raise TypeError("fromisoformat: argument must be str")
 
-        iso_format_regex = r"(\d{4})-(\d{2})-(\d{2})"
+        iso_format_regex = r"(\d{4})-?(\d{2})-?(\d{2})"
         matched_str = re.fullmatch(iso_format_regex, date_string)
         if matched_str is not None:
-            y, m, d = list(map(int, date_string.split('-')))
-            return date(y, m, d)
+            return date(*map(int, matched_str.groups()))
         else:
             raise ValueError(f'Invalid isoformat string: {date_string!r}')
 
@@ -811,6 +810,21 @@ class datetime(date):
             now_datetime.minute,
             now_datetime.second,
             now_datetime.microsecond,
+        )
+
+    @classmethod
+    def fromisoformat(cls, date_string: str):
+        """
+        Convert an ISO 8601 formatted string to a jdatetime.date
+        """
+        # Since we do not (yet?) support ISO week dates, the date and time
+        # separator is either at 8th or 10th position, see:
+        # https://github.com/python/cpython/blob/b2b85b5db9cfdb24f966b61757536a898abc3830/Lib/datetime.py#L271
+        separator_position = 10 if date_string[4] == '-' else 8
+        time_string = date_string[separator_position + 1:]
+        return cls.combine(
+            super().fromisoformat(date_string[:separator_position]),
+            time.fromisoformat(time_string) if time_string else time(),
         )
 
     @staticmethod
