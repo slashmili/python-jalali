@@ -815,7 +815,7 @@ class datetime(date):
     @classmethod
     def fromisoformat(cls, date_string: str):
         """
-        Convert an ISO 8601 formatted string to a jdatetime.date
+        Convert an ISO 8601 formatted string to a jdatetime.datetime
         """
         # Since we do not (yet?) support ISO week dates, the date and time
         # separator is either at 8th or 10th position, see:
