@@ -22,7 +22,7 @@ try:
         # Windows systems, do not have system time zone data available
         # therefore tzdata is required. See:
         # https://docs.python.org/3/library/zoneinfo.html#data-sources
-        import tzinfo
+        import tzinfo as _  # noqa
 except ImportError:
     zoneinfo = None
 
