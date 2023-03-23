@@ -876,18 +876,19 @@ class TestJdatetimeGetSetLocale(TestCase):
             ),
         )
 
-        # new Python 3.11 formats
         self.assertEqual(
             jdatetime.datetime.fromisoformat('14020101'),
             jdatetime.datetime(1402, 1, 1),
         )
 
-        self.assertEqual(
-            jdatetime.datetime.fromisoformat('1402-02-31T00:05:23Z'),
-            jdatetime.datetime(1402, 2, 31, 0, 5, 23, 0, tzinfo=UTC),
-        )
+        if sys.version_info[:2] >= (3, 11):  # new Python 3.11 time formats
 
-        self.assertEqual(
-            jdatetime.datetime.fromisoformat('14031230T010203'),
-            jdatetime.datetime(1403, 12, 30, 1, 2, 3),
-        )
+            self.assertEqual(
+                jdatetime.datetime.fromisoformat('1402-02-31T00:05:23Z'),
+                jdatetime.datetime(1402, 2, 31, 0, 5, 23, 0, tzinfo=UTC),
+            )
+
+            self.assertEqual(
+                jdatetime.datetime.fromisoformat('14031230T010203'),
+                jdatetime.datetime(1403, 12, 30, 1, 2, 3),
+            )
