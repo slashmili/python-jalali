@@ -1,5 +1,10 @@
 # Changelog
 
+## [Unreleased]
+
+### Fixed
+* treat %% as an escape sequence in strftime
+
 ## [4.1.1] - 2023-03-28
 
 ### Add
