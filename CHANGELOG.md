@@ -1,5 +1,7 @@
 # Changelog
 
+## [4.1.1] - 2023-03-28
+
 ### Add
 * Add `fromisoformat` method to `jdatetime.date`
 * Add support for Python 3.11
