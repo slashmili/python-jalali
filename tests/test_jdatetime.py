@@ -235,6 +235,14 @@ class TestJDateTime(TestCase):
             "2 02 3 03 4 04 5 05 6 06",
         )
 
+    def test_strftime_escape_percent(self):
+        dt = jdatetime.datetime(1402, 1, 7)
+        self.assertEqual(dt.strftime("%%d=%d"), "%d=07")
+        self.assertEqual(dt.strftime("%%%d"), "%07")
+
+    def test_strftime_unknown_directive(self):
+        self.assertEqual(jdatetime.date.today().strftime("%Q"), "%Q")
+
     def test_kabiseh(self):
         kabiseh_year = jdatetime.date.fromgregorian(date=datetime.date(2013, 3, 20))
         self.assertTrue(kabiseh_year.isleap())

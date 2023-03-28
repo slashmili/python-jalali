@@ -588,24 +588,24 @@ class date:
         return self.strftime(format)
 
     # strftime helper functions
-    def _strftime_get_attr_value(self, format, symbol, attr, fmt, fb=None):
+    def _strftime_get_attr_value(self, attr, fmt, fb=None):
         try:
-            return format.replace(symbol, fmt % getattr(self, attr))
-        except Exception:
-            return format.replace(symbol, fb)
+            return fmt % getattr(self, attr)
+        except AttributeError:
+            return fb
 
-    def _strftime_get_method_value(self, format, symbol, attr, fmt):
-        return format.replace(symbol, fmt % getattr(self, attr)())
+    def _strftime_get_method_value(self, attr, fmt):
+        return fmt % getattr(self, attr)()
 
-    def _strftime_p(self, format, **kwrgs):
+    def _strftime_p(self):
         try:
             if self.hour >= 12:
-                return format.replace("%p", self.j_ampm['PM'])
-            return format.replace("%p", self.j_ampm['AM'])
+                return self.j_ampm['PM']
+            return self.j_ampm['AM']
         except Exception:
-            return format.replace("%p", self.j_ampm['AM'])
+            return self.j_ampm['AM']
 
-    def _strftime_z(self, format, **kwrgs):
+    def _strftime_z(self):
         try:
             sign = "+"
             diff = self.utcoffset()
@@ -620,15 +620,15 @@ class date:
             tmp_min = diff_sec / 60
             diff_hour = tmp_min / 60
             diff_min = tmp_min % 60
-            return format.replace("%z", '%s%02.d%02.d' % (sign, diff_hour, diff_min))
+            return '%s%02.d%02.d' % (sign, diff_hour, diff_min)
         except AttributeError:
-            return format.replace("%z", '')
+            return ''
 
-    def _strftime_cap_z(self, format, **kwrgs):
+    def _strftime_cap_z(self):
         if hasattr(self, 'tzname') and self.tzname() is not None:
-            return format.replace("%Z", self.tzname())
+            return self.tzname()
         else:
-            return format.replace("%Z", '')
+            return ''
 
     def strftime(self, format):
         # Convert to unicode
@@ -645,12 +645,16 @@ class date:
         for s, r in symbols.items():
             format = format.replace(s, r)
 
-        for symbol in re.findall(r"\%-?[a-zA-z-]", format):
+        def repl(match):
+            symbol = match[0]
             if symbol in STRFTIME_MAPPING:
                 replace_method_name, kwargs = STRFTIME_MAPPING[symbol]
-                kwargs.update({"format": format, "symbol": symbol})
-                format = getattr(self, replace_method_name)(**kwargs)
-        return format
+                return getattr(self, replace_method_name)(**kwargs)
+            if symbol == "%%":
+                return "%"
+            return symbol
+
+        return re.sub(r"%-?[A-Za-z%-]", repl, format)
 
     def aslocale(self, locale):
         return date(self.year, self.month, self.day, locale=locale)
