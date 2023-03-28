@@ -5,6 +5,7 @@ import time
 from unittest import TestCase
 
 import jdatetime
+from tests import load_pickle
 
 
 class TestJDate(TestCase):
@@ -134,8 +135,7 @@ class TestJDate(TestCase):
         else:
             pickled_object_file = 'jdate_py2_jdatetime3.7.pickle'
 
-        with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
-            d = pickle.load(f)
+        d = load_pickle(pickled_object_file)
         self.assertEqual(d, jdatetime.date(1400, 10, 11))
 
     def test_fromisoformat(self):

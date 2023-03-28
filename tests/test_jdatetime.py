@@ -18,8 +18,16 @@ except ImportError:
 
 try:
     import zoneinfo
+    if platform.system() == 'Windows':
+        # Windows systems, do not have system time zone data available
+        # therefore tzdata is required. See:
+        # https://docs.python.org/3/library/zoneinfo.html#data-sources
+        import tzinfo as _  # noqa
 except ImportError:
     zoneinfo = None
+
+
+from tests import load_pickle
 
 
 class GMTTime(jdatetime.tzinfo):
@@ -753,8 +761,7 @@ class TestJDateTime(TestCase):
         else:
             pickled_object_file = 'jdatetime_py2_jdatetime3.7.pickle'
 
-        with open('tests/pickled_objects/%s' % pickled_object_file, 'rb') as f:
-            dt = pickle.load(f)
+        dt = load_pickle(pickled_object_file)
         self.assertEqual(dt, jdatetime.datetime(1400, 10, 11, 1, 2, 3, 30))
 
 
