@@ -144,6 +144,11 @@ class TestJDate(TestCase):
             jdatetime.date(day=22, month=2, year=1378),
         )
 
+        self.assertEqual(  # new Python 3.11 format
+            jdatetime.date.fromisoformat('14020231'),
+            jdatetime.date(1402, 2, 31),
+        )
+
         with self.assertRaises(ValueError, msg="Invalid isoformat string: 'some-invalid-format'"):
             jdatetime.date.fromisoformat("some-invalid-format")
 

@@ -849,3 +849,46 @@ class TestJdatetimeGetSetLocale(TestCase):
         fa_greenlet.switch(fa_record, jdatetime.FA_LOCALE)
 
         self.assertEqual(['یک‌شنبه', 'خرداد'], fa_record)
+
+    def test_fromisoformat(self):
+        UTC = datetime.timezone.utc
+
+        self.assertEqual(
+            jdatetime.datetime.fromisoformat('1402-01-03T15:35:59.898169'),
+            jdatetime.datetime(1402, 1, 3, 15, 35, 59, 898169),
+        )
+
+        self.assertEqual(
+            jdatetime.datetime.fromisoformat('1401-11-04 00:05:23.283'),
+            jdatetime.datetime(1401, 11, 4, 0, 5, 23, 283000),
+        )
+
+        self.assertEqual(
+            jdatetime.datetime.fromisoformat('1403-11-04 00:05:23.283+00:00'),
+            jdatetime.datetime(1403, 11, 4, 0, 5, 23, 283000, tzinfo=UTC),
+        )
+
+        self.assertEqual(
+            jdatetime.datetime.fromisoformat('1400-11-04T00:05:23+04:00'),
+            jdatetime.datetime(
+                1400, 11, 4, 0, 5, 23, 0,
+                tzinfo=datetime.timezone(datetime.timedelta(seconds=14400)),
+            ),
+        )
+
+        self.assertEqual(
+            jdatetime.datetime.fromisoformat('14020101'),
+            jdatetime.datetime(1402, 1, 1),
+        )
+
+        if sys.version_info[:2] >= (3, 11):  # new Python 3.11 time formats
+
+            self.assertEqual(
+                jdatetime.datetime.fromisoformat('1402-02-31T00:05:23Z'),
+                jdatetime.datetime(1402, 2, 31, 0, 5, 23, 0, tzinfo=UTC),
+            )
+
+            self.assertEqual(
+                jdatetime.datetime.fromisoformat('14031230T010203'),
+                jdatetime.datetime(1403, 12, 30, 1, 2, 3),
+            )
