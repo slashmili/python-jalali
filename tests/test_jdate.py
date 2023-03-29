@@ -76,6 +76,23 @@ class TestJDate(TestCase):
         self.assertEqual(new_date.day, 23)
         self.assertEqual(new_date.locale, 'nl_NL')
 
+    def test_unknown_type_operations(self):
+        date = jdatetime.date(1402, 1, 9)
+        unknown_type = object()
+        assert (
+            date.__sub__(unknown_type)
+            is date.__rsub__(unknown_type)
+            is date.__add__(unknown_type)
+            is date.__radd__(unknown_type)
+            is date.__eq__(unknown_type)
+            is date.__ne__(unknown_type)
+            is date.__lt__(unknown_type)
+            is date.__le__(unknown_type)
+            is date.__gt__(unknown_type)
+            is date.__ge__(unknown_type)
+            is NotImplemented
+        )
+
     def test_reverse_add_time_delta(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')
         new_date = datetime.timedelta(days=2) + date

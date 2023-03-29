@@ -385,10 +385,7 @@ class date:
         """x.__add__(y) <==> x+y"""
         if isinstance(timedelta, py_datetime.timedelta):
             return date.fromgregorian(date=self.togregorian() + timedelta, locale=self.locale)
-        raise TypeError(
-            "unsupported operand type(s) for +: '%s' and '%s'" %
-            (type(self), type(timedelta))
-        )
+        return NotImplemented
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
@@ -400,19 +397,13 @@ class date:
         if isinstance(other, date):
             return self.togregorian() - other.togregorian()
 
-        raise TypeError(
-            "unsupported operand type(s) for -: '%s' and '%s'" %
-            (type(self), type(timedelta))
-        )
+        return NotImplemented
 
     def __radd__(self, timedelta):
         """x.__radd__(y) <==> y+x"""
         if isinstance(timedelta, py_datetime.timedelta):
             return self.__add__(timedelta)
-        raise TypeError(
-            "unsupported operand type for +: '%s' and '%s'" %
-            (type(timedelta), type(self))
-        )
+        return NotImplemented
 
     def __rsub__(self, other):
         """x.__rsub__(y) <==> y-x"""
@@ -420,10 +411,7 @@ class date:
             return other.__sub__(self)
         if isinstance(other, py_datetime.date):
             return other - self.togregorian()
-        raise TypeError(
-            "unsupported operand type for -: '%s' and '%s'" %
-            (type(other), type(self))
-        )
+        return NotImplemented
 
     def __eq__(self, other_date):
         """x.__eq__(y) <==> x==y"""
@@ -432,7 +420,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__eq__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            return False
+            return NotImplemented
         if (
             self.year == other_date.year and
             self.month == other_date.month and
@@ -447,9 +435,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__ge__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            raise TypeError(
-                "unsupported operand type for >=: '%s'" %
-                (type(other_date)))
+            return NotImplemented
 
         if self.year > other_date.year:
             return True
@@ -465,10 +451,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__gt__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            raise TypeError(
-                "unsupported operand type for >: '%s'" %
-                (type(other_date))
-            )
+            return NotImplemented
 
         if self.year > other_date.year:
             return True
@@ -484,10 +467,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__le__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            raise TypeError(
-                "unsupported operand type for <=: '%s'" %
-                (type(other_date))
-            )
+            return NotImplemented
 
         return not self.__gt__(other_date)
 
@@ -496,10 +476,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__lt__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            raise TypeError(
-                "unsupported operand type for <: '%s'" %
-                (type(other_date))
-            )
+            return NotImplemented
 
         return not self.__ge__(other_date)
 
@@ -510,7 +487,7 @@ class date:
         if isinstance(other_date, py_datetime.date):
             return self.__ne__(date.fromgregorian(date=other_date))
         if not isinstance(other_date, date):
-            return True
+            return NotImplemented
 
         return not self.__eq__(other_date)
 
@@ -1056,9 +1033,7 @@ class datetime(date):
         """x.__add__(y) <==> x+y"""
         if isinstance(timedelta, py_datetime.timedelta):
             return datetime.fromgregorian(datetime=self.togregorian() + timedelta, locale=self.locale)
-        raise TypeError(
-            "unsupported operand type(s) for +: '%s' and '%s'" %
-            (type(self), type(timedelta)))
+        return NotImplemented
 
     def __sub__(self, other):
         """x.__sub__(y) <==> x-y"""
@@ -1069,19 +1044,13 @@ class datetime(date):
             return self.togregorian() - other
         if isinstance(other, datetime):
             return self.togregorian() - other.togregorian()
-        raise TypeError(
-            "unsupported operand type(s) for -: '%s' and '%s'" %
-            (type(self), type(other))
-        )
+        return NotImplemented
 
     def __radd__(self, timedelta):
         """x.__radd__(y) <==> y+x"""
         if isinstance(timedelta, py_datetime.timedelta):
             return self.__add__(timedelta)
-        raise TypeError(
-            "unsupported operand type for +: '%s' and '%s'" %
-            (type(timedelta), type(self))
-        )
+        return NotImplemented
 
     def __rsub__(self, other):
         """x.__rsub__(y) <==> y-x"""
@@ -1089,10 +1058,7 @@ class datetime(date):
             return other.__sub__(self)
         if isinstance(other, py_datetime.datetime):
             return other - self.togregorian()
-        raise TypeError(
-            "unsupported operand type for -: '%s' and '%s'" %
-            (type(other), type(self))
-        )
+        return NotImplemented
 
     def __eq__(self, other_datetime):
         """x.__eq__(y) <==> x==y"""
@@ -1101,7 +1067,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__eq__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            return False
+            return NotImplemented
         if (
             self.year == other_datetime.year and
             self.month == other_datetime.month and
@@ -1119,10 +1085,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__ge__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            raise TypeError(
-                "unsupported operand type for >=: '%s'" %
-                (type(other_datetime))
-            )
+            return NotImplemented
 
         return (
             self.year,
@@ -1147,9 +1110,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__gt__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            raise TypeError(
-                "unsupported operand type for >: '%s'" %
-                (type(other_datetime)))
+            return NotImplemented
 
         return (
             self.year,
@@ -1179,10 +1140,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__le__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            raise TypeError(
-                "unsupported operand type for <=: '%s'" %
-                (type(other_datetime))
-            )
+            return NotImplemented
 
         return not self.__gt__(other_datetime)
 
@@ -1191,10 +1149,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__lt__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            raise TypeError(
-                "unsupported operand type for <: '%s'" %
-                (type(other_datetime))
-            )
+            return NotImplemented
         return not self.__ge__(other_datetime)
 
     def __ne__(self, other_datetime):
@@ -1204,7 +1159,7 @@ class datetime(date):
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__ne__(datetime.fromgregorian(datetime=other_datetime))
         if not isinstance(other_datetime, datetime):
-            return True
+            return NotImplemented
 
         return not self.__eq__(other_datetime)
 
