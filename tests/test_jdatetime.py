@@ -237,6 +237,7 @@ class TestJDateTime(TestCase):
 
     def test_strftime_escape_percent(self):
         dt = jdatetime.datetime(1402, 1, 7)
+        self.assertEqual(dt.strftime("%%x=%x"), "%x=01/07/02")
         self.assertEqual(dt.strftime("%%d=%d"), "%d=07")
         self.assertEqual(dt.strftime("%%%d"), "%07")
 

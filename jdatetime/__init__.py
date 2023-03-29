@@ -29,6 +29,7 @@ STRFTIME_MAPPING = {
     "%A": ("_strftime_get_method_value", {"attr": "jweekday", "fmt": "%s"}),
     "%b": ("_strftime_get_method_value", {"attr": "jmonth_short", "fmt": "%s"}),
     "%B": ("_strftime_get_method_value", {"attr": "jmonth", "fmt": "%s"}),
+    "%c": ("_strftime_c", {}),
     "%d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%02.d"}),
     "%-d": ("_strftime_get_attr_value", {"attr": "day", "fmt": "%d"}),
     "%j": ("_strftime_get_method_value", {"attr": "yday", "fmt": "%03.d"}),
@@ -48,6 +49,8 @@ STRFTIME_MAPPING = {
     "%S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%02.d", "fb": "00"}),
     "%-S": ("_strftime_get_attr_value", {"attr": "second", "fmt": "%d", "fb": "0"}),
     "%p": ("_strftime_p", {}),
+    "%x": ("_strftime_x", {}),
+    "%X": ("_strftime_cap_x", {}),
     "%z": ("_strftime_z", {}),
     "%Z": ("_strftime_cap_z", {}),
 }
@@ -630,20 +633,21 @@ class date:
         else:
             return ''
 
+    def _strftime_c(self):
+        return self.strftime("%a %b %d %H:%M:%S %Y")
+
+    def _strftime_cap_x(self):
+        return self.strftime("%H:%M:%S")
+
+    def _strftime_x(self):
+        return self.strftime("%m/%d/%y")
+
     def strftime(self, format):
         # Convert to unicode
         try:
             format = format.decode('utf-8')
         except Exception:
             pass
-
-        symbols = {
-            "%c": "%a %b %d %H:%M:%S %Y",
-            "%x": "%m/%d/%y",
-            "%X": "%H:%M:%S",
-        }
-        for s, r in symbols.items():
-            format = format.replace(s, r)
 
         def repl(match):
             symbol = match[0]
