@@ -92,6 +92,11 @@ class TestJDate(TestCase):
             is date.__ge__(unknown_type)
             is NotImplemented
         )
+        with self.assertRaisesRegex(
+            TypeError,
+            "unsupported operand type\(s\) for \+=: 'date' and 'object'"
+        ):
+            date += unknown_type
 
     def test_reverse_add_time_delta(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')

@@ -924,3 +924,8 @@ class TestJdatetimeGetSetLocale(TestCase):
             is dt.__ge__(unknown_type)
             is NotImplemented
         )
+        with self.assertRaisesRegex(
+            TypeError,
+            "unsupported operand type\(s\) for \-=: 'datetime' and 'object'"
+        ):
+            dt -= unknown_type
