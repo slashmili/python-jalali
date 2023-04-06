@@ -2,8 +2,9 @@
 
 ## [Unreleased]
 
-### Fixed
+### Changed
 * BREAKING CHANGE: Arithmetic operations on `date`/`datetime` against an unknown type will now return `NotImplemented` instead of raising `TypeError`
+### Fixed
 * treat %% as an escape sequence in strftime
 
 ## [4.1.1] - 2023-03-28
