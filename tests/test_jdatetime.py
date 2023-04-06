@@ -926,6 +926,6 @@ class TestJdatetimeGetSetLocale(TestCase):
         )
         with self.assertRaisesRegex(
             TypeError,
-            "unsupported operand type\(s\) for \-=: 'datetime' and 'object'"
+            r"unsupported operand type\(s\) for \-=: 'datetime' and 'object'"
         ):
             dt -= unknown_type

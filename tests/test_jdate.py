@@ -94,7 +94,7 @@ class TestJDate(TestCase):
         )
         with self.assertRaisesRegex(
             TypeError,
-            "unsupported operand type\(s\) for \+=: 'date' and 'object'"
+            r"unsupported operand type\(s\) for \+=: 'date' and 'object'"
         ):
             date += unknown_type
 
