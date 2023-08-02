@@ -62,6 +62,20 @@ class TestJDate(TestCase):
         j_today = jdatetime.date.fromgregorian(day=15, month=7, year=2018, locale='nl_NL')
         self.assertEqual(j_today.locale, 'nl_NL')
 
+    def test_togregorian_leap(self):
+        self.assertEqual(
+            jdatetime.date(1402, 12, 9).togregorian(),
+            datetime.date(2024, 2, 28),
+        )
+        self.assertEqual(
+            jdatetime.date(1402, 12, 10).togregorian(),
+            datetime.date(2024, 2, 29),
+        )
+        self.assertEqual(
+            jdatetime.date(1402, 12, 11).togregorian(),
+            datetime.date(2024, 3, 1),
+        )
+
     def test_replace_keeps_the_locale_of_source_date(self):
         date = jdatetime.date(1397, 4, 22, locale='nl_NL')
         other_date = date.replace(day=20)
