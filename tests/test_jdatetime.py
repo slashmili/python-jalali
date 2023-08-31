@@ -908,3 +908,25 @@ class TestJdatetimeGetSetLocale(TestCase):
                 jdatetime.datetime.fromisoformat('14031230T010203'),
                 jdatetime.datetime(1403, 12, 30, 1, 2, 3),
             )
+
+    def test_unknown_type_operations(self):
+        dt = jdatetime.datetime(1402, 1, 9)
+        unknown_type = object()
+        self.assertTrue(
+            dt.__sub__(unknown_type)
+            is dt.__rsub__(unknown_type)
+            is dt.__add__(unknown_type)
+            is dt.__radd__(unknown_type)
+            is dt.__eq__(unknown_type)
+            is dt.__ne__(unknown_type)
+            is dt.__lt__(unknown_type)
+            is dt.__le__(unknown_type)
+            is dt.__gt__(unknown_type)
+            is dt.__ge__(unknown_type)
+            is NotImplemented
+        )
+        with self.assertRaisesRegex(
+            TypeError,
+            r"unsupported operand type\(s\) for \-=: 'datetime' and 'object'"
+        ):
+            dt -= unknown_type
