@@ -58,7 +58,7 @@ Example
 
 Locale
 ------
-In order to get the date string in farsi you need to set the locale to fa_IR. The locale
+In order to get the date string in farsi you need to set the locale to `jdatetime.FA_LOCALE`. The locale
 could be specified explicitly upon instantiation of `date`/`datetime` instances, or by
 setting a default locale.
 
@@ -67,8 +67,8 @@ Instance locales is *named argument only*:
 .. code-block:: python
 
     import jdatetime
-    fa_date = jdatetime.date(1397, 4, 23, locale='fa_IR')
-    fa_datetime = jdatetime.datetime(1397, 4, 23, 11, 40, 30, locale='fa_IR')
+    fa_date = jdatetime.date(1397, 4, 23, locale=jdatetime.FA_LOCALE)
+    fa_datetime = jdatetime.datetime(1397, 4, 23, 11, 40, 30, locale=jdatetime.FA_LOCALE)
 
 
 `date` and `datetime` instances provide the method `aslocale()` to return a clone of the instance
@@ -86,7 +86,7 @@ the desired locale, unless explicitly specified otherwise.
     >>> import jdatetime
     >> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
     u'Wed, 08 Ord 1395 20:47:32'
-    >>> locale.setlocale(locale.LC_ALL, "fa_IR")
+    >>> locale.setlocale(locale.LC_ALL, jdatetime.FA_LOCALE)
     'fa_IR'
     >>> jdatetime.datetime.now().strftime("%a, %d %b %Y %H:%M:%S")
     u'\u0686\u0647\u0627\u0631\u0634\u0646\u0628\u0647, 08 \u0627\u0631\u062f\u06cc\u0628\u0647\u0634\u062a 1395 20:47:56'
@@ -101,7 +101,7 @@ This supports both Python threads, and greenlets.
 .. code-block:: python
 
     import jdatetime
-    jdatetime.set_locale('fa_IR')
+    jdatetime.set_locale(jdatetime.FA_LOCALE)
     jdatetime.datetime.now().strftime('%A %B')
     # u'\u062f\u0648\u0634\u0646\u0628\u0647 \u062e\u0631\u062f\u0627\u062f'
 
