@@ -4,6 +4,7 @@
 
 ### Changed
 * BREAKING CHANGE: Arithmetic operations on `date`/`datetime` against an unknown type will now return `NotImplemented` instead of raising `TypeError`
+* Drop Python 3.7 support
 ### Fixed
 * treat %% as an escape sequence in strftime
 
