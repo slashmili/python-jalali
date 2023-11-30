@@ -9,6 +9,8 @@ environment:
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - PYTHON: "C:\\Python311"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - PYTHON: "C:\\Python312"
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"

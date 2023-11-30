@@ -13,6 +13,7 @@
 ### Add
 * Add `fromisoformat` method to `jdatetime.date`
 * Add support for Python 3.11
+* Add support for Python 3.12
 
 ### Fixed
 * Fix two chars month handling in ``jdatetime.datetime.strptime``
