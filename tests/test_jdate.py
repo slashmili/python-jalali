@@ -1,6 +1,5 @@
 import datetime
 import pickle
-import sys
 import time
 from unittest import TestCase
 
