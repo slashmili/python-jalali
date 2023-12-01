@@ -765,12 +765,7 @@ class TestJDateTime(TestCase):
         self.assertEqual(pickle.loads(pickle.dumps(dt)), dt)
 
     def test_unpickle_older_datetime_object(self):
-        if sys.version_info[0] >= 3:  # py3
-            pickled_object_file = 'jdatetime_py3_jdatetime3.7.pickle'
-        else:
-            pickled_object_file = 'jdatetime_py2_jdatetime3.7.pickle'
-
-        dt = load_pickle(pickled_object_file)
+        dt = load_pickle('jdatetime_py3_jdatetime3.7.pickle')
         self.assertEqual(dt, jdatetime.datetime(1400, 10, 11, 1, 2, 3, 30))
 
 
