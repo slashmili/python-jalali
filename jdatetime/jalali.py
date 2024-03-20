@@ -1,6 +1,23 @@
-# dervied from http://farsitools.sf.net
-# Copyright (C) 2003-2011  Parspooyesh Fanavar (http://parspooyesh.com/)
-# see LICENSE.txt
+#  The algorithms to convert between Jalali and Gregorian dates, are based on
+#  FarsiWeb's jalali.c library (http://www.farsiweb.info/jalali/jalali.c).
+# 
+#  Copyright (C) 2001  Roozbeh Pournader <roozbeh@sharif.edu>
+#  Copyright (C) 2001  Mohammad Toossi <mohammad@bamdad.org>
+#  Copyright (C) 2003-2011 Parspooyesh Fanavar (http://parspooyesh.com/)
+#
+#  This program is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation; either
+#  version 2.1 of the License, or (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You can receive a copy of GNU Lesser General Public License at the
+#  World Wide Web address <http://www.gnu.org/licenses/lgpl.html>.
+
 g_days_in_month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 j_days_in_month = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29]
 
