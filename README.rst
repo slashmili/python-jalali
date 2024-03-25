@@ -3,6 +3,11 @@ jdatetime
 
 jdatetime is Jalali_ implementation of Python's datetime module
 
+Licence
+-------
+This pacakge is released under dual licenses, check LICENSE file for more information.
+
+
 Status
 ------
 

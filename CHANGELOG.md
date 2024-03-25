@@ -4,6 +4,7 @@
 
 ### Add
 * Add support for Python 3.12
+* add LGPL licence for jalali.py file
 
 ### Changed
 * BREAKING CHANGE: Arithmetic operations on `date`/`datetime` against an unknown type will now return `NotImplemented` instead of raising `TypeError`

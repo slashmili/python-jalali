@@ -3,3 +3,24 @@ jdatetime is (c) 2010-2018 Milad Rastian <eslashmili at gmail.com>.
 The jdatetime module was contributed to Python as of Python 2.7 and thus
 was licensed under the Python license. Same license applies to all files in
 the jdatetime package project.
+
+The algorithms to convert between Jalali and Gregorian dates, are based on
+FarsiWeb's jalali.c library (http://www.farsiweb.info/jalali/jalali.c).
+
+Copyright (C) 2001  Roozbeh Pournader <roozbeh@sharif.edu>
+Copyright (C) 2001  Mohammad Toossi <mohammad@bamdad.org>
+Copyright (C) 2003-2011 Parspooyesh Fanavar (http://parspooyesh.com/)
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You can receive a copy of GNU Lesser General Public License at the
+World Wide Web address <http://www.gnu.org/licenses/lgpl.html>.
+
