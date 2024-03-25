@@ -15,6 +15,7 @@ setup(
     url="https://github.com/slashmili/python-jalali",
     long_description=open('README').read(),
     python_requires=">=3.8",
+    install_requires=["jalali-core>=1.0"],
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",
