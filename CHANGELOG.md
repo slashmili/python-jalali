@@ -8,7 +8,7 @@
 ### Changed
 * BREAKING CHANGE: Arithmetic operations on `date`/`datetime` against an unknown type will now return `NotImplemented` instead of raising `TypeError`
 * Drop Python 3.7 support
-* Use jalali.py as jalali_core dependency #148
+* Move jalali.py to jalali_core dependency due to licensing issues #148
 
 ### Fixed
 * treat %% as an escape sequence in strftime
