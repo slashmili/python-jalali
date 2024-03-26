@@ -4,7 +4,7 @@ import setuptools
 
 setup(
     name='jdatetime',
-    version='4.1.1',
+    version='5.0.0',
     packages=['jdatetime', ],
     license='Python Software Foundation License',
     keywords='Jalali implementation of Python datetime',
@@ -15,6 +15,7 @@ setup(
     url="https://github.com/slashmili/python-jalali",
     long_description=open('README').read(),
     python_requires=">=3.8",
+    install_requires=["jalali-core>=1.0"],
     classifiers=[
         "Intended Audience :: Developers",
         "Intended Audience :: System Administrators",

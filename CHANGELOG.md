@@ -1,14 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [5.0.0] - 2024-03-26
 
 ### Add
 * Add support for Python 3.12
-* add LGPL licence for jalali.py file
 
 ### Changed
 * BREAKING CHANGE: Arithmetic operations on `date`/`datetime` against an unknown type will now return `NotImplemented` instead of raising `TypeError`
 * Drop Python 3.7 support
+* Move jalali.py to jalali_core dependency due to licensing issues #148
 
 ### Fixed
 * treat %% as an escape sequence in strftime

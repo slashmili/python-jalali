@@ -14,11 +14,9 @@ try:
 except ImportError:
     from _thread import get_ident
 
-from jdatetime.jalali import (
-    GregorianToJalali, JalaliToGregorian, j_days_in_month,
-)
+from jalali_core import GregorianToJalali, JalaliToGregorian, j_days_in_month
 
-__VERSION__ = "4.1.1"
+__VERSION__ = "5.0.0"
 MINYEAR = 1
 MAXYEAR = 9377
 
