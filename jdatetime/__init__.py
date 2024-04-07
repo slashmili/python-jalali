@@ -576,37 +576,13 @@ class date:
         return fmt % getattr(self, attr)()
 
     def _strftime_p(self):
-        try:
-            if self.hour >= 12:
-                return self.j_ampm['PM']
-            return self.j_ampm['AM']
-        except Exception:
-            return self.j_ampm['AM']
+        return self.j_ampm['AM']
 
     def _strftime_z(self):
-        try:
-            sign = "+"
-            diff = self.utcoffset()
-            diff_sec = diff.seconds
-            if diff.days > 0 or diff.days < -1:
-                raise ValueError(
-                    "tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439"
-                )
-            if diff.days != 0:
-                sign = "-"
-                diff_sec = (1 * 24 * 60 * 60) - diff_sec
-            tmp_min = diff_sec / 60
-            diff_hour = tmp_min / 60
-            diff_min = tmp_min % 60
-            return '%s%02.d%02.d' % (sign, diff_hour, diff_min)
-        except AttributeError:
-            return ''
+        return ''
 
     def _strftime_cap_z(self):
-        if hasattr(self, 'tzname') and self.tzname() is not None:
-            return self.tzname()
-        else:
-            return ''
+        return ''
 
     def _strftime_c(self):
         return self.strftime("%a %b %d %H:%M:%S %Y")
@@ -1340,3 +1316,29 @@ class datetime(date):
             gmtoff_fraction = -gmtoff_fraction
         timezone = py_datetime.timezone(timedelta(seconds=gmtoff, microseconds=gmtoff_fraction))
         return timezone
+
+    def _strftime_p(self):
+        if self.hour >= 12:
+            return self.j_ampm['PM']
+        return self.j_ampm['AM']
+
+    def _strftime_z(self):
+        diff = self.utcoffset()
+        if diff is None:
+            return ''
+        sign = '+'
+        diff_sec = diff.seconds
+        if diff.days > 0 or diff.days < -1:
+            raise ValueError(
+                'tzinfo.utcoffset() returned big time delta! ; must be in -1439 .. 1439'
+            )
+        if diff.days != 0:
+            sign = '-'
+            diff_sec = (1 * 24 * 60 * 60) - diff_sec
+        tmp_min = diff_sec / 60
+        diff_hour = tmp_min / 60
+        diff_min = tmp_min % 60
+        return '%s%02.d%02.d' % (sign, diff_hour, diff_min)
+
+    def _strftime_cap_z(self):
+        return self.tzname() or ''
