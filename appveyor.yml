@@ -16,7 +16,7 @@ init:
   - "ECHO %PYTHON% %PYTHON_VERSION% %PYTHON_ARCH%"
 
 install:
-  - py -m pip install tzdata
+  - py -m pip install . tzdata
 
 test_script:
   - py -m unittest discover tests
