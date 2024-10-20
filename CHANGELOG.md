@@ -1,5 +1,10 @@
 # Changelog
 
+### Add
+* Drop Python 3.8 support
+* Add support for Python 3.13
+
+
 ## [5.0.0] - 2024-03-26
 
 ### Add

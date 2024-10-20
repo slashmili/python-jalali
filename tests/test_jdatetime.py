@@ -645,7 +645,7 @@ class TestJDateTime(TestCase):
         if platform.system() == 'Windows':
             locale.setlocale(locale.LC_ALL, 'English_United States')
         else:
-            locale.resetlocale()
+            locale.setlocale(locale.LC_ALL, '')
 
     def test_with_fa_locale(self):
         self.set_fa_locale()

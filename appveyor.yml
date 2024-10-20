@@ -2,7 +2,6 @@ build: false
 
 environment:
   matrix:
-    - PYTHON: "C:\\Python38"
     - PYTHON: "C:\\Python39"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - PYTHON: "C:\\Python310"
@@ -10,6 +9,8 @@ environment:
     - PYTHON: "C:\\Python311"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
     - PYTHON: "C:\\Python312"
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - PYTHON: "C:\\Python313"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
 
 init:
