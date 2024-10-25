@@ -86,6 +86,10 @@ def _format_time(hour, minute, second, microsecond, timespec='auto'):
         return fmt.format(hour, minute, second, microsecond)
 
 
+def _base_cmp(x, y):
+    return 0 if x == y else 1 if x > y else -1
+
+
 class time(py_datetime.time):
     def __repr__(self):
         return f"jdatetime.time({self.hour}, {self.minute}, {self.second})"
@@ -1042,93 +1046,57 @@ class datetime(date):
         """x.__eq__(y) <==> x==y"""
         if other_datetime is None:
             return False
+
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__eq__(datetime.fromgregorian(datetime=other_datetime))
+
         if not isinstance(other_datetime, datetime):
             return NotImplemented
-        if (
-            self.year == other_datetime.year and
-            self.month == other_datetime.month and
-            self.day == other_datetime.day and
-            self.locale == other_datetime.locale
-        ):
-            return (
-                self.timetz() == other_datetime.timetz() and
-                self.microsecond == other_datetime.microsecond
-            )
+
+        if self.locale == other_datetime.locale:
+            return self._cmp(other_datetime, allow_mixed=True) == 0
+
         return False
 
     def __ge__(self, other_datetime):
         """x.__ge__(y) <==> x>=y"""
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__ge__(datetime.fromgregorian(datetime=other_datetime))
+
         if not isinstance(other_datetime, datetime):
             return NotImplemented
 
-        return (
-            self.year,
-            self.month,
-            self.day,
-            self.hour,
-            self.minute,
-            self.second,
-            self.microsecond,
-        ) >= (
-            other_datetime.year,
-            other_datetime.month,
-            other_datetime.day,
-            other_datetime.hour,
-            other_datetime.minute,
-            other_datetime.second,
-            other_datetime.microsecond,
-        )
+        return self._cmp(other_datetime) >= 0
 
     def __gt__(self, other_datetime):
         """x.__gt__(y) <==> x>y"""
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__gt__(datetime.fromgregorian(datetime=other_datetime))
+
         if not isinstance(other_datetime, datetime):
             return NotImplemented
 
-        return (
-            self.year,
-            self.month,
-            self.day,
-            self.hour,
-            self.minute,
-            self.second,
-            self.microsecond
-        ) > (
-            other_datetime.year,
-            other_datetime.month,
-            other_datetime.day,
-            other_datetime.hour,
-            other_datetime.minute,
-            other_datetime.second,
-            other_datetime.microsecond,
-        )
-
-    def __hash__(self):
-        """x.__hash__() <==> hash(x)"""
-        gdt = self.togregorian()
-        return gdt.__hash__()
+        return self._cmp(other_datetime) > 0
 
     def __le__(self, other_datetime):
         """x.__le__(y) <==> x<=y"""
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__le__(datetime.fromgregorian(datetime=other_datetime))
+
         if not isinstance(other_datetime, datetime):
             return NotImplemented
 
-        return not self.__gt__(other_datetime)
+        return self._cmp(other_datetime) <= 0
 
     def __lt__(self, other_datetime):
         """x.__lt__(y) <==> x<y"""
         if isinstance(other_datetime, py_datetime.datetime):
             return self.__lt__(datetime.fromgregorian(datetime=other_datetime))
+
         if not isinstance(other_datetime, datetime):
             return NotImplemented
-        return not self.__ge__(other_datetime)
+
+        return self._cmp(other_datetime) < 0
 
     def __ne__(self, other_datetime):
         """x.__ne__(y) <==> x!=y"""
@@ -1140,6 +1108,75 @@ class datetime(date):
             return NotImplemented
 
         return not self.__eq__(other_datetime)
+
+    def _cmp(self, other, allow_mixed=False):
+        """
+        Compare two datetime objects.
+        If allow_mixed is True, returns 2 for ambiguous times during DST transitions, as needed for the __eq__ method.
+        """
+        assert isinstance(other, datetime)
+
+        self_tz = self.tzinfo
+        other_tz = other.tzinfo
+        self_offset = None
+        other_offset = None
+
+        if self_tz is other_tz:
+            base_compare = True
+        else:
+            self_offset = self.utcoffset()
+            other_offset = other.utcoffset()
+
+            # Assume that allow_mixed means that we are called from __eq__ and
+            # Return 2 for ambiguous times during DST transitions.
+            if allow_mixed:
+                if self_offset != self.replace(fold=not self.fold).utcoffset():
+                    return 2
+                if other_offset != other.replace(fold=not other.fold).utcoffset():
+                    return 2
+
+            base_compare = self_offset == other_offset
+
+        if base_compare:
+            return _base_cmp(
+                (
+                    self.year,
+                    self.month,
+                    self.day,
+                    self.hour,
+                    self.minute,
+                    self.second,
+                    self.microsecond
+                ),
+                (
+                    other.year,
+                    other.month,
+                    other.day,
+                    other.hour,
+                    other.minute,
+                    other.second,
+                    other.microsecond
+                ),
+            )
+
+        if self_offset is None or other_offset is None:
+            if allow_mixed:
+                return 2  # arbitrary non-zero value for __eq__
+            else:
+                raise TypeError("cannot compare naive and aware datetimes")
+
+        diff = self - other
+        if diff.days < 0:
+            return -1
+        elif diff:
+            return 1
+        else:
+            return 0
+
+    def __hash__(self):
+        """x.__hash__() <==> hash(x)"""
+        gdt = self.togregorian()
+        return gdt.__hash__()
 
     @staticmethod
     def fromgregorian(**kw):
