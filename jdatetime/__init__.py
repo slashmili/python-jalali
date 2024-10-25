@@ -1112,7 +1112,8 @@ class datetime(date):
     def _cmp(self, other, allow_mixed=False):
         """
         Compare two datetime objects.
-        If allow_mixed is True, returns 2 for ambiguous times during DST transitions, as needed for the __eq__ method.
+        If allow_mixed is True, returns 2 for ambiguous times during DST transitions,
+        as needed for the __eq__ method.
         """
         assert isinstance(other, datetime)
 
