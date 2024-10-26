@@ -7,6 +7,7 @@ import threading
 import time
 from unittest import TestCase, skipIf, skipUnless
 from unittest.mock import patch
+from zoneinfo import ZoneInfo
 
 import jdatetime
 
@@ -16,17 +17,6 @@ try:
     greenlet_installed = True
 except ImportError:
     greenlet_installed = False
-
-try:
-    import zoneinfo
-    if platform.system() == 'Windows':
-        # Windows systems, do not have system time zone data available
-        # therefore tzdata is required. See:
-        # https://docs.python.org/3/library/zoneinfo.html#data-sources
-        import tzinfo as _  # noqa
-except ImportError:
-    zoneinfo = None
-
 
 from tests import load_pickle
 
@@ -713,9 +703,8 @@ class TestJDateTime(TestCase):
         self.assertEqual(milliseconds, '1398-04-11T11:06:05.123')
         self.assertEqual(microseconds, '1398-04-11T11:06:05.123456')
 
-    @skipIf(zoneinfo is None, "ZoneInfo not supported!")
     def test_zoneinfo_as_timezone(self):
-        tzinfo = zoneinfo.ZoneInfo('Asia/Tehran')
+        tzinfo = ZoneInfo('Asia/Tehran')
         jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456, tzinfo=tzinfo)
         self.assertEqual(str(jdt), '1398-04-11 11:06:05.123456+0430')
 
@@ -746,8 +735,8 @@ class TestJdatetimeComparison(TestCase):
         with self.assertRaises(TypeError):
             dt1._cmp(dt2)
 
-    def test_ambiguous_time_in_iran(self):
-        tz_teh = zoneinfo.ZoneInfo("Asia/Tehran")
+    def test_cmp_ambiguous_time_in_iran_timezone(self):
+        tz_teh = ZoneInfo("Asia/Tehran")
         tz_gmt = GMTTime()
 
         jd = jdatetime.datetime(1395, 1, 2, 0, 15, tzinfo=tz_teh)
