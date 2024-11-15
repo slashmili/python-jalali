@@ -753,7 +753,6 @@ class TestJdatetimeComparison(TestCase):
         dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
         self.assertEqual(dt_en, dt_fa)
 
-
     def test_eq_with_none(self):
         dt1 = jdatetime.datetime(2023, 9, 30, 12, 0, 0, locale='fa_IR')
         self.assertFalse(dt1.__eq__(None))
