@@ -748,10 +748,11 @@ class TestJdatetimeComparison(TestCase):
         jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=teh)
         self.assertEqual(jdt_teh, jdt_gmt)
 
-    def test_eq_datetimes_with_different_locales_are_equal(self):
+    def test_eq_datetimes_with_different_locales_are_not_equal(self):
         dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
         dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
-        self.assertEqual(dt_en, dt_fa)
+        self.assertNotEqual(dt_en, dt_fa)
+        self.assertNotEqual(dt_fa, dt_en)
 
     def test_eq_with_none(self):
         dt1 = jdatetime.datetime(2023, 9, 30, 12, 0, 0, locale='fa_IR')

@@ -1043,6 +1043,10 @@ class datetime(date):
         if other_datetime is None:
             return False
 
+        other_locale = other_datetime.locale if isinstance(other_datetime, datetime) else get_locale()
+        if self.locale != other_locale:
+            return False
+
         if isinstance(other_datetime, datetime):
             other_datetime = other_datetime.togregorian()
 
