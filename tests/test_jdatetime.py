@@ -6,6 +6,7 @@ import sys
 import threading
 import time
 from unittest import TestCase, skipIf, skipUnless
+from zoneinfo import ZoneInfo
 
 import jdatetime
 
@@ -15,17 +16,6 @@ try:
     greenlet_installed = True
 except ImportError:
     greenlet_installed = False
-
-try:
-    import zoneinfo
-    if platform.system() == 'Windows':
-        # Windows systems, do not have system time zone data available
-        # therefore tzdata is required. See:
-        # https://docs.python.org/3/library/zoneinfo.html#data-sources
-        import tzinfo as _  # noqa
-except ImportError:
-    zoneinfo = None
-
 
 from tests import load_pickle
 
@@ -446,53 +436,11 @@ class TestJDateTime(TestCase):
                 with self.assertRaises(ValueError, msg=msg):
                     jdatetime.datetime.strptime(date_string, date_format)
 
-    def test_datetime_eq(self):
-        date_string = "1363-6-6 12:13:14"
-        date_format = "%Y-%m-%d %H:%M:%S"
-
-        dt1 = jdatetime.datetime.strptime(date_string, date_format)
-
-        date_string = "1364-6-6 12:13:14"
-        dt2 = jdatetime.datetime.strptime(date_string, date_format)
-
-        self.assertNotEqual(dt2, dt1)
-
-    def test_datetime_eq_now(self):
-        import time
-        dt1 = jdatetime.datetime.now()
-        time.sleep(0.1)
-        dt2 = jdatetime.datetime.now()
-        self.assertNotEqual(dt2, dt1)
-
     def test_timetz(self):
         teh = TehranTime()
 
         dt_gmt = datetime.datetime(2015, 6, 27, 1, 2, 3, tzinfo=teh)
         self.assertEqual("01:02:03+03:30", dt_gmt.timetz().__str__())
-
-    def test_datetime_eq_diff_tz(self):
-        gmt = GMTTime()
-        teh = TehranTime()
-
-        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
-        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0, tzinfo=teh)
-        self.assertEqual(dt_teh, dt_gmt, "In standrd python datetime, __eq__ considers timezone")
-
-        jdt_gmt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=gmt)
-
-        jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=teh)
-
-        self.assertEqual(jdt_teh, jdt_gmt)
-
-    def test_datetimes_with_different_locales_are_not_equal(self):
-        dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
-        dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
-        self.assertNotEqual(dt_en, dt_fa)
-
-    def test_datetimes_with_different_locales_inequality_works(self):
-        dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
-        dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
-        self.assertTrue(dt_en != dt_fa)
 
     def test_fromgregorian_accepts_named_argument_of_date_and_locale(self):
         gd = datetime.date(2018, 7, 14)
@@ -754,9 +702,8 @@ class TestJDateTime(TestCase):
         self.assertEqual(milliseconds, '1398-04-11T11:06:05.123')
         self.assertEqual(microseconds, '1398-04-11T11:06:05.123456')
 
-    @skipIf(zoneinfo is None, "ZoneInfo not supported!")
     def test_zoneinfo_as_timezone(self):
-        tzinfo = zoneinfo.ZoneInfo('Asia/Tehran')
+        tzinfo = ZoneInfo('Asia/Tehran')
         jdt = jdatetime.datetime(1398, 4, 11, 11, 6, 5, 123456, tzinfo=tzinfo)
         self.assertEqual(str(jdt), '1398-04-11 11:06:05.123456+0430')
 
@@ -767,6 +714,130 @@ class TestJDateTime(TestCase):
     def test_unpickle_older_datetime_object(self):
         dt = load_pickle('jdatetime_py3_jdatetime3.7.pickle')
         self.assertEqual(dt, jdatetime.datetime(1400, 10, 11, 1, 2, 3, 30))
+
+
+class TestJdatetimeComparison(TestCase):
+    # __eq__
+    def test_eq_datetime(self):
+        date_string = "1363-6-6 12:13:14"
+        date_format = "%Y-%m-%d %H:%M:%S"
+
+        dt1 = jdatetime.datetime.strptime(date_string, date_format)
+
+        date_string = "1364-6-6 12:13:14"
+        dt2 = jdatetime.datetime.strptime(date_string, date_format)
+
+        self.assertNotEqual(dt2, dt1)
+
+    def test_eq_datetime_now(self):
+        import time
+        dt1 = jdatetime.datetime.now()
+        time.sleep(0.1)
+        dt2 = jdatetime.datetime.now()
+        self.assertNotEqual(dt2, dt1)
+
+    def test_eq_datetime_diff_tz(self):
+        gmt = GMTTime()
+        teh = TehranTime()
+
+        dt_gmt = datetime.datetime(2015, 6, 27, 0, 0, 0, tzinfo=gmt)
+        dt_teh = datetime.datetime(2015, 6, 27, 3, 30, 0, tzinfo=teh)
+        self.assertEqual(dt_teh, dt_gmt, "In standrd python datetime, __eq__ considers timezone")
+
+        jdt_gmt = jdatetime.datetime(1389, 2, 17, 0, 0, 0, tzinfo=gmt)
+        jdt_teh = jdatetime.datetime(1389, 2, 17, 3, 30, 0, tzinfo=teh)
+        self.assertEqual(jdt_teh, jdt_gmt)
+
+    def test_eq_datetimes_with_different_locales_are_not_equal(self):
+        dt_en = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='en_US')
+        dt_fa = jdatetime.datetime(2018, 4, 15, 0, 0, 0, locale='fa_IR')
+        self.assertNotEqual(dt_en, dt_fa)
+        self.assertNotEqual(dt_fa, dt_en)
+
+    def test_eq_with_none(self):
+        dt1 = jdatetime.datetime(2023, 9, 30, 12, 0, 0, locale='fa_IR')
+        self.assertFalse(dt1.__eq__(None))
+
+    def test_eq_with_not_implemented(self):
+        dt1 = jdatetime.datetime(2023, 9, 30, 12, 0, 0, locale='fa_IR')
+        dt2 = "not a datetime object"
+        self.assertFalse(dt1 == dt2)
+
+    # __ge__
+    def test_ge_with_same_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 8, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 8, 12, 0, 0)
+
+        self.assertTrue(dt1 >= dt2)
+
+    def test_ge_with_greater_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 8, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 7, 12, 0, 0)
+
+        self.assertTrue(dt1 >= dt2)
+
+    def test_ge_with_lesser_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 8, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 9, 12, 0, 0)
+
+        self.assertFalse(dt1 >= dt2)
+
+    # __gt__
+    def test_gt_with_same_datetime(self):
+        dt1 = jdatetime.datetime(2023, 9, 30, 12, 0, 0)
+        dt2 = jdatetime.datetime(2023, 9, 30, 12, 0, 0)
+
+        self.assertFalse(dt1 > dt2)
+
+    def test_gt_with_greater_datetime(self):
+        dt1 = jdatetime.datetime(2023, 10, 1, 12, 0, 0)
+        dt2 = jdatetime.datetime(2023, 9, 30, 12, 0, 0)
+
+        self.assertTrue(dt1 > dt2)
+
+    def test_gt_with_lesser_datetime(self):
+        dt1 = jdatetime.datetime(2023, 9, 29, 12, 0, 0)
+        dt2 = jdatetime.datetime(2023, 9, 30, 12, 0, 0)
+
+        self.assertFalse(dt1 > dt2)
+
+    # __le__
+    def test_le_with_same_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertTrue(dt1 <= dt2)
+
+    def test_le_with_greater_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 2, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertFalse(dt1 <= dt2)
+
+    def test_le_with_lesser_datetime(self):
+        dt1 = jdatetime.datetime(1402, 6, 30, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertTrue(dt1 <= dt2)
+
+    # __lt__
+    def test_lt_with_same_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertFalse(dt1 < dt2)
+
+    def test_lt_with_greater_datetime(self):
+        dt1 = jdatetime.datetime(1402, 7, 2, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertFalse(dt1 < dt2)
+
+    def test_lt_with_lesser_datetime(self):
+        dt1 = jdatetime.datetime(1402, 6, 30, 12, 0, 0)
+        dt2 = jdatetime.datetime(1402, 7, 1, 12, 0, 0)
+
+        self.assertTrue(dt1 < dt2)
 
 
 class TestJdatetimeGetSetLocale(TestCase):

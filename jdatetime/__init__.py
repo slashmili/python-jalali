@@ -1042,104 +1042,63 @@ class datetime(date):
         """x.__eq__(y) <==> x==y"""
         if other_datetime is None:
             return False
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__eq__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
+
+        other_locale = other_datetime.locale if isinstance(other_datetime, datetime) else get_locale()
+        if self.locale != other_locale:
+            return False
+
+        if isinstance(other_datetime, datetime):
+            other_datetime = other_datetime.togregorian()
+
+        if not isinstance(other_datetime, py_datetime.datetime):
             return NotImplemented
-        if (
-            self.year == other_datetime.year and
-            self.month == other_datetime.month and
-            self.day == other_datetime.day and
-            self.locale == other_datetime.locale
-        ):
-            return (
-                self.timetz() == other_datetime.timetz() and
-                self.microsecond == other_datetime.microsecond
-            )
-        return False
+
+        return self.togregorian() == other_datetime
 
     def __ge__(self, other_datetime):
         """x.__ge__(y) <==> x>=y"""
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__ge__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
+        if isinstance(other_datetime, datetime):
+            other_datetime = other_datetime.togregorian()
+
+        if not isinstance(other_datetime, py_datetime.datetime):
             return NotImplemented
 
-        return (
-            self.year,
-            self.month,
-            self.day,
-            self.hour,
-            self.minute,
-            self.second,
-            self.microsecond,
-        ) >= (
-            other_datetime.year,
-            other_datetime.month,
-            other_datetime.day,
-            other_datetime.hour,
-            other_datetime.minute,
-            other_datetime.second,
-            other_datetime.microsecond,
-        )
+        return self.togregorian() >= other_datetime
 
     def __gt__(self, other_datetime):
         """x.__gt__(y) <==> x>y"""
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__gt__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
+        if isinstance(other_datetime, datetime):
+            other_datetime = other_datetime.togregorian()
+
+        if not isinstance(other_datetime, py_datetime.datetime):
             return NotImplemented
 
-        return (
-            self.year,
-            self.month,
-            self.day,
-            self.hour,
-            self.minute,
-            self.second,
-            self.microsecond
-        ) > (
-            other_datetime.year,
-            other_datetime.month,
-            other_datetime.day,
-            other_datetime.hour,
-            other_datetime.minute,
-            other_datetime.second,
-            other_datetime.microsecond,
-        )
+        return self.togregorian() > other_datetime
+
+    def __le__(self, other_datetime):
+        """x.__le__(y) <==> x<=y"""
+        if isinstance(other_datetime, datetime):
+            other_datetime = other_datetime.togregorian()
+
+        if not isinstance(other_datetime, py_datetime.datetime):
+            return NotImplemented
+
+        return self.togregorian() <= other_datetime
+
+    def __lt__(self, other_datetime):
+        """x.__lt__(y) <==> x<y"""
+        if isinstance(other_datetime, datetime):
+            other_datetime = other_datetime.togregorian()
+
+        if not isinstance(other_datetime, py_datetime.datetime):
+            return NotImplemented
+
+        return self.togregorian() < other_datetime
 
     def __hash__(self):
         """x.__hash__() <==> hash(x)"""
         gdt = self.togregorian()
         return gdt.__hash__()
-
-    def __le__(self, other_datetime):
-        """x.__le__(y) <==> x<=y"""
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__le__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
-            return NotImplemented
-
-        return not self.__gt__(other_datetime)
-
-    def __lt__(self, other_datetime):
-        """x.__lt__(y) <==> x<y"""
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__lt__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
-            return NotImplemented
-        return not self.__ge__(other_datetime)
-
-    def __ne__(self, other_datetime):
-        """x.__ne__(y) <==> x!=y"""
-        if other_datetime is None:
-            return True
-        if isinstance(other_datetime, py_datetime.datetime):
-            return self.__ne__(datetime.fromgregorian(datetime=other_datetime))
-        if not isinstance(other_datetime, datetime):
-            return NotImplemented
-
-        return not self.__eq__(other_datetime)
 
     @staticmethod
     def fromgregorian(**kw):
