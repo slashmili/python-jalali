@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.1.0] - 2025-01-13
+
+### Fixed
+
+* Fix compare datetime with diffrent timezones #159
+
 ### Add
 * Drop Python 3.8 support
 * Add support for Python 3.13
